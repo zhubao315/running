@@ -1,11 +1,15 @@
 module.exports = {
   pathPrefix: '/running', // Change to `/running_page` when running on github pages
   siteMetadata: {
-    siteTitle: 'Running Page',
+    siteTitle: 'zhubao315的跑步生涯',
     siteUrl: 'https://zhubao315.github.io/',
     logo: 'https://dgalywyr863hv.cloudfront.net/pictures/athletes/339768/24821975/1/large.jpg',
     description: 'zhubao315',
     navLinks: [
+      {
+        name: 'Twitter',
+        url: 'https://twitter.com/zhubao315/',
+      },
       {
         name: 'Blog',
         url: 'https://zhubao315.github.io/',
