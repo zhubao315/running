@@ -46,7 +46,10 @@ const RunRow = ({
       <td>
         {titleForRun(run)}
         {sceneHashOf(run.run_id) ? (
-          <sup className="ml-1 rounded bg-orange-100 px-1 text-[10px] font-medium text-orange-700">
+          <sup
+            title="查看 3D 地形"
+            className="ml-1 rounded border border-[#e0ed5e]/30 bg-[#e0ed5e]/15 px-1 text-[10px] font-medium leading-4 text-[#e0ed5e]"
+          >
             3D
           </sup>
         ) : null}

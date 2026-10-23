@@ -85,29 +85,41 @@ for (const run of runs) {
     console.error(`skip ${id}: no points`);
     continue;
   }
-  const code = await new Promise((res) => {
-    const child = spawn(
-      process.execPath,
-      [bake, '-', '--id', id, '--out', outDir, '--cache', cacheDir],
-      {
+  const bakeOnce = (trim) =>
+    new Promise((res) => {
+      const bakeArgs = [
+        bake,
+        '-',
+        '--id',
+        id,
+        '--out',
+        outDir,
+        '--cache',
+        cacheDir,
+      ];
+      if (trim !== undefined) bakeArgs.push('--trim', String(trim));
+      const child = spawn(process.execPath, bakeArgs, {
         stdio: ['pipe', 'ignore', 'pipe'],
         env: { ...process.env, NODE_NO_WARNINGS: '1' },
-      }
+      });
+      let err = '';
+      child.stderr.on('data', (d) => {
+        err += d;
+      });
+      child.on('error', () => res({ code: 1, err }));
+      child.on('close', (code) => res({ code, err }));
+      child.stdin.end(JSON.stringify({ points }));
+    });
+
+  let { code, err } = await bakeOnce();
+  // Very short runs cannot hide 200 m at each end; 50 m still hides the doorstep.
+  if (code !== 0 && /too short to trim/.test(err)) {
+    ({ code, err } = await bakeOnce(50));
+  }
+  if (code !== 0)
+    console.error(
+      `fail ${id}: ${err.trim().split('\n').slice(-2).join(' | ')}`
     );
-    let err = '';
-    child.stderr.on('data', (d) => {
-      err += d;
-    });
-    child.on('error', () => res(1));
-    child.on('close', (c) => {
-      if (c !== 0)
-        console.error(
-          `fail ${id}: ${err.trim().split('\n').slice(-2).join(' | ')}`
-        );
-      res(c);
-    });
-    child.stdin.end(JSON.stringify({ points }));
-  });
   if (code === 0) {
     try {
       hashes[id] = JSON.parse(readFileSync(sidecar, 'utf8')).hash;

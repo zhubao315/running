@@ -1,5 +1,4 @@
 @media only screen and (max-width: 700px) {
-
   /* 当屏幕宽度小于 700px 时 */
   .runTable th:nth-child(4),
   .runTable td:nth-child(4) {
@@ -18,13 +17,18 @@
     text-align: right;
 
     :is(th) {
+      position: sticky;
+      top: 0;
+      z-index: 10;
       padding: 0.5rem;
+      background-color: rgb(26, 26, 26);
     }
   }
 }
 
 .runRow {
   cursor: pointer;
+  transition: background-color 0.15s ease;
   :is(td) {
     padding: 0.5rem;
     border: 0;
@@ -41,7 +45,9 @@
 }
 
 .selected {
-  color: red;
+  color: rgb(255, 92, 92);
+  background-color: rgba(224, 237, 94, 0.06);
+  box-shadow: inset 2px 0 0 rgb(224, 237, 94);
 }
 
 .tableContainer {
@@ -51,4 +57,24 @@
 
 .runDate {
   color: rgb(204, 204, 204);
+}
+
+.hint {
+  margin-top: 1.5rem;
+  text-align: right;
+  font-size: 12px;
+  color: rgb(111, 111, 111);
+}
+
+.hintBadge {
+  display: inline-block;
+  margin-right: 0.25rem;
+  padding: 0 0.25rem;
+  border: 1px solid rgba(224, 237, 94, 0.3);
+  border-radius: 3px;
+  background-color: rgba(224, 237, 94, 0.15);
+  color: rgb(224, 237, 94);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1rem;
 }

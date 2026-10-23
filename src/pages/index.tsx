@@ -214,7 +214,9 @@ const Index = () => {
           thisYear={year}
         />
         <div ref={terrainRef} className="scroll-mt-4">
-          {selectedRun ? <TerrainCard run={selectedRun} /> : null}
+          {selectedRun ? (
+            <TerrainCard run={selectedRun} onClose={() => setRunIndex(-1)} />
+          ) : null}
         </div>
         {year === 'Total' ? (
           <SVGStat />

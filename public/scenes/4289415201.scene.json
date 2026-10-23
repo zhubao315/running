@@ -1,0 +1,19 @@
+{
+  "format": "vert-scene",
+  "version": 1,
+  "bytes": 14731,
+  "hash": "afacad51",
+  "summary": {
+    "distance": 5055,
+    "climb": 65,
+    "drawnLength": 4655,
+    "extent": {
+      "x": 886,
+      "y": 1404
+    },
+    "trim": {
+      "start": 200,
+      "end": 200
+    }
+  }
+}

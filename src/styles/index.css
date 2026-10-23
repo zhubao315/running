@@ -26,3 +26,25 @@ hr {
   border-color: #0003;
   margin: 2rem 0;
 }
+
+/* The 3D terrain panel eases in when a run with a scene is selected. */
+@keyframes terrain-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.terrain-in {
+  animation: terrain-in 320ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terrain-in {
+    animation: none;
+  }
+}

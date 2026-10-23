@@ -67,6 +67,10 @@ const RunTable = ({
 
   return (
     <div className={styles.tableContainer}>
+      <p className={styles.hint}>
+        <span className={styles.hintBadge}>3D</span>
+        标记的跑步可查看地形与海拔剖面
+      </p>
       <table className={styles.runTable} cellSpacing="0" cellPadding="0">
         <thead>
           <tr>
