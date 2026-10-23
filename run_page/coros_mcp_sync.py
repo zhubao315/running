@@ -59,9 +59,7 @@ TOKEN_PATH = os.path.expanduser(
 )
 RUNNING_SPORT_TYPES = [100, 101, 102, 103]  # outdoor / indoor / trail running
 
-RECORD_RE = re.compile(
-    r"LabelId:\s*(\d+)\s*\|\s*SportType:\s*(\d+)", re.MULTILINE
-)
+RECORD_RE = re.compile(r"LabelId:\s*(\d+)\s*\|\s*SportType:\s*(\d+)", re.MULTILINE)
 
 
 def log(msg):
@@ -299,9 +297,7 @@ def mcp_call(token, tool, arguments):
         with urllib.request.urlopen(req, timeout=120) as resp:
             payload = json.loads(resp.read())
     except urllib.error.HTTPError as exc:
-        raise RuntimeError(
-            f"MCP {tool} failed ({exc.code}): {exc.read()[:300]!r}"
-        )
+        raise RuntimeError(f"MCP {tool} failed ({exc.code}): {exc.read()[:300]!r}")
     if "error" in payload:
         raise RuntimeError(f"MCP {tool} error: {payload['error']}")
     result = payload.get("result")
@@ -434,7 +430,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--account", default=os.getenv("COROS_ACCOUNT"))
     parser.add_argument("--password", default=os.getenv("COROS_PASSWORD"))
-    parser.add_argument("--issuer", default=os.getenv("COROS_MCP_ISSUER", DEFAULT_ISSUER))
+    parser.add_argument(
+        "--issuer", default=os.getenv("COROS_MCP_ISSUER", DEFAULT_ISSUER)
+    )
     parser.add_argument(
         "--start-date",
         help="first day to sync, yyyyMMdd (default: newest local activity - 2 days)",
