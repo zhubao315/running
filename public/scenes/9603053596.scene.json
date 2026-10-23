@@ -1,0 +1,19 @@
+{
+  "format": "vert-scene",
+  "version": 1,
+  "bytes": 15492,
+  "hash": "cad220db",
+  "summary": {
+    "distance": 12337,
+    "climb": 23,
+    "drawnLength": 11937,
+    "extent": {
+      "x": 5755,
+      "y": 2565
+    },
+    "trim": {
+      "start": 200,
+      "end": 200
+    }
+  }
+}

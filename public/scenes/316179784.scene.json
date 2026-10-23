@@ -1,0 +1,19 @@
+{
+  "format": "vert-scene",
+  "version": 1,
+  "bytes": 22886,
+  "hash": "3b83ac05",
+  "summary": {
+    "distance": 12925,
+    "climb": 34,
+    "drawnLength": 12525,
+    "extent": {
+      "x": 2306,
+      "y": 2010
+    },
+    "trim": {
+      "start": 200,
+      "end": 200
+    }
+  }
+}

@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Bake new scenes
-        run: pnpm bake:scenes
+        run: pnpm bake:scenes --prune
 
       - name: Commit new scenes
         run: |

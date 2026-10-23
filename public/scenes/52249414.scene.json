@@ -1,0 +1,19 @@
+{
+  "format": "vert-scene",
+  "version": 1,
+  "bytes": 14762,
+  "hash": "bead619e",
+  "summary": {
+    "distance": 8579,
+    "climb": 65,
+    "drawnLength": 8179,
+    "extent": {
+      "x": 3600,
+      "y": 7519
+    },
+    "trim": {
+      "start": 200,
+      "end": 200
+    }
+  }
+}
