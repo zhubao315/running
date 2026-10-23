@@ -11,6 +11,39 @@
   python run_page/get_garmin_secret.py ${email} ${password} --is-cn
 ```
 
+## 高驰（COROS）MCP 自动同步
+
+本仓库的数据源已从 Strava 切换为 **COROS 官方 MCP**（`https://mcpcn.coros.com`，OAuth 2.0 授权，使用 `querySportRecords` + `queryActivityFitFileDownloadUrls` 拉取原始 FIT）。脚本为 `run_page/coros_mcp_sync.py`，不再依赖 Strava refresh token，也不需要手写 cookie。
+
+### 一次性准备
+
+在仓库 **Settings → Secrets and variables → Actions** 中添加：
+
+| Secret | 说明 |
+| --- | --- |
+| `COROS_ACCOUNT` | 高驰账号（手机号或邮箱） |
+| `COROS_PASSWORD` | 高驰登录密码（明文，仅存放在 Actions secret） |
+
+### 本地补齐历史 / 调试
+
+```bash
+pip install -r requirements.txt
+python run_page/coros_mcp_sync.py --account "$COROS_ACCOUNT" --password "$COROS_PASSWORD" --start-date 20260628
+```
+
+- 不传 `--start-date` 时，会自动从 `src/static/activities.json` 的最后一条记录往前推 2 天增量同步。
+- COROS MCP 每天最多下载 50 个 FIT，脚本默认 `--max-downloads 45`，剩余活动下一次自动续传。
+- 默认只同步跑步（sportType 100/101/102/103）；加 `--all-sports` 可同步全部运动类型。
+
+### 自动更新
+
+`.github/workflows/run_data_sync.yml` 中：
+
+- `RUN_TYPE: coros_mcp`
+- 每天 UTC 00:00（北京时间 08:00）自动同步并生成 `activities.json`、`data.db`、`assets/*.svg`
+- `SAVE_DATA_IN_GITHUB_CACHE: false`：数据直接提交回仓库，避免 Actions 缓存过期导致历史丢失
+- 支持 `workflow_dispatch` 手动触发
+
 ![running_page](https://socialify.git.ci/yihong0618/running_page/image?description=1&font=Inter&forks=1&issues=1&language=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fshaonianche%2Fgallery%2Fmaster%2Frunning_page%2Frunning_page_logo_150*150.jpg&owner=1&pulls=1&stargazers=1&theme=Light)
 
 # [这里是白银越野赛全部 21 位逝者的故事](https://github.com/yihong0618/running_page/issues/135)
