@@ -1,0 +1,12 @@
+name: COROS Sync
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - .github/workflows/coros-sync.yml
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "coros sync workflow alive"
