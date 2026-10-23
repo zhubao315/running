@@ -37,11 +37,11 @@ python run_page/coros_mcp_sync.py --account "$COROS_ACCOUNT" --password "$COROS_
 
 ### 自动更新
 
-`.github/workflows/run_data_sync.yml` 中：
+`.github/workflows/coros_sync.yml` 中：
 
-- `RUN_TYPE: coros_mcp`
 - 每天 UTC 00:00（北京时间 08:00）自动同步并生成 `activities.json`、`data.db`、`assets/*.svg`
-- `SAVE_DATA_IN_GITHUB_CACHE: false`：数据直接提交回仓库，避免 Actions 缓存过期导致历史丢失
+- 同步结果直接提交回 `master`，不再依赖 Actions 缓存（旧缓存模式会在缓存过期后丢历史）
+- 提交完成后自动构建并部署 GitHub Pages
 - 支持 `workflow_dispatch` 手动触发
 
 ![running_page](https://socialify.git.ci/yihong0618/running_page/image?description=1&font=Inter&forks=1&issues=1&language=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fshaonianche%2Fgallery%2Fmaster%2Frunning_page%2Frunning_page_logo_150*150.jpg&owner=1&pulls=1&stargazers=1&theme=Light)
