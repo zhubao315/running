@@ -34,6 +34,7 @@ python run_page/coros_mcp_sync.py --account "$COROS_ACCOUNT" --password "$COROS_
 - 不传 `--start-date` 时，会自动从 `src/static/activities.json` 的最后一条记录往前推 2 天增量同步。
 - COROS MCP 每天最多下载 50 个 FIT，脚本默认 `--max-downloads 45`，剩余活动下一次自动续传。
 - 默认只同步跑步（sportType 100/101/102/103）；加 `--all-sports` 可同步全部运动类型。
+- 账号在 EU/US 区域时，用环境变量 `COROS_MCP_ISSUER=https://mcpeu.coros.com`（或 `mcpus`）覆盖默认的 CN 网关。
 
 ### 自动更新
 
