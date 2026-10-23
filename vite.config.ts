@@ -37,7 +37,7 @@ export default defineConfig({
   ],
   base: process.env.PATH_PREFIX || '/',
   define: {
-    "import.meta.env.VERCEL": JSON.stringify(process.env.VERCEL),
+    'import.meta.env.VERCEL': JSON.stringify(process.env.VERCEL),
   },
   build: {
     manifest: true,
@@ -46,6 +46,9 @@ export default defineConfig({
       output: {
         manualChunks: (id: string) => {
           if (id.includes('node_modules')) {
+            // Vert and three.js arrive with the lazily loaded terrain card. Leaving them out of
+            // the eager `vendors` chunk keeps three.js off every page load.
+            if (id.includes('/three/') || id.includes('@geekplux/vert')) return;
             return 'vendors';
             // If there will be more and more external packages referenced in the future,
             // the following approach can be considered.

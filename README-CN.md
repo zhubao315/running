@@ -135,6 +135,25 @@ R.I.P. 希望大家都能健康顺利的跑过终点，逝者安息。
 
 </details>
 
+## 3D 地形（基于 [Vert](https://github.com/geekplux/vert)）
+
+列表中带 `3D` 标记的跑步，点击后会在热力图下方展开该次跑步的 3D 地形与海拔剖面。地形数据由 Vert 在**构建期**烘焙成 `.scene` 文件，其中不含经纬度、时间与瓦片编号；浏览器只做本地渲染，轨迹不会上传。
+
+- 场景文件：`public/scenes/<run_id>.scene` 与 `.scene.json`（哈希用于缓存失效），已随仓库提交；选中某次跑步时才按需加载 `@geekplux/vert` 与 three.js。
+- 入口登记：`src/static/scenes.json`（run_id → 场景哈希）。只有登记过的跑步才显示 3D 入口。
+- 生成环境：Node ≥ 22.18，且可访问 `https://vert.geekplux.com/tiles/{z}/{x}/{y}.png`。
+
+```sh
+# 为 2024 年的跑步生成场景（已有场景跳过）
+pnpm bake:scenes --year 2024
+# 最近 100 次、距离 >= 5 km
+pnpm bake:scenes --limit 100 --min-distance 5000
+# 全部重烤
+pnpm bake:scenes --year 2024 --force
+```
+
+海拔由 Vert 的地形瓦片采样得到（`activities.json` 只有 `summary_polyline`，没有海拔）。瓦片缓存默认在 `/tmp/vert-bake-cache`，可用 `VERT_TILE_CACHE` 指定，**不要提交**。
+
 ## 支持
 
 - **[Strava](#strava)**
