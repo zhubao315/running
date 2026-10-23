@@ -24,6 +24,9 @@ on:
       - run_page/oppo_sync.py
       - requirements.txt
 
+permissions:
+  contents: write
+
 env:
   # please change to your own config.
   RUN_TYPE: coros_mcp # support strava/nike/garmin/coros/coros_mcp/... see the steps below; please change it to your own
