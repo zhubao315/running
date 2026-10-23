@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import Layout from '@/components/Layout';
 import LocationStat from '@/components/LocationStat';
 import RunMap from '@/components/RunMap';
 import RunTable from '@/components/RunTable';
+import TerrainCard from '@/components/TerrainCard';
 import SVGStat from '@/components/SVGStat';
 import YearsStat from '@/components/YearsStat';
 import useActivities from '@/hooks/useActivities';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
+import { sceneHashOf } from '@/vert/scenes';
 import { IS_CHINESE } from '@/utils/const';
 import {
   Activity,
@@ -170,6 +172,22 @@ const Index = () => {
     };
   }, [year]);
 
+  const selectedRun = runIndex >= 0 ? runs[runIndex] : undefined;
+  const terrainRef = useRef<HTMLDivElement>(null);
+
+  // A run with a baked scene opens the 3D card below the map; bring it into view once the map's
+  // own scroll (in locateActivity) has landed.
+  useEffect(() => {
+    if (!selectedRun || !sceneHashOf(selectedRun.run_id)) return;
+    const timer = window.setTimeout(() => {
+      terrainRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }, 150);
+    return () => window.clearTimeout(timer);
+  }, [selectedRun?.run_id]);
+
   return (
     <Layout>
       <div className="w-full lg:w-1/3">
@@ -195,6 +213,9 @@ const Index = () => {
           changeYear={changeYear}
           thisYear={year}
         />
+        <div ref={terrainRef} className="scroll-mt-4">
+          {selectedRun ? <TerrainCard run={selectedRun} /> : null}
+        </div>
         {year === 'Total' ? (
           <SVGStat />
         ) : (
@@ -208,7 +229,7 @@ const Index = () => {
         )}
       </div>
       {/* Enable Audiences in Vercel Analytics: https://vercel.com/docs/concepts/analytics/audiences/quickstart */}
-      {import.meta.env.VERCEL && <Analytics /> }
+      {import.meta.env.VERCEL && <Analytics />}
     </Layout>
   );
 };
