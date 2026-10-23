@@ -60,6 +60,8 @@ TOKEN_PATH = os.path.expanduser(
 RUNNING_SPORT_TYPES = [100, 101, 102, 103]  # outdoor / indoor / trail running
 
 RECORD_RE = re.compile(r"LabelId:\s*(\d+)\s*\|\s*SportType:\s*(\d+)", re.MULTILINE)
+RECORD_DATE_RE = re.compile(r"—\s*(\d{4}-\d{2}-\d{2})")
+CURSOR_FILE = os.path.join(FIT_FOLDER, ".coros_sync_cursor")
 
 
 def log(msg):
@@ -310,6 +312,15 @@ def mcp_call(token, tool, arguments):
     )
     if result.get("isError"):
         raise RuntimeError(f"MCP {tool} reported an error: {text[:300]}")
+    # Some tools (e.g. querySportRecords) double-encode their output: the text
+    # field is itself a JSON string. Decode it so line-based parsing works.
+    if text.startswith('"') and text.endswith('"'):
+        try:
+            decoded = json.loads(text)
+            if isinstance(decoded, str):
+                text = decoded
+        except ValueError:
+            pass
     return text
 
 
@@ -325,8 +336,18 @@ def list_activity_labels(token, start_date, end_date, sport_types):
         },
     )
     labels = []
-    for label_id, sport_type in RECORD_RE.findall(text):
-        labels.append((label_id, int(sport_type)))
+    for block in re.split(r"\n(?=\s*\d+\.\s)", text):
+        match = RECORD_RE.search(block)
+        if not match:
+            continue
+        date_match = RECORD_DATE_RE.search(block)
+        labels.append(
+            (
+                match.group(1),
+                int(match.group(2)),
+                date_match.group(1) if date_match else "",
+            )
+        )
     # newest first from the tool; keep that order
     log(f"{len(labels)} activities listed between {start_date} and {end_date}")
     return labels
@@ -364,17 +385,42 @@ def download_fit(url, folder):
 # Sync
 # ---------------------------------------------------------------------------
 def last_synced_date():
-    """Newest activity date in the generated JSON, used as incremental start."""
+    """Incremental start date: newest activity minus 2 days.
+
+    If a previous run hit the daily FIT cap, a cursor points at the oldest
+    activity that is still missing, and the range starts there instead.
+    """
+    newest = None
     try:
         with open(JSON_FILE) as f:
             activities = json.load(f)
         if activities:
-            newest = max(a["start_date_local"] for a in activities)
-            date = datetime.datetime.strptime(newest, "%Y-%m-%d %H:%M:%S").date()
-            return date - datetime.timedelta(days=2)
+            latest = max(a["start_date_local"] for a in activities)
+            newest = datetime.datetime.strptime(
+                latest, "%Y-%m-%d %H:%M:%S"
+            ).date() - datetime.timedelta(days=2)
     except Exception:
         pass
-    return datetime.date.today() - datetime.timedelta(days=730)
+    if newest is None:
+        newest = datetime.date.today() - datetime.timedelta(days=730)
+    try:
+        with open(CURSOR_FILE) as f:
+            cursor = datetime.datetime.strptime(f.read().strip(), "%Y%m%d").date()
+        return min(newest, cursor)
+    except Exception:
+        return newest
+
+
+def write_cursor(date_str):
+    with open(CURSOR_FILE, "w") as f:
+        f.write(date_str)
+
+
+def clear_cursor():
+    try:
+        os.remove(CURSOR_FILE)
+    except FileNotFoundError:
+        pass
 
 
 def downloaded_label_ids(folder):
@@ -482,16 +528,18 @@ def main():
         labels = list_activity_labels(token, start_s, end_s, sport_types)
 
     have = downloaded_label_ids(FIT_FOLDER)
-    todo = [(label, sport) for label, sport in labels if label not in have]
+    todo = [item for item in labels if item[0] not in have]
     log(f"{len(have)} FIT files already present, {len(todo)} to fetch")
 
     fetched = 0
-    for label_id, sport_type in todo:
+    capped = False
+    for label_id, sport_type, _ in todo:
         if fetched >= args.max_downloads:
             log(
                 f"reached --max-downloads {args.max_downloads}; "
                 "remaining activities will be picked up by the next run"
             )
+            capped = True
             break
         try:
             url = fit_url_for(token, label_id, sport_type)
@@ -512,6 +560,12 @@ def main():
         except RuntimeError as exc:
             log(str(exc))
         time.sleep(0.2)
+
+    if capped and todo[-1][2]:
+        # Newest-first listing: the tail holds the oldest pending activity.
+        write_cursor(todo[-1][2].replace("-", ""))
+    else:
+        clear_cursor()
 
     log(f"fetched {fetched} new FIT files")
     make_activities_file(SQL_FILE, FIT_FOLDER, JSON_FILE, "fit")
