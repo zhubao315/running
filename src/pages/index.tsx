@@ -29,11 +29,18 @@ import {
 const Index = () => {
   const { activities, thisYear } = useActivities();
   const [year, setYear] = useState(thisYear);
-  const [runIndex, setRunIndex] = useState(-1);
-  const [runs, setActivity] = useState(
+  const [runs, setActivity] = useState(() =>
     filterAndSortRuns(activities, year, filterYearRuns, sortDateFunc)
   );
-  const [title, setTitle] = useState('');
+  // Default to the most recent activity that has a baked 3D scene.
+  const [runIndex, setRunIndex] = useState(() => {
+    const index = runs.findIndex((run) => sceneHashOf(run.run_id));
+    return index >= 0 ? index : runs.length ? 0 : -1;
+  });
+  const [title, setTitle] = useState(() =>
+    runIndex >= 0 ? titleForShow(runs[runIndex]) : ''
+  );
+  const scrollOnSelect = useRef(false);
   const [geoData, setGeoData] = useState(geoJsonForRuns(runs));
   // for auto zoom
   const bounds = getBoundsForGeoData(geoData);
@@ -52,8 +59,10 @@ const Index = () => {
     if (name != 'Year') {
       setYear(thisYear);
     }
-    setActivity(filterAndSortRuns(activities, item, func, sortDateFunc));
-    setRunIndex(-1);
+    const nextRuns = filterAndSortRuns(activities, item, func, sortDateFunc);
+    setActivity(nextRuns);
+    const sceneIndex = nextRuns.findIndex((run) => sceneHashOf(run.run_id));
+    setRunIndex(sceneIndex >= 0 ? sceneIndex : nextRuns.length ? 0 : -1);
     setTitle(`${item} ${name} Running Heatmap`);
   };
 
@@ -80,6 +89,7 @@ const Index = () => {
   };
 
   const locateActivity = (runIds: RunIds) => {
+    scrollOnSelect.current = true;
     const ids = new Set(runIds);
 
     const selectedRuns = !runIds.length
@@ -177,6 +187,8 @@ const Index = () => {
   // A run with a baked scene opens the 3D card below the map; bring it into view once the map's
   // own scroll (in locateActivity) has landed.
   useEffect(() => {
+    if (!scrollOnSelect.current) return;
+    scrollOnSelect.current = false;
     if (!selectedRun || !sceneHashOf(selectedRun.run_id)) return;
     const timer = window.setTimeout(() => {
       terrainRef.current?.scrollIntoView({
