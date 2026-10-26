@@ -20,6 +20,9 @@ const Header = () => {
               className={`pill ${
                 link.url.replace(/\/$/, '') === normalized ? 'pill-active' : ''
               }`}
+              {...(link.name === 'X'
+                ? { target: '_blank', rel: 'noreferrer' }
+                : {})}
             >
               {link.name}
             </a>
