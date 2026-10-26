@@ -16,6 +16,18 @@ const data: ISiteMetadataResult = {
   description: 'zhubao315的跑步生涯',
   navLinks: [
     {
+      name: '跑步',
+      url: 'https://zhubao315.github.io/running/',
+    },
+    {
+      name: '骑行',
+      url: 'https://zhubao315.github.io/cycling/',
+    },
+    {
+      name: '徒步',
+      url: 'https://zhubao315.github.io/hiking/',
+    },
+    {
       name: 'X',
       url: 'https://x.com/zhubao315',
     },
