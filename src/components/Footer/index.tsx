@@ -30,7 +30,7 @@ const Footer = () => {
           ) : null}
         </nav>
         <p className={styles.note}>
-          数据来自 COROS · 每天 08:00 自动同步 · 轨迹由 FIT 原始文件生成
+          数据来自 COROS · 每天早上自动同步 · 轨迹由 FIT 原始文件生成
         </p>
       </div>
     </footer>

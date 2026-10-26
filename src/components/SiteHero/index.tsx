@@ -29,7 +29,7 @@ const SiteHero = () => {
       <div className={styles.inner}>
         <div className={styles.badge}>
           <span className={styles.dot} />
-          {sportLabel} · COROS 自动同步 · 每天 08:00 更新
+          {sportLabel} · COROS 自动同步 · 每天早上更新
         </div>
         <h1 className={styles.title}>{siteTitle}</h1>
         <p className={styles.tagline}>{tagline}</p>

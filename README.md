@@ -26,7 +26,7 @@
 | 1,851 次跑步 | 22,961 km | — | 2015–2026 | 2026-10-26 |
 <!-- STATS:END -->
 
-> 每天早上 **08:00（北京时间）** 自动同步；同步完成后自动重建页面并部署到 GitHub Pages。
+> 每天早上自动同步（约 **08:10 北京时间**）；完成后自动重建页面并部署到 GitHub Pages。
 
 ## 站点亮点
 
@@ -49,7 +49,7 @@ flowchart LR
 ```
 
 - **数据源**：COROS 官方 MCP（OAuth 2.0 + PKCE），不再依赖 Strava token
-- **调度**：每天 `00:00 UTC` / `08:00 Asia/Shanghai`
+- **调度**：每天 `00:10 UTC` / `08:10 Asia/Shanghai`
 - **工作流**：[`coros_sync.yml`](https://github.com/zhubao315/running/blob/master/.github/workflows/coros_sync.yml)
 - **落盘**：同步结果直接提交回仓库，不依赖会过期的 Actions 缓存
 - **构建**：同步 → SVG 海报 → README 数据表 → `pnpm build` → Pages
