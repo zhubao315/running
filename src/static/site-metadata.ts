@@ -38,6 +38,10 @@ const data: ISiteMetadataResult = {
       url: 'https://zhubao315.github.io/hiking/',
     },
     {
+      name: '健康',
+      url: 'https://zhubao315.github.io/health/',
+    },
+    {
       name: 'X',
       url: 'https://x.com/zhubao315',
     },

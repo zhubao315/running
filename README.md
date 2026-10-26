@@ -96,13 +96,14 @@ python run_page/coros_mcp_sync.py \
 | `public/scenes/` | 预烘焙 3D 地形 |
 | `.github/workflows/coros_sync.yml` | 每日同步 + 部署 |
 
-## 三个站点
+## 相关站点
 
 | 站点 | 内容 | 链接 |
 | --- | --- | --- |
 | 🏃 跑步 | 2015 至今的跑步记录 | <https://zhubao315.github.io/running/> |
 | 🚴 骑行 | 2022 至今的骑行记录 | <https://zhubao315.github.io/cycling/> |
 | 🥾 徒步 | 山野徒步与 3D 地形 | <https://zhubao315.github.io/hiking/> |
+| ❤️ 健康 | 睡眠 / HRV / 心率 / 压力分析 | <https://zhubao315.github.io/health/> |
 
 ## 技术栈
 
