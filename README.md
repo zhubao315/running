@@ -10,7 +10,7 @@
 [![Site](https://img.shields.io/badge/site-live-e0ed5e?style=flat-square&logo=githubpages&logoColor=white)](https://zhubao315.github.io/running/)
 [![Data](https://img.shields.io/badge/data-COROS%20MCP-e0ed5e?style=flat-square)](https://zhubao315.github.io/running/)
 [![Last commit](https://img.shields.io/github/last-commit/zhubao315/running?style=flat-square)](https://github.com/zhubao315/running/commits)
-[![License](https://img.shields.io/github/license/zhubao315/running?style=flat-square)](https://github.com/zhubao315/running/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/zhubao315/running?style=flat-square)](https://github.com/zhubao315/running/blob/master/LICENSE)
 
 [🌐 在线站点](https://zhubao315.github.io/running/) · [📊 数据概览](#数据概览) · [🔄 自动同步](#自动同步) · [🛠 本地运行](#本地运行) · [🔗 三个站点](#三个站点)
 
@@ -50,7 +50,7 @@ flowchart LR
 
 - **数据源**：COROS 官方 MCP（OAuth 2.0 + PKCE），不再依赖 Strava token
 - **调度**：每天 `00:00 UTC` / `08:00 Asia/Shanghai`
-- **工作流**：[`coros_sync.yml`](https://github.com/zhubao315/running/blob/main/.github/workflows/coros_sync.yml)
+- **工作流**：[`coros_sync.yml`](https://github.com/zhubao315/running/blob/master/.github/workflows/coros_sync.yml)
 - **落盘**：同步结果直接提交回仓库，不依赖会过期的 Actions 缓存
 - **构建**：同步 → SVG 海报 → README 数据表 → `pnpm build` → Pages
 
