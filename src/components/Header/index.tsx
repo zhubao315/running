@@ -1,32 +1,32 @@
-import { Link } from 'react-router-dom';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
+import styles from './style.module.css';
 
 const Header = () => {
-  const { logo, siteUrl, navLinks } = useSiteMetadata();
+  const { logo, siteUrl, navLinks, siteTitle } = useSiteMetadata();
+  const normalized = siteUrl.replace(/\/$/, '');
 
   return (
-    <>
-      <nav className="mt-12 flex w-full items-center justify-between pl-6 lg:px-16">
-        <div className="w-1/4">
-          <Link to={siteUrl}>
-            <picture>
-              <img className="h-16 w-16 rounded-full" alt="logo" src={logo} />
-            </picture>
-          </Link>
-        </div>
-        <div className="w-3/4 text-right">
-          {navLinks.map((n, i) => (
+    <header className={styles.header}>
+      <div className={styles.inner}>
+        <a href={siteUrl} className={styles.brand}>
+          <img className={styles.logo} alt="logo" src={logo} />
+          <span className={styles.name}>{siteTitle}</span>
+        </a>
+        <nav className={styles.nav} aria-label="站点导航">
+          {navLinks.map((link) => (
             <a
-              key={i}
-              href={n.url}
-              className="mr-3 text-lg lg:mr-4 lg:text-base"
+              key={link.name}
+              href={link.url}
+              className={`pill ${
+                link.url.replace(/\/$/, '') === normalized ? 'pill-active' : ''
+              }`}
             >
-              {n.name}
+              {link.name}
             </a>
           ))}
-        </div>
-      </nav>
-    </>
+        </nav>
+      </div>
+    </header>
   );
 };
 

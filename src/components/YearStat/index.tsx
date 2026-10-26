@@ -5,6 +5,7 @@ import { formatPace } from '@/utils/utils';
 import useHover from '@/hooks/useHover';
 import { yearStats } from '@assets/index';
 import { loadSvgComponent } from '@/utils/svgUtils';
+import styles from './style.module.css';
 
 const YearStat = ({ year, onClick }: { year: string, onClick: (_year: string) => void }) => {
   let { activities: runs, years } = useActivities();
@@ -50,11 +51,11 @@ const YearStat = ({ year, onClick }: { year: string, onClick: (_year: string) =>
   );
   return (
     <div
-      className="cursor-pointer"
+      className={`cursor-pointer rounded-xl px-2 py-3 transition-colors hover:bg-white/5`}
       onClick={() => onClick(year)}
       {...eventHandlers}
     >
-      <section>
+      <section className={styles.grid}>
         <Stat value={year} description=" Journey" />
         <Stat value={runs.length} description=" Runs" />
         <Stat value={sumDistance} description=" KM" />
@@ -69,7 +70,7 @@ const YearStat = ({ year, onClick }: { year: string, onClick: (_year: string) =>
           <YearSVG className="my-4 h-4/6 w-4/6 border-0 p-0" />
         </Suspense>
       )}
-      <hr color="red" />
+      <hr className={styles.divider} />
     </div>
   );
 };

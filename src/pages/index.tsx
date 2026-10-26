@@ -5,10 +5,10 @@ import LocationStat from '@/components/LocationStat';
 import RunMap from '@/components/RunMap';
 import RunTable from '@/components/RunTable';
 import TerrainCard from '@/components/TerrainCard';
+import SiteHero from '@/components/SiteHero';
 import SVGStat from '@/components/SVGStat';
 import YearsStat from '@/components/YearsStat';
 import useActivities from '@/hooks/useActivities';
-import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { sceneHashOf } from '@/vert/scenes';
 import { IS_CHINESE } from '@/utils/const';
 import {
@@ -27,7 +27,6 @@ import {
 } from '@/utils/utils';
 
 const Index = () => {
-  const { siteTitle } = useSiteMetadata();
   const { activities, thisYear } = useActivities();
   const [year, setYear] = useState(thisYear);
   const [runIndex, setRunIndex] = useState(-1);
@@ -190,45 +189,51 @@ const Index = () => {
 
   return (
     <Layout>
-      <div className="w-full lg:w-1/3">
-        <h1 className="my-12 text-5xl font-extrabold italic">
-          <a href="/">{siteTitle}</a>
-        </h1>
-        {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
-          <LocationStat
-            changeYear={changeYear}
-            changeCity={changeCity}
-            changeTitle={changeTitle}
-          />
-        ) : (
-          <YearsStat year={year} onClick={changeYear} />
-        )}
-      </div>
-      <div className="w-full lg:w-2/3">
-        <RunMap
-          title={title}
-          viewState={viewState}
-          geoData={geoData}
-          setViewState={setViewState}
-          changeYear={changeYear}
-          thisYear={year}
-        />
-        <div ref={terrainRef} className="scroll-mt-4">
-          {selectedRun ? (
-            <TerrainCard run={selectedRun} onClose={() => setRunIndex(-1)} />
-          ) : null}
+      <SiteHero />
+      <div id="explore" className="mt-8 flex flex-col gap-8 lg:flex-row">
+        <aside className="w-full lg:w-1/3">
+          <div className="card p-6 lg:sticky lg:top-24">
+            {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
+              <LocationStat
+                changeYear={changeYear}
+                changeCity={changeCity}
+                changeTitle={changeTitle}
+              />
+            ) : (
+              <YearsStat year={year} onClick={changeYear} />
+            )}
+          </div>
+        </aside>
+        <div className="w-full space-y-6 lg:w-2/3">
+          <div className="card overflow-hidden">
+            <RunMap
+              title={title}
+              viewState={viewState}
+              geoData={geoData}
+              setViewState={setViewState}
+              changeYear={changeYear}
+              thisYear={year}
+            />
+          </div>
+          <div ref={terrainRef} className="scroll-mt-4">
+            {selectedRun ? (
+              <TerrainCard run={selectedRun} onClose={() => setRunIndex(-1)} />
+            ) : null}
+          </div>
+          <div className="card p-4 lg:p-6">
+            {year === 'Total' ? (
+              <SVGStat />
+            ) : (
+              <RunTable
+                runs={runs}
+                locateActivity={locateActivity}
+                setActivity={setActivity}
+                runIndex={runIndex}
+                setRunIndex={setRunIndex}
+              />
+            )}
+          </div>
         </div>
-        {year === 'Total' ? (
-          <SVGStat />
-        ) : (
-          <RunTable
-            runs={runs}
-            locateActivity={locateActivity}
-            setActivity={setActivity}
-            runIndex={runIndex}
-            setRunIndex={setRunIndex}
-          />
-        )}
       </div>
       {/* Enable Audiences in Vercel Analytics: https://vercel.com/docs/concepts/analytics/audiences/quickstart */}
       {import.meta.env.VERCEL && <Analytics />}

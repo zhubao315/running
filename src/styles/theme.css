@@ -1,0 +1,111 @@
+:root {
+  --accent: #e0ed5e;
+  --accent-2: #a3e635;
+  --bg: #0b0d10;
+  --bg-soft: #12151b;
+  --card: rgba(255, 255, 255, 0.035);
+  --card-hover: rgba(255, 255, 255, 0.06);
+  --text: #e9edf2;
+  --muted: #98a2b3;
+  --border: rgba(255, 255, 255, 0.08);
+  --radius: 18px;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(
+      1100px 520px at 85% -10%,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      900px 520px at -10% 15%,
+      color-mix(in srgb, var(--accent) 7%, transparent),
+      transparent 70%
+    ),
+    var(--bg);
+  color: var(--text);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(10px);
+}
+
+.card-hover:hover {
+  background: var(--card-hover);
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--border));
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-size: 0.8rem;
+  color: var(--muted);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.pill:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  background: var(--card-hover);
+}
+
+.pill-active {
+  color: #0b0d10;
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.mapboxgl-map {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+hr {
+  border-color: var(--border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

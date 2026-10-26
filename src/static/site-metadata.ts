@@ -2,6 +2,11 @@ interface ISiteMetadataResult {
   siteTitle: string;
   siteUrl: string;
   description: string;
+  tagline?: string;
+  accent?: string;
+  accent2?: string;
+  sportLabel?: string;
+  repoUrl?: string;
   logo: string;
   navLinks: {
     name: string;
@@ -14,6 +19,11 @@ const data: ISiteMetadataResult = {
   siteUrl: 'https://zhubao315.github.io/running/',
   logo: 'https://avatars.githubusercontent.com/u/1206487?v=4',
   description: 'zhubao315的跑步生涯',
+  tagline: '用脚步丈量城市，也用数据记住每一次出发。',
+  accent: '#e0ed5e',
+  accent2: '#a3e635',
+  sportLabel: '跑步',
+  repoUrl: 'https://github.com/zhubao315/running',
   navLinks: [
     {
       name: '跑步',

@@ -1,0 +1,60 @@
+.footer {
+  margin-top: 5rem;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, #000 28%, transparent);
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 1.6rem 2rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mark {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 14px var(--accent);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.link {
+  color: var(--muted);
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--accent);
+}
+
+.note {
+  width: 100%;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+@media (min-width: 900px) {
+  .note {
+    width: auto;
+  }
+}

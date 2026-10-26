@@ -26,16 +26,20 @@
 }
 
 .selected {
-  color: rgb(224, 237, 94);
+  color: var(--accent);
 }
 
 .runTitle {
   height: 29px;
-  width: 710px;
+  max-width: min(710px, 60vw);
   position: absolute;
   bottom: 0px;
   left: 120px;
   cursor: pointer;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
 }
 
 .lights {

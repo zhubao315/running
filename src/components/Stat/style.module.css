@@ -1,0 +1,23 @@
+.stat {
+  width: 100%;
+  padding: 0.3rem 0;
+}
+
+.value {
+  display: block;
+  color: var(--accent);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+
+.label {
+  display: block;
+  margin-top: 0.1rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}

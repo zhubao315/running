@@ -14,7 +14,11 @@ on:
       - master
     paths:
       - run_page/coros_mcp_sync.py
+      - run_page/update_readme_stats.py
       - requirements.txt
+      - src/**
+      - assets/**
+      - README.md
       - .github/workflows/coros_sync.yml
 
 permissions:
@@ -70,6 +74,9 @@ jobs:
         run: |
           pip install duckdb
           python run_page/save_to_parqent.py
+
+      - name: Update README stats
+        run: python run_page/update_readme_stats.py --sport running
 
       - name: Commit new runs
         run: |
