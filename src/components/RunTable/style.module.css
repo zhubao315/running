@@ -8,6 +8,8 @@
 
 .runTable {
   width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
   margin: 0.5rem 0 1rem;
 

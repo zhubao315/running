@@ -25,7 +25,6 @@ const SiteHero = () => {
 
   return (
     <section className={styles.hero}>
-      <div className={styles.ring} />
       <div className={styles.inner}>
         <div className={styles.badge}>
           <span className={styles.dot} />
