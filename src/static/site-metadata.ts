@@ -15,10 +15,10 @@ interface ISiteMetadataResult {
 }
 
 const data: ISiteMetadataResult = {
-  siteTitle: 'zhubao315的跑步生涯',
+  siteTitle: 'zhubao315 的跑步生涯',
   siteUrl: 'https://zhubao315.github.io/running/',
   logo: 'https://avatars.githubusercontent.com/u/1206487?v=4',
-  description: 'zhubao315的跑步生涯',
+  description: 'zhubao315 的跑步生涯',
   tagline: '用脚步丈量城市，也用数据记住每一次出发。',
   accent: '#e0ed5e',
   accent2: '#a3e635',
