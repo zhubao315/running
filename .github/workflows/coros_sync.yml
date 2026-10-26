@@ -19,6 +19,7 @@ on:
       - src/**
       - assets/**
       - README.md
+      - index.html
       - .github/workflows/coros_sync.yml
 
 permissions:
