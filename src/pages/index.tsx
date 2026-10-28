@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import Layout from '@/components/Layout';
+import JourneyStats from '@/components/JourneyStats';
 import LocationStat from '@/components/LocationStat';
 import RunMap from '@/components/RunMap';
 import RunTable from '@/components/RunTable';
@@ -202,6 +203,7 @@ const Index = () => {
   return (
     <Layout>
       <SiteHero />
+      <JourneyStats changeCity={changeCity} changeTitle={changeTitle} />
       <div id="explore" className="mt-8 flex flex-col gap-8 lg:flex-row">
         <aside className="w-full lg:w-1/3">
           <div className="card p-6 lg:sticky lg:top-24">
