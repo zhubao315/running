@@ -4,7 +4,7 @@ import { WebMercatorViewport } from 'viewport-mercator-project';
 import { chinaGeojson, RPGeometry } from '@/static/run_countries';
 import worldGeoJson from '@surbowl/world-geo-json-zh/world.zh.json';
 import { chinaCities } from '@/static/city';
-import { MAIN_COLOR, MUNICIPALITY_CITIES_ARR, NEED_FIX_MAP, RUN_TITLES, ACTIVITY_TYPES, RICH_TITLE } from './const';
+import { MAP_LINE_COLOR, MUNICIPALITY_CITIES_ARR, NEED_FIX_MAP, RUN_TITLES, ACTIVITY_TYPES, RICH_TITLE } from './const';
 import { FeatureCollection, LineString } from 'geojson';
 
 export type Coordinate = [number, number];
@@ -218,7 +218,7 @@ const geoJsonForRuns = (runs: Activity[]): FeatureCollection<LineString> => ({
     return {
       type: 'Feature',
       properties: {
-        color: MAIN_COLOR,
+        color: MAP_LINE_COLOR,
       },
       geometry: {
         type: 'LineString',
