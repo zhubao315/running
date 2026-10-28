@@ -6,7 +6,7 @@ const fmt = (value: number) => Math.round(value).toLocaleString('en-US');
 
 const SiteHero = () => {
   const { activities, years } = useActivities();
-  const { tagline, sportLabel, repoUrl, siteTitle } = useSiteMetadata();
+  const { repoUrl, siteTitle } = useSiteMetadata();
 
   const totalKm = activities.reduce((sum, run) => sum + (run.distance || 0), 0) / 1000;
   const totalClimb = activities.reduce(
@@ -26,13 +26,7 @@ const SiteHero = () => {
   return (
     <section className={styles.hero}>
       <div className={styles.inner}>
-        <div className={styles.badge}>
-          <span className={styles.dot} />
-          {sportLabel} · COROS 自动同步 · 每天早上更新
-        </div>
         <h1 className={styles.title}>{siteTitle}</h1>
-        <p className={styles.tagline}>{tagline}</p>
-
         <div className={styles.stats}>
           <div className={styles.stat}>
             <span className={styles.value}>{fmt(activities.length)}</span>
