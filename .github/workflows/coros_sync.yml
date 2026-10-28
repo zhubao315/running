@@ -71,6 +71,20 @@ jobs:
           python run_page/gen_svg.py --from-db --type circular --use-localtime
           python run_page/gen_svg.py --from-db --year $(date +"%Y") --language zh_CN --title "$(date +"%Y") Running" --type github --github-style "align-firstday" --athlete "${{ env.ATHLETE }}" --special-distance 10 --special-distance2 20 --special-color yellow --special-color2 red --output "assets/github_$(date +"%Y").svg" --use-localtime --min-distance 0.5
 
+      - name: Set up Node.js for 3D baking
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Enable pnpm for 3D baking
+        run: npm install -g corepack@latest && corepack enable pnpm
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Bake 3D terrain for new activities
+        run: node scripts/bake-scenes.mjs --since "$(date -u -d '7 days ago' +%F)" --limit 30
+
       - name: Export parquet snapshot
         run: |
           pip install duckdb

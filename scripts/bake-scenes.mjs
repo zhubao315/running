@@ -24,6 +24,7 @@ const arg = (name, dflt) => {
   return i >= 0 && args[i + 1] !== undefined ? args[i + 1] : dflt;
 };
 const year = arg('--year', '');
+const since = arg('--since', '');
 const limit = Number(arg('--limit', '0'));
 const minDistance = Number(arg('--min-distance', '0'));
 const concurrency = Math.max(1, Number(arg('--concurrency', '4')));
@@ -87,6 +88,7 @@ for (const id of ids) {
 
 let runs = activities.filter((a) => a.summary_polyline && a.distance >= minDistance);
 if (year) runs = runs.filter((a) => a.start_date_local.startsWith(year));
+if (since) runs = runs.filter((a) => a.start_date_local.slice(0, 10) >= since);
 runs.sort((a, b) => (a.start_date_local < b.start_date_local ? 1 : -1));
 if (limit > 0) runs = runs.slice(0, limit);
 
