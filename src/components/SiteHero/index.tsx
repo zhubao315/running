@@ -6,7 +6,7 @@ const fmt = (value: number) => Math.round(value).toLocaleString('en-US');
 
 const SiteHero = () => {
   const { activities, years } = useActivities();
-  const { repoUrl, siteTitle } = useSiteMetadata();
+  const { siteTitle } = useSiteMetadata();
 
   const totalKm = activities.reduce((sum, run) => sum + (run.distance || 0), 0) / 1000;
   const totalClimb = activities.reduce(
@@ -54,14 +54,6 @@ const SiteHero = () => {
         </div>
 
         <div className={styles.actions}>
-          <a className={styles.primary} href="#explore">
-            查看轨迹地图
-          </a>
-          {repoUrl ? (
-            <a className={styles.ghost} href={repoUrl} target="_blank" rel="noreferrer">
-              GitHub 源码
-            </a>
-          ) : null}
           {latest ? (
             <span className={styles.latest}>
               最近一次 · {latest.name} ·{' '}
