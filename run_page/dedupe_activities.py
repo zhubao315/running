@@ -15,6 +15,7 @@ Usage:
     python run_page/dedupe_activities.py --execute  # apply to JSON (+ DB if present)
     python run_page/dedupe_activities.py --execute --sport running
 """
+
 import argparse
 import json
 import os
@@ -64,13 +65,20 @@ def classify(activities, sport="cycling"):
                 if sa is None or sb is None:
                     continue
                 try:
-                    ta = datetime.strptime(a["start_date_local"][:19], "%Y-%m-%d %H:%M:%S")
-                    tb = datetime.strptime(b["start_date_local"][:19], "%Y-%m-%d %H:%M:%S")
+                    ta = datetime.strptime(
+                        a["start_date_local"][:19], "%Y-%m-%d %H:%M:%S"
+                    )
+                    tb = datetime.strptime(
+                        b["start_date_local"][:19], "%Y-%m-%d %H:%M:%S"
+                    )
                 except Exception:
                     continue
                 if abs((ta - tb).total_seconds()) > DUP_START_SEC:
                     continue
-                if abs((a.get("distance") or 0) - (b.get("distance") or 0)) > DUP_DIST_M:
+                if (
+                    abs((a.get("distance") or 0) - (b.get("distance") or 0))
+                    > DUP_DIST_M
+                ):
                     continue
                 if abs(sa - sb) > DUP_TIME_SEC:
                     continue
@@ -126,14 +134,18 @@ def dedupe_sql(sql_file, removed_ids, dry_run):
         for i in range(0, len(ids), 500):
             chunk = ids[i : i + 500]
             placeholders = ",".join("?" for _ in chunk)
-            cur.execute(f"DELETE FROM activities WHERE run_id IN ({placeholders})", chunk)
+            cur.execute(
+                f"DELETE FROM activities WHERE run_id IN ({placeholders})", chunk
+            )
         con.commit()
     after = cur.execute("SELECT COUNT(*) FROM activities").fetchone()[0]
     con.close()
     return before, after
 
 
-def dedupe_activities(json_file=None, sql_file=None, execute=False, quiet=False, sport="cycling"):
+def dedupe_activities(
+    json_file=None, sql_file=None, execute=False, quiet=False, sport="cycling"
+):
     json_file = json_file or JSON_FILE
     sql_file = sql_file or SQL_FILE
     with open(json_file) as f:
@@ -163,10 +175,14 @@ def dedupe_activities(json_file=None, sql_file=None, execute=False, quiet=False,
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--execute", action="store_true", help="apply changes (default dry-run)")
+    ap.add_argument(
+        "--execute", action="store_true", help="apply changes (default dry-run)"
+    )
     ap.add_argument("--json", default=None)
     ap.add_argument("--db", default=None)
-    ap.add_argument("--sport", default="cycling", choices=["cycling", "running", "hiking"])
+    ap.add_argument(
+        "--sport", default="cycling", choices=["cycling", "running", "hiking"]
+    )
     args = ap.parse_args()
     dedupe_activities(
         json_file=args.json,
