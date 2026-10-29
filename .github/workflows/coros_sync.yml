@@ -9,6 +9,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '10 0 * * *' # 08:10 Asia/Shanghai
+    - cron: '10 12 * * *' # 20:10 Asia/Shanghai (compensation pass)
   push:
     branches:
       - master
@@ -56,6 +57,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Sync from COROS MCP
+        # Skip the network sync when this push is the bot committing its own
+        # results; otherwise every sync retriggers itself and burns quota.
+        if: "github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'chore: sync runs')"
         run: |
           python run_page/coros_mcp_sync.py \
             --account "${{ secrets.COROS_ACCOUNT }}" \

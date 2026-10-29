@@ -40,6 +40,7 @@ import json
 import os
 import re
 import secrets
+import sqlite3
 import sys
 import time
 from urllib.parse import parse_qs, urlencode, urlparse
@@ -432,6 +433,47 @@ def downloaded_label_ids(folder):
     return ids
 
 
+PROCESSED_FILE = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), ".coros_processed.json"
+)
+
+
+def _db_activity_count():
+    try:
+        con = sqlite3.connect(SQL_FILE)
+        n = con.execute("SELECT COUNT(*) FROM activities").fetchone()[0]
+        con.close()
+        return n
+    except Exception:
+        return 0
+
+
+def processed_label_ids():
+    """Label ids already ingested into data.db.
+
+    ``--purge-fit`` (and the ephemeral runner) means the FIT folder is empty at
+    the start of every run, so the sync would re-download the whole date window
+    and burn the account-wide 50 FIT/day COROS quota shared by every site.
+    This committed manifest records what has actually been imported.  It is
+    ignored when data.db is empty so a wiped database still re-downloads.
+    """
+    if _db_activity_count() == 0:
+        return set()
+    try:
+        with open(PROCESSED_FILE) as f:
+            return set(json.load(f))
+    except Exception:
+        return set()
+
+
+def mark_processed(label_ids):
+    ids = processed_label_ids() | {str(i) for i in label_ids}
+    if not ids:
+        return
+    with open(PROCESSED_FILE, "w") as f:
+        json.dump(sorted(ids), f)
+
+
 def auto_name(start_date_local):
     """Strava-like default title for FIT files, which carry no activity name."""
     try:
@@ -527,11 +569,13 @@ def main():
         token = login(args.issuer, args.account, args.password)
         labels = list_activity_labels(token, start_s, end_s, sport_types)
 
-    have = downloaded_label_ids(FIT_FOLDER)
-    todo = [item for item in labels if item[0] not in have]
+    have = downloaded_label_ids(FIT_FOLDER) | processed_label_ids()
+    todo = [item for item in labels if str(item[0]) not in have]
     log(f"{len(have)} FIT files already present, {len(todo)} to fetch")
 
     fetched = 0
+    fetched_ids = []
+    quota_blocked = 0
     capped = False
     for label_id, sport_type, _ in todo:
         if fetched >= args.max_downloads:
@@ -545,6 +589,8 @@ def main():
             url = fit_url_for(token, label_id, sport_type)
         except RuntimeError as exc:
             log(f"skip {label_id}: {exc}")
+            if "daily limit" in str(exc):
+                quota_blocked += 1
             if "anomalies" in str(exc):
                 # Gateway throttling / context guard: stop politely.
                 break
@@ -556,9 +602,12 @@ def main():
             path, created = download_fit(url, FIT_FOLDER)
             if created:
                 fetched += 1
+                fetched_ids.append(str(label_id))
                 log(f"downloaded {os.path.basename(path)}")
         except RuntimeError as exc:
             log(str(exc))
+            if "daily limit" in str(exc):
+                quota_blocked += 1
         time.sleep(0.2)
 
     if capped and todo[-1][2]:
@@ -578,7 +627,13 @@ def main():
         )
     except Exception as exc:
         log(f"dedupe_activities failed: {exc}")
+    mark_processed(fetched_ids)
     log("activities.json rebuilt")
+    if quota_blocked:
+        print(
+            f"::warning::COROS 50/day FIT quota reached; "
+            f"{quota_blocked} activities deferred to the next run"
+        )
 
 
 if __name__ == "__main__":
