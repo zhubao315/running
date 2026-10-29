@@ -623,7 +623,11 @@ def main():
         from dedupe_activities import dedupe_activities
 
         dedupe_activities(
-            JSON_FILE, SQL_FILE, execute=True, quiet=False, sport=args.sport
+            JSON_FILE,
+            SQL_FILE,
+            execute=True,
+            quiet=False,
+            sport=getattr(args, "sport", "running"),
         )
     except Exception as exc:
         log(f"dedupe_activities failed: {exc}")
