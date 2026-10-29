@@ -64,9 +64,7 @@ def split_components(points, threshold_km):
 
 
 def comp_len_km(points, comp):
-    return sum(
-        _dist_km(points[i], points[j]) for i, j in zip(comp, comp[1:])
-    )
+    return sum(_dist_km(points[i], points[j]) for i, j in zip(comp, comp[1:]))
 
 
 def drop_specified_components(points, comp_idx, expected_pts, args, label):
@@ -74,31 +72,47 @@ def drop_specified_components(points, comp_idx, expected_pts, args, label):
     n = len(points)
     comps = split_components(points, args.threshold / 1000.0)
     if comp_idx >= len(comps):
-        print(f"    !! {label}: only {len(comps)} component(s), "
-              f"cannot drop #{comp_idx} — skipped")
+        print(
+            f"    !! {label}: only {len(comps)} component(s), "
+            f"cannot drop #{comp_idx} — skipped"
+        )
         return points, 0
     comp = comps[comp_idx]
     size = len(comp)
     if expected_pts and abs(size - expected_pts) > args.tolerance * expected_pts:
-        print(f"    !! {label}: component #{comp_idx} has {size} points, "
-              f"expected ~{expected_pts} — refusing to drop")
+        print(
+            f"    !! {label}: component #{comp_idx} has {size} points, "
+            f"expected ~{expected_pts} — refusing to drop"
+        )
         return points, 0
     length = comp_len_km(points, comp)
-    gap_in = 0.0 if comp_idx == 0 else _dist_km(
-        points[comps[comp_idx - 1][-1]], points[comp[0]])
-    gap_out = 0.0 if comp_idx == len(comps) - 1 else _dist_km(
-        points[comp[-1]], points[comps[comp_idx + 1][0]])
+    gap_in = (
+        0.0
+        if comp_idx == 0
+        else _dist_km(points[comps[comp_idx - 1][-1]], points[comp[0]])
+    )
+    gap_out = (
+        0.0
+        if comp_idx == len(comps) - 1
+        else _dist_km(points[comp[-1]], points[comps[comp_idx + 1][0]])
+    )
     if max(gap_in, gap_out) <= args.min_gap:
-        print(f"    !! {label}: component #{comp_idx} not detached "
-              f"(gap {max(gap_in, gap_out):.2f} km) — refusing to drop")
+        print(
+            f"    !! {label}: component #{comp_idx} not detached "
+            f"(gap {max(gap_in, gap_out):.2f} km) — refusing to drop"
+        )
         return points, 0
     if length > args.max_len or size * 2 >= n:
-        print(f"    !! {label}: component #{comp_idx} too large "
-              f"({length:.2f} km, {size}/{n} pts) — refusing to drop")
+        print(
+            f"    !! {label}: component #{comp_idx} too large "
+            f"({length:.2f} km, {size}/{n} pts) — refusing to drop"
+        )
         return points, 0
     keep = [i for c_i, c in enumerate(comps) if c_i != comp_idx for i in c]
-    print(f"    drop: {label} component #{comp_idx}: {size} pts, "
-          f"{length:.2f} km, gap_in={gap_in:.2f} gap_out={gap_out:.2f}")
+    print(
+        f"    drop: {label} component #{comp_idx}: {size} pts, "
+        f"{length:.2f} km, gap_in={gap_in:.2f} gap_out={gap_out:.2f}"
+    )
     return [points[i] for i in keep], size
 
 
@@ -110,8 +124,7 @@ def fix_polyline(poly_str, drops, args, label):
     except Exception:
         return poly_str, 0
     comp_idx, expected = drops
-    filtered, dropped = drop_specified_components(
-        pts, comp_idx, expected, args, label)
+    filtered, dropped = drop_specified_components(pts, comp_idx, expected, args, label)
     if not dropped:
         return poly_str, 0
     if not filtered:
@@ -148,14 +161,24 @@ def main():
         default=[],
         help="run_id:component_index[@expected_points]; repeatable",
     )
-    parser.add_argument("--threshold", type=int, default=3000,
-                        help="chain threshold in metres")
-    parser.add_argument("--min-gap", type=float, default=1.0,
-                        help="min detachment gap in km")
-    parser.add_argument("--max-len", type=float, default=2.0,
-                        help="max droppable component length in km")
-    parser.add_argument("--tolerance", type=float, default=0.3,
-                        help="relative tolerance on expected point count")
+    parser.add_argument(
+        "--threshold", type=int, default=3000, help="chain threshold in metres"
+    )
+    parser.add_argument(
+        "--min-gap", type=float, default=1.0, help="min detachment gap in km"
+    )
+    parser.add_argument(
+        "--max-len",
+        type=float,
+        default=2.0,
+        help="max droppable component length in km",
+    )
+    parser.add_argument(
+        "--tolerance",
+        type=float,
+        default=0.3,
+        help="relative tolerance on expected point count",
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -175,12 +198,13 @@ def main():
         for comp_idx, expected in drops[rid]:
             label = f"json run_id={rid}"
             old = a.get("summary_polyline")
-            new, dropped = fix_polyline(
-                old, (comp_idx, expected), args, label)
+            new, dropped = fix_polyline(old, (comp_idx, expected), args, label)
             if dropped:
-                print(f"  json: run_id={rid} "
-                      f"{a.get('start_date_local', '')} "
-                      f"{a.get('name', '')!r}: drop {dropped} point(s)")
+                print(
+                    f"  json: run_id={rid} "
+                    f"{a.get('start_date_local', '')} "
+                    f"{a.get('name', '')!r}: drop {dropped} point(s)"
+                )
                 if not args.dry_run:
                     a["summary_polyline"] = new
                 json_changed += 1
@@ -206,8 +230,7 @@ def main():
             changed_pts = 0
             for comp_idx, expected in comp_drops:
                 label = f"db run_id={rid}"
-                new, dropped = fix_polyline(
-                    new, (comp_idx, expected), args, label)
+                new, dropped = fix_polyline(new, (comp_idx, expected), args, label)
                 changed_pts += dropped
             if changed_pts:
                 print(f"  db: run_id={rid}: drop {changed_pts} point(s) total")
