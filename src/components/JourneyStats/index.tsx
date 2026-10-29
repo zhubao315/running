@@ -101,8 +101,16 @@ const JourneyStats = ({ changeCity, changeTitle }: IJourneyStatsProps) => {
 
     const dateOf = (a: Activity) => a.start_date_local.slice(0, 10);
 
+    // 「最长时间」只计真实跑步时长：忘关表/挂表的记录（时长 > 2h 且均速
+    // < 6 km/h）不计入，否则榜首永远是 7h+ 的挂表时长。真实长跑均速都在
+    // 10 km/h 上下，6 km/h 与之之间有清晰断档（挂表最长仅 ~5.4 km/h）。
+    const realLong = runs.filter(
+      (a) =>
+        a.average_speed >= 6 / 3.6 ||
+        convertMovingTime2Sec(a.moving_time) <= 2 * 3600
+    );
     const far = runs.reduce((a, b) => (b.distance > a.distance ? b : a));
-    const longest = runs.reduce((a, b) =>
+    const longest = (realLong.length ? realLong : runs).reduce((a, b) =>
       convertMovingTime2Sec(b.moving_time) > convertMovingTime2Sec(a.moving_time)
         ? b
         : a
@@ -354,7 +362,7 @@ const JourneyStats = ({ changeCity, changeTitle }: IJourneyStatsProps) => {
           <div className={styles.recordCard}>
             <div className={styles.panelHead}>
               <span className={styles.panelTitle}>个人最佳</span>
-              <span className={styles.panelHint}>历史之最</span>
+              <span className={styles.panelHint}>历史之最 · 忘关表不计</span>
             </div>
             <div className={styles.recordList}>
               {records.pbRows.map((r) => (
