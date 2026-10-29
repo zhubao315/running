@@ -145,8 +145,9 @@ jobs:
         run: python run_page/update_readme_stats.py --sport running
 
       # Targeted cleanup of confirmed GPS-drift artifacts (joyrun imports).
-      # Per-case component drops with detachment/count guards; safe to run
-      # on every sync because non-allowlisted tracks are never touched.
+      # Per-case component drops with detachment/count guards, plus
+      # whole-activity deletes for phantom records; safe to run on every
+      # sync because non-allowlisted tracks are never touched.
       - name: Remove known GPS drift artifacts
         if: steps.change.outputs.rebuild == 'true'
         run: |
@@ -155,7 +156,8 @@ jobs:
             --db run_page/data.db \
             --drop 232036223:0@264 \
             --drop 9223370520777606807:1 \
-            --drop 20285755:1@191
+            --drop 20285755:1@191 \
+            --delete 9223370440357779707
 
       - name: Commit new runs
         id: commit

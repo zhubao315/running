@@ -26,6 +26,11 @@ Usage:
         --drop 20285755:1@191 --drop 55972441:1@172 [--dry-run]
 
     --drop spec format: run_id:component_index[@expected_points]
+
+Whole-activity removal (for confirmed phantom records, e.g. a COROS watch
+session whose metadata drifted into 10h moving_time / 30 min/km pace):
+
+    --delete 9223370440357779707
 """
 
 import argparse
@@ -162,6 +167,12 @@ def main():
         help="run_id:component_index[@expected_points]; repeatable",
     )
     parser.add_argument(
+        "--delete",
+        action="append",
+        default=[],
+        help="run_id whose whole activity should be removed; repeatable",
+    )
+    parser.add_argument(
         "--threshold", type=int, default=3000, help="chain threshold in metres"
     )
     parser.add_argument(
@@ -183,7 +194,8 @@ def main():
     args = parser.parse_args()
 
     drops = parse_drops(args.drop)
-    if not drops:
+    deletes = {int(i) for i in args.delete}
+    if not drops and not deletes:
         print("No --drop spec given; nothing to do.")
         return 0
 
@@ -208,6 +220,17 @@ def main():
                 if not args.dry_run:
                     a["summary_polyline"] = new
                 json_changed += 1
+    for a in list(activities):
+        rid = int(a.get("run_id"))
+        if rid not in deletes:
+            continue
+        print(
+            f"  json: run_id={rid} {a.get('start_date_local', '')} "
+            f"{a.get('name', '')!r}: deleted whole activity"
+        )
+        json_changed += 1
+        if not args.dry_run:
+            activities.remove(a)
     if not args.dry_run and json_changed:
         with open(args.json, "w") as f:
             json.dump(activities, f)
@@ -241,6 +264,17 @@ def main():
                         (new, rid),
                     )
                 db_changed += 1
+        for rid in sorted(deletes):
+            row = cur.execute(
+                "SELECT 1 FROM activities WHERE run_id = ?", (rid,)
+            ).fetchone()
+            if not row:
+                print(f"  db: run_id={rid}: not found")
+                continue
+            print(f"  db: run_id={rid}: deleted whole activity")
+            db_changed += 1
+            if not args.dry_run:
+                cur.execute("DELETE FROM activities WHERE run_id = ?", (rid,))
         if not args.dry_run:
             con.commit()
         con.close()
