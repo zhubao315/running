@@ -1,11 +1,16 @@
 name: Bake 3D scenes
 
-# Bakes Vert scenes for runs that do not have one yet and commits them. Runs after the daily data
-# sync has had time to land, so a new run gets its 3D terrain within a day.
+# Bakes Vert scenes for runs that do not have one yet and commits them.
+#
+# This is only a safety net: the COROS sync workflow already bakes terrain for
+# fresh activities (last 7 days) as part of its own run, so a new run usually
+# gets its 3D scene the same morning. A weekly sweep catches whatever a sync
+# pass missed (failed bake, scene pruned, run imported later) without paying
+# for a daily pnpm install.
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 3 * * *'
+    - cron: '30 3 * * 1' # Mondays 11:30 Asia/Shanghai
 
 permissions:
   contents: write

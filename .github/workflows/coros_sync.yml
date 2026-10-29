@@ -1,15 +1,19 @@
 name: COROS Sync
 
-# Daily sync from the official COROS MCP gateway, then rebuild and deploy the
-# page. Data is committed back to master so history never depends on the
-# Actions cache (the old cache-based workflow lost months of data when the
-# Strava token expired).
+# Sync from the official COROS MCP gateway, then rebuild and deploy the page.
+# Data is committed back to master so history never depends on the Actions
+# cache (the old cache-based workflow lost months of data when the Strava
+# token expired).
+#
+# Cost control: around three runs a week means one scheduled pass a day is
+# plenty (the sync window always starts at newest activity - 2 days, so a
+# missed day is recovered by the next one). A pass that downloads nothing new
+# skips the rebuild and the Pages deploy; pushes never talk to COROS at all.
 
 on:
   workflow_dispatch:
   schedule:
     - cron: '10 0 * * *' # 08:10 Asia/Shanghai
-    - cron: '10 12 * * *' # 20:10 Asia/Shanghai (compensation pass)
   push:
     branches:
       - master
@@ -42,11 +46,31 @@ jobs:
   sync:
     name: Sync COROS data
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
     steps:
+      # COROS only allows 50 FIT downloads a day for the whole account, shared
+      # with cycling and hiking. Pushes (UI tweaks, code, and the bot's own
+      # data commit) therefore never touch the network: only the schedule and
+      # manual dispatch do. This also stops the bot's commit from retriggering
+      # a full rebuild of the pipeline that produced it.
+      - name: Decide whether this run syncs
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout
+        if: steps.gate.outputs.run == 'true'
         uses: actions/checkout@v4
 
       - name: Set up Python
+        if: steps.gate.outputs.run == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -54,21 +78,38 @@ jobs:
           cache-dependency-path: requirements.txt
 
       - name: Install dependencies
+        if: steps.gate.outputs.run == 'true'
         run: pip install -r requirements.txt
 
       - name: Sync from COROS MCP
-        # Skip the network sync when this push is the bot committing its own
-        # results; otherwise every sync retriggers itself and burns quota.
-        if: "github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'chore: sync runs')"
+        id: sync
+        if: steps.gate.outputs.run == 'true'
         run: |
+          set -o pipefail
           python run_page/coros_mcp_sync.py \
             --account "${{ secrets.COROS_ACCOUNT }}" \
             --password "${{ secrets.COROS_PASSWORD }}" \
-            --max-downloads 45
+            --max-downloads 45 2>&1 | tee "$RUNNER_TEMP/coros_sync.log"
+          fetched=$(grep -oE 'fetched [0-9]+ new FIT' "$RUNNER_TEMP/coros_sync.log" \
+            | tail -n1 | grep -oE '[0-9]+' || true)
+          echo "fetched=${fetched:-unknown}" >> "$GITHUB_OUTPUT"
         # COROS allows 50 FIT downloads per day; stop at 45 and let the next
         # run pick up anything left over.
 
+      - name: Check whether anything new arrived
+        id: change
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          fetched="${{ steps.sync.outputs.fetched }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ -z "$fetched" ] || [ "$fetched" != "0" ]; then
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "no new activities (0 FIT) — skipping the rebuild and deploy"
+            echo "rebuild=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Regenerate SVG charts
+        if: steps.change.outputs.rebuild == 'true'
         run: |
           python run_page/gen_svg.py --from-db --title "${{ env.TITLE }}" --type github --github-style "align-firstday" --athlete "${{ env.ATHLETE }}" --special-distance 10 --special-distance2 20 --special-color yellow --special-color2 red --output assets/github.svg --use-localtime --min-distance 0.5
           python run_page/gen_svg.py --from-db --title "${{ env.TITLE_GRID }}" --type grid --athlete "${{ env.ATHLETE }}" --output assets/grid.svg --special-color yellow --special-color2 red --special-distance 20 --special-distance2 40 --use-localtime --min-distance "${{ env.MIN_GRID_DISTANCE }}"
@@ -76,43 +117,60 @@ jobs:
           python run_page/gen_svg.py --from-db --year $(date +"%Y") --language zh_CN --title "$(date +"%Y") Running" --type github --github-style "align-firstday" --athlete "${{ env.ATHLETE }}" --special-distance 10 --special-distance2 20 --special-color yellow --special-color2 red --output "assets/github_$(date +"%Y").svg" --use-localtime --min-distance 0.5
 
       - name: Set up Node.js for 3D baking
+        if: steps.change.outputs.rebuild == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: Enable pnpm for 3D baking
+        if: steps.change.outputs.rebuild == 'true'
         run: npm install -g corepack@latest && corepack enable pnpm
 
       - name: Install Node dependencies
+        if: steps.change.outputs.rebuild == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Bake 3D terrain for new activities
+        if: steps.change.outputs.rebuild == 'true'
         run: node scripts/bake-scenes.mjs --since "$(date -u -d '7 days ago' +%F)" --limit 30
 
       - name: Export parquet snapshot
+        if: steps.change.outputs.rebuild == 'true'
         run: |
           pip install duckdb
           python run_page/save_to_parqent.py
 
       - name: Update README stats
+        if: steps.change.outputs.rebuild == 'true'
         run: python run_page/update_readme_stats.py --sport running
 
       - name: Commit new runs
+        id: commit
+        if: steps.change.outputs.rebuild == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
           if git diff --cached --quiet; then
             echo "nothing to commit"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git commit -m "chore: sync runs $(date -u +%Y-%m-%dT%H:%MZ)"
           git pull --rebase origin master
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
 
   deploy:
     name: Build and deploy page
     needs: sync
+    # Publish only when the data commit changed something, or when a human
+    # pushed UI/code (the bot's own commit is already covered by that push's
+    # deploy job, so it must not rebuild the page a second time).
+    if: |
+      needs.sync.outputs.changed == 'true' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && !startsWith(github.event.head_commit.message, 'chore: sync runs'))
     runs-on: ubuntu-latest
     environment:
       name: github-pages
