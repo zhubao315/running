@@ -5,7 +5,7 @@ import {
   CHINESE_LOCATION_INFO_MESSAGE_SECOND,
   RUN_TITLES,
 } from '@/utils/const';
-import { formatPace } from '@/utils/utils';
+import { Activity, convertMovingTime2Sec, formatPace } from '@/utils/utils';
 import styles from './style.module.css';
 
 interface IJourneyStatsProps {
@@ -14,6 +14,32 @@ interface IJourneyStatsProps {
 }
 
 const PREVIEW_CITIES = 8;
+
+interface RecordRow {
+  label: string;
+  value: string;
+  date: string;
+}
+
+interface Records {
+  pbRows: RecordRow[];
+  prRows: RecordRow[];
+}
+
+const fmtDuration = (seconds: number): string => {
+  const s = Math.round(seconds);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  return [h, m, s % 60].map((n) => String(n).padStart(2, '0')).join(':');
+};
+
+// 最快时间：用单次跑步的平均配速推算（Strava 口径），跑量不足该距离则不计。
+const FAST_DISTANCES = [
+  { label: '5 公里', meters: 5000 },
+  { label: '10 公里', meters: 10000 },
+  { label: RUN_TITLES.HALF_MARATHON_RUN_TITLE, meters: 21097.5 },
+  { label: RUN_TITLES.FULL_MARATHON_RUN_TITLE, meters: 42195 },
+];
 
 // 一天里的顺序：清晨 → 午间 → 午后 → 傍晚 → 夜晚；alpha 越小颜色越暗。
 const DAY_SEGMENTS = [
@@ -64,6 +90,65 @@ const JourneyStats = ({ changeCity, changeTitle }: IJourneyStatsProps) => {
     count: runPeriod[title] || 0,
   })).filter((p) => p.count > 0);
   const periodTotal = periods.reduce((sum, p) => sum + p.count, 0);
+
+  // 个人最佳 / 最快时间：全部由历史数据实时推算，缺失不计、绝不补零。
+  const records = useMemo<Records>(() => {
+    const empty: Records = { pbRows: [], prRows: [] };
+    const runs = (activities as Activity[]).filter(
+      (a) => a.type === 'Run' && a.distance > 0 && a.average_speed > 0
+    );
+    if (!runs.length) return empty;
+
+    const dateOf = (a: Activity) => a.start_date_local.slice(0, 10);
+
+    const far = runs.reduce((a, b) => (b.distance > a.distance ? b : a));
+    const longest = runs.reduce((a, b) =>
+      convertMovingTime2Sec(b.moving_time) > convertMovingTime2Sec(a.moving_time)
+        ? b
+        : a
+    );
+    const fastest = runs.reduce((a, b) =>
+      b.average_speed > a.average_speed ? b : a
+    );
+
+    const pbRows: RecordRow[] = [
+      {
+        label: '最远距离',
+        value: `${(far.distance / 1000).toFixed(2)} km`,
+        date: dateOf(far),
+      },
+      {
+        label: '最长时间',
+        value: fmtDuration(convertMovingTime2Sec(longest.moving_time)),
+        date: dateOf(longest),
+      },
+      {
+        label: '最快速度',
+        value: `${(fastest.average_speed * 3.6).toFixed(2)} km/h`,
+        date: dateOf(fastest),
+      },
+      {
+        label: '最快配速',
+        value: formatPace(fastest.average_speed),
+        date: dateOf(fastest),
+      },
+    ];
+
+    const prRows: RecordRow[] = FAST_DISTANCES.map(({ label, meters }) => {
+      const cands = runs.filter((a) => a.distance >= meters);
+      if (!cands.length) return null;
+      const best = cands.reduce((a, b) =>
+        meters / b.average_speed < meters / a.average_speed ? b : a
+      );
+      return {
+        label,
+        value: fmtDuration(meters / best.average_speed),
+        date: dateOf(best),
+      };
+    }).filter((r): r is RecordRow => r !== null);
+
+    return { pbRows, prRows };
+  }, [activities]);
 
   const races = [
     {
@@ -263,6 +348,43 @@ const JourneyStats = ({ changeCity, changeTitle }: IJourneyStatsProps) => {
           </div>
         </div>
       </div>
+
+      {records.pbRows.length ? (
+        <div className={styles.records}>
+          <div className={styles.recordCard}>
+            <div className={styles.panelHead}>
+              <span className={styles.panelTitle}>个人最佳</span>
+              <span className={styles.panelHint}>历史之最</span>
+            </div>
+            <div className={styles.recordList}>
+              {records.pbRows.map((r) => (
+                <div key={r.label} className={styles.recordRow}>
+                  <span className={styles.recordLabel}>{r.label}</span>
+                  <span className={styles.recordValue}>{r.value}</span>
+                  <span className={styles.recordDate}>{r.date}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          {records.prRows.length ? (
+            <div className={styles.recordCard}>
+              <div className={styles.panelHead}>
+                <span className={styles.panelTitle}>最快时间</span>
+                <span className={styles.panelHint}>按平均配速推算</span>
+              </div>
+              <div className={styles.recordList}>
+                {records.prRows.map((r) => (
+                  <div key={r.label} className={styles.recordRow}>
+                    <span className={styles.recordLabel}>{r.label}</span>
+                    <span className={styles.recordValue}>{r.value}</span>
+                    <span className={styles.recordDate}>{r.date}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </section>
   );
 };

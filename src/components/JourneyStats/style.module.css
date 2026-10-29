@@ -363,6 +363,63 @@ button.geoCell:hover {
   text-transform: uppercase;
 }
 
+/* --- records: personal bests & fastest times --- */
+
+.records {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  margin-top: 1.4rem;
+}
+
+.recordCard {
+  padding: 0.85rem 0.95rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--bg-soft) 60%, transparent);
+}
+
+.recordList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.recordRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  column-gap: 0.7rem;
+  padding: 0.24rem 0.4rem;
+  border-radius: 6px;
+  transition: background-color 140ms ease;
+}
+
+.recordRow:hover {
+  background: var(--card-hover);
+}
+
+.recordLabel {
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.recordValue {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--accent);
+}
+
+.recordDate {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
 @media (max-width: 960px) {
   .body {
     grid-template-columns: 1fr;
@@ -376,6 +433,10 @@ button.geoCell:hover {
 
   .homeCell {
     grid-column: span 2;
+  }
+
+  .records {
+    grid-template-columns: 1fr;
   }
 
   .cityRow {
