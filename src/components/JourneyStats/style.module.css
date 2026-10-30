@@ -16,22 +16,6 @@
   color: var(--accent);
 }
 
-.quote {
-  margin: 0.6rem 0 0;
-  font-size: 1.02rem;
-  line-height: 1.75;
-  color: var(--text);
-}
-
-.quoteEn {
-  display: block;
-  margin-top: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-}
-
 /* --- geography KPI row --- */
 
 .geoGrid {

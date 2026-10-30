@@ -1,10 +1,6 @@
 import { useMemo, useState } from 'react';
 import useActivities from '@/hooks/useActivities';
-import {
-  CHINESE_LOCATION_INFO_MESSAGE_FIRST,
-  CHINESE_LOCATION_INFO_MESSAGE_SECOND,
-  RUN_TITLES,
-} from '@/utils/const';
+import { RUN_TITLES } from '@/utils/const';
 import { Activity, convertMovingTime2Sec, formatPace } from '@/utils/utils';
 import styles from './style.module.css';
 
@@ -178,12 +174,6 @@ const JourneyStats = ({ changeCity, changeTitle }: IJourneyStatsProps) => {
   return (
     <section className={styles.journey} aria-label="Total Journey">
       <p className={styles.kicker}>Total Journey</p>
-      <p className={styles.quote}>
-        {CHINESE_LOCATION_INFO_MESSAGE_FIRST}
-        <br />
-        {CHINESE_LOCATION_INFO_MESSAGE_SECOND}
-        <span className={styles.quoteEn}> — Yesterday you said tomorrow.</span>
-      </p>
 
       <div className={styles.geoGrid}>
         <div className={styles.geoCell}>
