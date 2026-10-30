@@ -325,7 +325,86 @@ Deployment:
 - Live URL: <https://zhubao315.github.io/running/>.
 - Live HTML serves `activities-78e7240e.js`, matching the post-deletion build.
 
-## 9. Known limitations
+## 9. Second-round homepage optimization (2026-10-30)
+
+### 9.1 Module order
+
+The rendered order is now:
+
+1. `01 Running Profile / 个人跑步档案`
+2. `02 Core Metrics / 核心数据`
+3. `03 Yearly Trend / 年度趋势`
+4. `04 Total Journey / 跑步旅程`
+5. `05 Activity Explorer / 地图与全部记录`
+6. `06 Running Calendar / 跑步日历`
+
+`RunningDashboard` no longer renders the calendar; the calendar and day detail
+were moved to the last section in `src/pages/index.tsx`. `JourneyStats`
+(Total Journey) was moved before Activity Explorer.
+
+### 9.2 Total Journey bilingual labels
+
+- Geographic Footprint / 城市足迹
+- Running Rhythm / 跑步节律
+- Personal Bests / 个人最佳
+- Fastest Times / 最快时间
+- Half Marathon / 半程马拉松
+- Full Marathon / 全程马拉松
+- Average Pace / 平均配速
+- Longest Streak / 最长连续跑步
+
+### 9.3 Personal Bests
+
+Each record is now a button carrying the source `run_id`, label, value, date,
+distance, duration, pace and heart rate. Clicking a record opens an inline
+detail card with real activity fields and a map action that calls the existing
+`selectRun(run_id)` without changing Activity Explorer filters.
+
+Records:
+
+- Longest Distance
+- Longest Time (suspicious long/slow runs excluded)
+- Fastest Speed
+- Fastest Pace
+
+### 9.4 Fastest Times
+
+Buttons: `5K`, `10K`, `Half Marathon`, `Full Marathon`. Clicking a distance
+filters single activities whose distance is at least that distance, estimates
+`targetDistance / average_speed`, and sorts ascending. The first result is
+highlighted. Clicking a result opens the same detail card.
+
+Estimate note shown in the detail card:
+“基于单次历史活动的平均配速估算，仅用于个人训练表现参考，不代表官方比赛成绩。”
+
+No cross-activity distance accumulation is used.
+
+### 9.5 Activity Explorer linkage
+
+- Record clicks set only `selectedRunId`; they do not reset year/month/date
+  or quick filters.
+- Map and 3D terrain reuse the existing components.
+- Returning from a detail keeps the previous list state.
+
+### 9.6 Running Calendar
+
+The calendar remains the last module. Existing capabilities are unchanged:
+year navigation, daily km colour levels, multiple-run dots, day detail,
+activity selection and map linkage.
+
+### 9.7 Data audit
+
+No historical data was changed for this round. The previous deletion of the
+single 2013 record remains the only data change.
+
+### 9.8 Build
+
+- `node_modules/.bin/tsc --noEmit`: pass
+- `PATH_PREFIX=/running pnpm build`: pass
+- Desktop/mobile interaction checks: pass
+- Console: only the existing two non-fatal MapLibre warnings
+
+## 10. Known limitations
 
 1. Elevation gain is absent from every record and from the DB schema. The
    dashboard does not show cumulative climb; it says so in the data notes.

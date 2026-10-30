@@ -42,7 +42,7 @@ const RunCalendar = ({
 
   return (
     <section className={styles.section} aria-labelledby="calendar-title">
-      <SectionHeader index="04" kicker="RUNNING CALENDAR" title="跑步日历">
+      <SectionHeader index="06" kicker="RUNNING CALENDAR" title="跑步日历">
         <div className={styles.yearNav}>
           <button
             type="button"

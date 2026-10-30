@@ -2,10 +2,7 @@ import { useMemo } from 'react';
 import Profile from './Profile';
 import CoreMetrics from './CoreMetrics';
 import YearTrend from './YearTrend';
-import RunCalendar from './RunCalendar';
-import DayDetail from './DayDetail';
 import {
-  buildCalendar,
   buildYearSeries,
   computeTotals,
   formatDateCN,
@@ -25,12 +22,9 @@ interface IRunningDashboardProps {
   scope: RunScope;
   filterNote: string | null;
   selectedMetric: MetricKey;
-  selectedRunId: number | null;
   onSelectYear: (_year: string) => void;
   onSelectMonth: (_year: number, _month: number) => void;
-  onSelectDate: (_date: string) => void;
   onSelectMetric: (_metric: MetricKey) => void;
-  onSelectRun: (_runId: number | null) => void;
   onClearScope: () => void;
 }
 
@@ -41,12 +35,9 @@ const RunningDashboard = ({
   scope,
   filterNote,
   selectedMetric,
-  selectedRunId,
   onSelectYear,
   onSelectMonth,
-  onSelectDate,
   onSelectMetric,
-  onSelectRun,
   onClearScope,
 }: IRunningDashboardProps) => {
   const careerTotals = useMemo(() => computeTotals(runs), [runs]);
@@ -55,33 +46,6 @@ const RunningDashboard = ({
     () => buildYearSeries(baseRuns),
     [baseRuns]
   );
-  const latestYear = yearSeries.length
-    ? yearSeries[yearSeries.length - 1].year
-    : new Date().getFullYear();
-
-  const calendarYear = scope.date
-    ? Number(scope.date.slice(0, 4))
-    : scope.month
-      ? Number(scope.year)
-      : scope.year !== 'all'
-        ? Number(scope.year)
-        : latestYear;
-
-  const calendar = useMemo(
-    () => buildCalendar(baseRuns, calendarYear),
-    [baseRuns, calendarYear]
-  );
-
-  const dayRuns = useMemo(
-    () =>
-      scope.date
-        ? scopeRuns.filter((run) => run.date === scope.date)
-        : [],
-    [scopeRuns, scope.date]
-  );
-
-  const minYear = yearSeries.length ? yearSeries[0].year : calendarYear;
-  const maxYear = latestYear;
   const filtering =
     scope.year !== 'all' ||
     scope.month !== null ||
@@ -193,27 +157,6 @@ const RunningDashboard = ({
         onSelectYear={onSelectYear}
       />
 
-      <RunCalendar
-        calendar={calendar}
-        selectedMonth={scope.month}
-        selectedDate={scope.date}
-        minYear={minYear}
-        maxYear={maxYear}
-        onSelectMonth={onSelectMonth}
-        onSelectDate={onSelectDate}
-        onSelectYear={onSelectYear}
-      />
-
-      {scope.date && dayRuns.length ? (
-        <DayDetail
-          date={scope.date}
-          runs={dayRuns}
-          selectedRunId={selectedRunId}
-          onSelectRun={onSelectRun}
-          onClose={() => onSelectDate(scope.date as string)}
-        />
-      ) : null}
-
       <details className={styles.dataNotes}>
         <summary>数据说明</summary>
         <p>
@@ -231,7 +174,7 @@ const RunningDashboard = ({
                 (careerTotals.hrCount / careerTotals.count) * 100
               )
             : 0}
-          %，2022 年起），心率均值只代表有心率的样本，不代表 2013–2021
+          %，2022 年起），心率均值只代表有心率的样本，不代表 2015–2021
           年。另有 {suspiciousLongRuns} 条时长超过 4 小时且均速低于 6
           km/h 的疑似忘关表记录，保留在总量中、未做删改，解读配速与时长时需留意。
         </p>

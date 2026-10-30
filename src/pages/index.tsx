@@ -7,6 +7,8 @@ import RunMap from '@/components/RunMap';
 import RunTable from '@/components/RunTable';
 import TerrainCard from '@/components/TerrainCard';
 import RunningDashboard from '@/components/RunningDashboard';
+import DayDetail from '@/components/RunningDashboard/DayDetail';
+import RunCalendar from '@/components/RunningDashboard/RunCalendar';
 import SectionHeader from '@/components/RunningDashboard/SectionHeader';
 import useActivities from '@/hooks/useActivities';
 import { sceneHashOf } from '@/vert/scenes';
@@ -20,7 +22,9 @@ import {
   titleForShow,
 } from '@/utils/utils';
 import {
+  buildCalendar,
   buildDataset,
+  buildYearSeries,
   computeTotals,
   filterRunsByScope,
   formatDistanceKm,
@@ -217,6 +221,31 @@ const Index = () => {
     )} km`;
   }, [selectedRun, filterNote, scope, scopeRuns, scopeTotals.distanceKm]);
 
+  const yearSeries = useMemo(() => buildYearSeries(baseRuns), [baseRuns]);
+  const latestYear = yearSeries.length
+    ? yearSeries[yearSeries.length - 1].year
+    : new Date().getFullYear();
+  const calendarYear = selectedDate
+    ? Number(selectedDate.slice(0, 4))
+    : selectedMonth
+      ? Number(selectedYear)
+      : selectedYear !== 'all'
+        ? Number(selectedYear)
+        : latestYear;
+  const calendar = useMemo(
+    () => buildCalendar(baseRuns, calendarYear),
+    [baseRuns, calendarYear]
+  );
+  const dayRuns = useMemo(
+    () =>
+      selectedDate
+        ? scopeRuns.filter((run) => run.date === selectedDate)
+        : [],
+    [scopeRuns, selectedDate]
+  );
+  const minYear = yearSeries.length ? yearSeries[0].year : calendarYear;
+  const maxYear = latestYear;
+
   return (
     <Layout>
       <RunningDashboard
@@ -226,14 +255,19 @@ const Index = () => {
         scope={scope}
         filterNote={filterNote}
         selectedMetric={selectedMetric}
-        selectedRunId={selectedRunId}
         onSelectYear={selectYear}
         onSelectMonth={selectMonth}
-        onSelectDate={selectDate}
         onSelectMetric={setSelectedMetric}
-        onSelectRun={selectRun}
         onClearScope={clearScope}
       />
+
+      <section id="journey" className={styles.section}>
+        <JourneyStats
+          changeCity={(city) => selectQuickFilter('city', city)}
+          changeTitle={(title) => selectQuickFilter('title', title)}
+          onViewRun={selectRun}
+        />
+      </section>
 
       <section id="explore" className={styles.section}>
         <SectionHeader
@@ -273,10 +307,29 @@ const Index = () => {
         </div>
       </section>
 
-      <JourneyStats
-        changeCity={(city) => selectQuickFilter('city', city)}
-        changeTitle={(title) => selectQuickFilter('title', title)}
-      />
+      <section id="calendar" className={styles.section}>
+        <div className="card p-4 lg:p-6">
+          <RunCalendar
+            calendar={calendar}
+            selectedMonth={selectedMonth}
+            selectedDate={selectedDate}
+            minYear={minYear}
+            maxYear={maxYear}
+            onSelectMonth={selectMonth}
+            onSelectDate={selectDate}
+            onSelectYear={selectYear}
+          />
+          {selectedDate && dayRuns.length ? (
+            <DayDetail
+              date={selectedDate}
+              runs={dayRuns}
+              selectedRunId={selectedRunId}
+              onSelectRun={selectRun}
+              onClose={() => selectDate(selectedDate)}
+            />
+          ) : null}
+        </div>
+      </section>
 
       {/* Enable Audiences in Vercel Analytics: https://vercel.com/docs/concepts/analytics/audiences/quickstart */}
       {import.meta.env.VERCEL && <Analytics />}
