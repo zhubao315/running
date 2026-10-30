@@ -12,10 +12,10 @@ running total.
 
 | Source | Role | Result |
 | --- | --- | --- |
-| `src/static/activities.json` | Runtime data used by the page | 2,049 records, all `type: "Run"` |
-| `run_page/data.db` | Audit source of truth | 2,049 `Run` rows |
+| `src/static/activities.json` | Runtime data used by the page | 2,048 records, all `type: "Run"` |
+| `run_page/data.db` | Audit source of truth | 2,048 `Run` rows |
 | `src/static/activities.json` vs DB | Key/date/distance comparison | 0 missing IDs, 0 distance diffs, 0 date diffs |
-| `docs/running-monthly-2013-2026.csv` | Monthly breakdown | 134 months with at least one run |
+| `docs/running-monthly-2013-2026.csv` | Monthly breakdown | 133 months with at least one run |
 
 The runtime JSON is the source for every number on the page. The DB confirms
 that the JSON is complete. No record was edited, deleted, resampled or
@@ -25,17 +25,17 @@ zero-filled for this rebuild.
 
 | Metric | Value |
 | --- | --- |
-| Runs | **2,049** |
-| Distance | **24,759.43 km** (displayed as 24,759.4 km) |
-| Moving time | **8,405,478 s = 2,334 h 51 m** |
+| Runs | **2,048** |
+| Distance | **24,753.67 km** (displayed as 24,753.7 km) |
+| Moving time | **8,403,342 s = 2,334 h 16 m** |
 | Weighted pace | **5.6581 min/km = 5'39"/km** |
-| First run | **2013-04-09** |
+| First run | **2015-10-06** |
 | Latest run | **2026-10-30** (2026 is partial) |
-| Active running days | **1,827** |
+| Active running days | **1,826** |
 | Days with 2+ runs | **176** (maximum 4 runs in one day) |
 | Longest streak | **15 days**, ending **2020-03-06** |
 | Current streak | **1 day** (2026-10-30) |
-| Average distance per run | **12.08 km** |
+| Average distance per run | **12.09 km** |
 | Average moving time per run | **1 h 08 m** |
 
 ### 1.3 Year by year
@@ -44,8 +44,6 @@ zero-filled for this rebuild.
 
 | Year | Runs | km | Hours | Weighted pace | Active days | HR records / mean |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 2013 | 1 | 5.8 | 0.6 | 6'11" | 1 | 0 / — |
-| 2014 | 0 | — | — | — | — | — |
 | 2015 | 59 | 526.9 | 56.4 | 6'25" | 40 | 0 / — |
 | 2016 | 216 | 2,151.6 | 216.8 | 6'03" | 177 | 0 / — |
 | 2017 | 243 | 2,521.6 | 224.2 | 5'20" | 190 | 0 / — |
@@ -63,22 +61,22 @@ Notes:
 
 - 2017 has one record with `average_heartrate = 0`. It is treated as missing,
   so the year shows 0 valid HR records rather than a 0 bpm average.
-- The annual chart spans 2013–2026 inclusive. 2014 is kept as an explicit
-  empty year so the timeline does not hide a gap.
+- The annual chart now spans 2015–2026 inclusive. The only 2013 record was
+  deleted at the user's request, so 2013–2014 no longer appear.
 - 2026 ends on 2026-10-30; it is not a full-year comparison.
 
 ### 1.4 Field completeness
 
 | Field | Present | Missing | Handling |
 | --- | ---: | ---: | --- |
-| `run_id` | 2,049 | 0 | Primary key; 0 duplicates |
-| `distance` | 2,049 | 0 | 0 zero-distance rows |
-| `moving_time` | 2,049 | 0 | 0 zero-duration rows |
-| Date | 2,049 | 0 | Invalid dates would be dropped, none found |
+| `run_id` | 2,048 | 0 | Primary key; 0 duplicates |
+| `distance` | 2,048 | 0 | 0 zero-distance rows |
+| `moving_time` | 2,048 | 0 | 0 zero-duration rows |
+| Date | 2,048 | 0 | Invalid dates would be dropped, none found |
 | `average_heartrate` | 629 valid (+1 zero) | 1,420 | Mean uses values `> 0`; missing shows `—` |
-| `location_country` | 1,731 | 318 | Missing location is not guessed |
-| `summary_polyline` | 1,829 | 220 | Runs without a polyline stay out of map lines |
-| Elevation gain | 0 | 2,049 | No elevation column exists; climb is not shown |
+| `location_country` | 1,731 | 317 | Missing location is not guessed |
+| `summary_polyline` | 1,829 | 219 | Runs without a polyline stay out of map lines |
+| Elevation gain | 0 | 2,048 | No elevation column exists; climb is not shown |
 
 Additional checks:
 
@@ -88,9 +86,9 @@ Additional checks:
   (78.76 h, 250.4 km). These look like watches left running, but they are
   retained because the source cannot prove an error. Excluding them would
   change the career pace to 5'31"/km; the page keeps the unmodified 5'39"/km.
-- Heart-rate coverage is 629 / 2,049 = **30.7%**, mean **147.29 bpm**.
+- Heart-rate coverage is 629 / 2,048 = **30.7%**, mean **147.29 bpm**.
   Valid HR starts in 2022. The mean describes that sample only and is not
-  comparable with 2013–2021.
+  comparable with 2015–2021.
 
 ## 2. Metric definitions
 
@@ -143,9 +141,9 @@ Problems:
 ### After
 
 ```
-A  Profile                 identity, 2013—2026, 2,049 runs, 3 countries / 15 provinces / 28 cities
+A  Profile                 identity, 2015—2026, 2,048 runs, 3 countries / 15 provinces / 28 cities
 B  Core metrics            distance, moving time, weighted pace, run count (scope-aware)
-C  Annual trend            2013–2026 bars/line for distance, count, time, pace
+C  Annual trend            2015–2026 bars/line for distance, count, time, pace
 D  Running calendar        12 month blocks, daily km colour, day detail
 E  Activity explorer       map + 3D terrain + sortable/paginated table
 F  Career archive          JourneyStats (cities, time of day, PBs)
@@ -254,22 +252,22 @@ Interaction rules:
 | `PATH_PREFIX=/running pnpm build` | Pass, 8.43 s |
 | Build output | `dist/index.html` plus hashed JS/CSS assets |
 | Build warning | Only the existing chunk-size warning |
-| Data consistency | 2,049 JSON = 2,049 DB; 0 ID/date/distance diffs |
+| Data consistency | 2,048 JSON = 2,048 DB; 0 ID/date/distance diffs |
 | Zero/duplicate rows | 0 zero distance, 0 zero time, 0 duplicate IDs |
 
 ### Browser interactions (Playwright, desktop 1440)
 
 | Scenario | Expected | Result |
 | --- | --- | --- |
-| Initial load | 24,759.4 km, 2,049 runs, all history | Pass |
+| Initial load | 24,753.7 km, 2,048 runs, all history | Pass |
 | Year 2025 | 2,173.6 km, 148 runs, 6'10"/km, calendar follows | Pass |
 | October 2025 | 215.6 km, 14 runs, 8'33"/km | Pass |
 | 2025-10-05 | 23.89 km, day detail and map title | Pass |
 | Select day run | Map title changes, scope stays on the day | Pass |
 | Clear | Career totals and all-history scope restored | Pass |
-| Pace view | Line + 13 active-year dots, no zero bars | Pass |
+| Pace view | Line + 12 active-year dots, no zero bars | Pass |
 | Count view | 13 bars + 1 explicit empty-year marker | Pass |
-| Table pagination | 80 / 2,049 → 160 / 2,049 | Pass |
+| Table pagination | 80 / 2,048 → 160 / 2,048 | Pass |
 | KM sort | 42.24 km marathon first | Pass |
 | City filter 东城区 | Breadcrumb, core metrics and map title update | Pass |
 | Clear after city filter | Career totals restored | Pass |
@@ -336,6 +334,7 @@ Deployment:
 3. 2026 is partial (through 2026-10-30).
 4. 14 long/slow records are retained as recorded. They affect total time and
    pace; the page documents them instead of silently deleting them.
-5. 318 records have no location and 220 have no polyline. They still count
+5. 317 records have no location and 219 have no polyline. They still count
    toward totals; they simply do not appear as map lines or city shortcuts.
-6. The 2014 gap is real (no records), not a rendering bug.
+6. There are no 2013–2014 records after the requested deletion; the first run
+   is now 2015-10-06.
