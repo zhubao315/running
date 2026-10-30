@@ -66,29 +66,27 @@
 .profile {
   position: relative;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: clamp(1.4rem, 4vw, 3rem);
   padding: 0.4rem 0 clamp(1.4rem, 3vw, 2rem);
   border-bottom: 1px solid var(--border);
 }
 
-.profileAccent {
-  position: absolute;
-  left: 0;
-  top: 0.9rem;
-  width: 2px;
-  height: 3.2rem;
-  background: var(--accent);
-  border-radius: 1px;
-}
-
 .profileIdentity {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: clamp(0.9rem, 2vw, 1.35rem);
-  padding-left: 1rem;
   min-width: 0;
+}
+
+.profileYear {
+  margin: 0.35rem 0 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 1.3vw, 0.82rem);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
 }
 
 .avatar {
@@ -1080,7 +1078,7 @@ button.day:hover {
 
 @media (max-width: 560px) {
   .profileIdentity {
-    padding-left: 0.8rem;
+    padding-left: 0;
   }
 
   .metricValue {

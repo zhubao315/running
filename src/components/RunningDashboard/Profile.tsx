@@ -28,14 +28,13 @@ const Profile = ({ runs }: IProfileProps) => {
   return (
     <section className={styles.profile} aria-labelledby="profile-title">
       <SectionHeader index="01" kicker="RUNNING PROFILE" title="个人跑步档案" />
-      <div className={styles.profileAccent} aria-hidden="true" />
       <div className={styles.profileIdentity}>
         <img className={styles.avatar} src={meta.logo} alt="" />
         <div className={styles.profileText}>
-          <p className={styles.eyebrow}>RUNNING PROFILE · {span}</p>
           <h1 id="profile-title" className={styles.profileTitle}>
             {meta.siteTitle}
           </h1>
+          {span ? <p className={styles.profileYear}>{span}</p> : null}
           {meta.tagline ? (
             <p className={styles.tagline}>{meta.tagline}</p>
           ) : null}
