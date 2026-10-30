@@ -317,13 +317,13 @@ so the `/running/` base path is preserved.
 
 Deployment:
 
-- Pushed commit `e2b04b3` to `master` on 2026-10-30.
-- CI run `41009877522`: `success`.
-- COROS Sync run `41009877670`: `success`; jobs
+- Data deletion and dashboard refresh pushed as commit `f5d022c` on
+  2026-10-30.
+- CI run `41011696421`: `success`.
+- COROS Sync run `41011696431`: `success`; jobs
   `Sync COROS data` and `Build and deploy page` both `success`.
 - Live URL: <https://zhubao315.github.io/running/>.
-- Live HTML serves the same hashed assets as the local build:
-  `index-6203be4e.js` and `index-2296203e.css`.
+- Live HTML serves `activities-78e7240e.js`, matching the post-deletion build.
 
 ## 9. Known limitations
 
