@@ -6,14 +6,12 @@ import {
   PROVINCE_FILL_COLOR,
   COUNTRY_FILL_COLOR,
   USE_DASH_LINE,
-  LINE_OPACITY,
-  MAP_HEIGHT,
 } from '@/utils/const';
 import { Coordinate, IViewState, geoJsonForMap } from '@/utils/utils';
 import RunMarker from './RunMarker';
-import RunMapButtons from './RunMapButtons';
 import styles from './style.module.css';
 import { FeatureCollection } from 'geojson';
+import { FilterSpecification } from 'maplibre-gl';
 import { RPGeometry } from '@/static/run_countries';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -21,29 +19,31 @@ interface IRunMapProps {
   title: string;
   viewState: IViewState;
   setViewState: (_viewState: IViewState) => void;
-  changeYear: (_year: string) => void;
   geoData: FeatureCollection<RPGeometry>;
-  thisYear: string;
 }
 
 const RunMap = ({
   title,
   viewState,
   setViewState,
-  changeYear,
   geoData,
-  thisYear,
 }: IRunMapProps) => {
   const { countries, provinces } = useActivities();
-  const mapRef = useRef<MapRef>();
+  const mapRef = useRef<MapRef | null>(null);
   const mapRefCallback = useCallback((ref: MapRef) => {
     if (ref) mapRef.current = ref;
   }, []);
-  const filterProvinces = provinces.slice();
-  const filterCountries = countries.slice();
   // for geojson format
-  filterProvinces.unshift('in', 'name');
-  filterCountries.unshift('in', 'name');
+  const filterProvinces = [
+    'in',
+    'name',
+    ...provinces,
+  ] as unknown as FilterSpecification;
+  const filterCountries = [
+    'in',
+    'name',
+    ...countries,
+  ] as unknown as FilterSpecification;
 
   const initGeoDataLength = geoData.features.length;
   const isBigMap = (viewState.zoom ?? 0) <= 3;
@@ -69,13 +69,14 @@ const RunMap = ({
     [startLon, startLat] = points[0];
     [endLon, endLat] = points[points.length - 1];
   }
-  let dash = USE_DASH_LINE && !isSingleRun && !isBigMap ? [2, 2] : [2, 0];
+  const dash =
+    USE_DASH_LINE && !isSingleRun && !isBigMap ? [2, 2] : undefined;
   const onMove = React.useCallback(({ viewState }: { viewState: IViewState }) => {
     setViewState(viewState);
   }, []);
   const style: React.CSSProperties = {
     width: '100%',
-    height: MAP_HEIGHT,
+    height: 'clamp(360px, 48vw, 600px)',
   };
   const fullscreenButton: React.CSSProperties = {
     position: 'absolute',
@@ -104,7 +105,6 @@ const RunMap = ({
       mapStyle="https://tiles.openfreemap.org/styles/positron"
       ref={mapRefCallback}
     >
-      <RunMapButtons changeYear={changeYear} thisYear={thisYear} />
       <Source id="data" type="geojson" data={geoData}>
         <Layer
           id="province"
@@ -130,7 +130,7 @@ const RunMap = ({
           paint={{
             'line-color':  ['get', 'color'],
             'line-width': isBigMap ? 2 : 3,
-            'line-dasharray': dash,
+            ...(dash ? { 'line-dasharray': dash } : {}),
             'line-opacity': isSingleRun || isBigMap ? 1 : 0.85,
             'line-blur': 0.3,
           }}

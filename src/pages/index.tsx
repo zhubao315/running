@@ -1,192 +1,200 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
+import type { FeatureCollection, LineString } from 'geojson';
 import Layout from '@/components/Layout';
 import JourneyStats from '@/components/JourneyStats';
-import LocationStat from '@/components/LocationStat';
 import RunMap from '@/components/RunMap';
 import RunTable from '@/components/RunTable';
 import TerrainCard from '@/components/TerrainCard';
-import SiteHero from '@/components/SiteHero';
-import SVGStat from '@/components/SVGStat';
-import YearsStat from '@/components/YearsStat';
+import RunningDashboard from '@/components/RunningDashboard';
+import SectionHeader from '@/components/RunningDashboard/SectionHeader';
 import useActivities from '@/hooks/useActivities';
 import { sceneHashOf } from '@/vert/scenes';
-import { IS_CHINESE } from '@/utils/const';
 import {
-  Activity,
   IViewState,
-  filterAndSortRuns,
   filterCityRuns,
   filterTitleRuns,
-  filterYearRuns,
   geoJsonForRuns,
   getBoundsForGeoData,
   scrollToMap,
-  sortDateFunc,
   titleForShow,
-  RunIds,
 } from '@/utils/utils';
+import {
+  buildDataset,
+  computeTotals,
+  filterRunsByScope,
+  formatDistanceKm,
+  formatNumber,
+  scopeLabel,
+  type MetricKey,
+  type RunScope,
+} from '@/utils/runningStats';
+import styles from '@/components/RunningDashboard/style.module.css';
+
+type QuickFilter = {
+  kind: 'city' | 'title';
+  value: string;
+} | null;
 
 const Index = () => {
-  const { activities, thisYear } = useActivities();
-  const [year, setYear] = useState(thisYear);
-  const [runs, setActivity] = useState(() =>
-    filterAndSortRuns(activities, year, filterYearRuns, sortDateFunc)
-  );
-  // Default to the most recent activity that has a baked 3D scene.
-  const [runIndex, setRunIndex] = useState(() => {
-    const index = runs.findIndex((run) => sceneHashOf(run.run_id));
-    return index >= 0 ? index : runs.length ? 0 : -1;
-  });
-  const [title, setTitle] = useState(() =>
-    runIndex >= 0 ? titleForShow(runs[runIndex]) : ''
-  );
+  const { activities } = useActivities();
+  const { runs } = useMemo(() => buildDataset(activities), [activities]);
+
+  const [selectedYear, setSelectedYear] = useState('all');
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedMetric, setSelectedMetric] =
+    useState<MetricKey>('distance');
+  const [selectedRunId, setSelectedRunId] = useState<number | null>(null);
+  const [quickFilter, setQuickFilter] = useState<QuickFilter>(null);
   const scrollOnSelect = useRef(false);
-  const [geoData, setGeoData] = useState(geoJsonForRuns(runs));
-  // for auto zoom
-  const bounds = getBoundsForGeoData(geoData);
-  const [intervalId, setIntervalId] = useState<number>();
 
-  const [viewState, setViewState] = useState<IViewState>({
-    ...bounds,
-  });
+  const scope: RunScope = useMemo(
+    () => ({
+      year: selectedYear,
+      month: selectedMonth,
+      date: selectedDate,
+    }),
+    [selectedYear, selectedMonth, selectedDate]
+  );
 
-  const changeByItem = (
-    item: string,
-    name: string,
-    func: (_run: Activity, _value: string) => boolean
-  ) => {
-    scrollToMap();
-    if (name != 'Year') {
-      setYear(thisYear);
-    }
-    const nextRuns = filterAndSortRuns(activities, item, func, sortDateFunc);
-    setActivity(nextRuns);
-    const sceneIndex = nextRuns.findIndex((run) => sceneHashOf(run.run_id));
-    setRunIndex(sceneIndex >= 0 ? sceneIndex : nextRuns.length ? 0 : -1);
-    setTitle(`${item} ${name} Running Heatmap`);
-  };
+  const filterNote = quickFilter
+    ? `${quickFilter.kind === 'city' ? '城市' : '类型'} · ${
+        quickFilter.value
+      }`
+    : null;
 
-  const changeYear = (y: string) => {
-    // default year
-    setYear(y);
+  // City / run-type shortcuts narrow the whole dashboard, not just the table.
+  const baseRuns = useMemo(() => {
+    if (!quickFilter) return runs;
+    const predicate =
+      quickFilter.kind === 'city' ? filterCityRuns : filterTitleRuns;
+    return runs.filter((run) => predicate(run, quickFilter.value));
+  }, [runs, quickFilter]);
 
-    if ((viewState.zoom ?? 0) > 3 && bounds) {
-      setViewState({
-        ...bounds,
-      });
-    }
+  const scopeRuns = useMemo(
+    () => filterRunsByScope(baseRuns, scope),
+    [baseRuns, scope]
+  );
 
-    changeByItem(y, 'Year', filterYearRuns);
-    clearInterval(intervalId);
-  };
+  const scopeTotals = useMemo(() => computeTotals(scopeRuns), [scopeRuns]);
+  const selectedRun =
+    selectedRunId === null
+      ? undefined
+      : runs.find((run) => run.run_id === selectedRunId);
 
-  const changeCity = (city: string) => {
-    changeByItem(city, 'City', filterCityRuns);
-  };
+  const mapRuns = useMemo(
+    () => (selectedRun ? [selectedRun] : scopeRuns),
+    [selectedRun, scopeRuns]
+  );
 
-  const changeTitle = (title: string) => {
-    changeByItem(title, 'Title', filterTitleRuns);
-  };
+  const fullGeoData = useMemo(() => geoJsonForRuns(mapRuns), [mapRuns]);
+  const [geoData, setGeoData] = useState<FeatureCollection<LineString>>(
+    () => fullGeoData
+  );
 
-  const locateActivity = (runIds: RunIds) => {
-    scrollOnSelect.current = true;
-    const ids = new Set(runIds);
+  const bounds = useMemo(
+    () => getBoundsForGeoData(fullGeoData),
+    [fullGeoData]
+  );
+  const [viewState, setViewState] = useState<IViewState>({ ...bounds });
 
-    const selectedRuns = !runIds.length
-      ? runs
-      : runs.filter((r: any) => ids.has(r.run_id));
+  useEffect(() => {
+    setViewState({ ...bounds });
+  }, [bounds]);
 
-    if (!selectedRuns.length) {
+  // Draw large scopes in a few frames so MapLibre never blocks the main thread
+  // on a single 2,000-polyline mutation.
+  useEffect(() => {
+    const features = fullGeoData.features;
+    if (features.length <= 240 || selectedRun) {
+      setGeoData(fullGeoData);
       return;
     }
 
-    const lastRun = selectedRuns.sort(sortDateFunc)[0];
-
-    if (!lastRun) {
-      return;
-    }
-    setGeoData(geoJsonForRuns(selectedRuns));
-    setTitle(titleForShow(lastRun));
-    clearInterval(intervalId);
-    scrollToMap();
-  };
-
-  useEffect(() => {
-    setViewState({
-      ...bounds,
-    });
-  }, [geoData]);
-
-  useEffect(() => {
-    const runsNum = runs.length;
-    // maybe change 20 ?
-    const sliceNume = runsNum >= 20 ? runsNum / 20 : 1;
-    let i = sliceNume;
-    const id = setInterval(() => {
-      if (i >= runsNum) {
-        clearInterval(id);
+    const step = Math.max(1, Math.ceil(features.length / 18));
+    let count = step;
+    setGeoData({ ...fullGeoData, features: features.slice(0, count) });
+    const timer = window.setInterval(() => {
+      count += step;
+      if (count >= features.length) {
+        setGeoData(fullGeoData);
+        window.clearInterval(timer);
+      } else {
+        setGeoData({
+          ...fullGeoData,
+          features: features.slice(0, count),
+        });
       }
+    }, 70);
 
-      const tempRuns = runs.slice(0, i);
-      setGeoData(geoJsonForRuns(tempRuns));
-      i += sliceNume;
-    }, 100);
-    setIntervalId(id);
-  }, [runs]);
+    return () => window.clearInterval(timer);
+  }, [fullGeoData, selectedRun]);
 
-  useEffect(() => {
-    if (year !== 'Total') {
-      return;
-    }
+  const clearScope = useCallback(() => {
+    setSelectedYear('all');
+    setSelectedMonth(null);
+    setSelectedDate(null);
+    setSelectedRunId(null);
+    setQuickFilter(null);
+  }, []);
 
-    let svgStat = document.getElementById('svgStat');
-    if (!svgStat) {
-      return;
-    }
+  const selectYear = useCallback((year: string) => {
+    setSelectedYear(year);
+    setSelectedMonth(null);
+    setSelectedDate(null);
+    setSelectedRunId(null);
+    setQuickFilter(null);
+  }, []);
 
-    const handleClick = (e: Event) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName.toLowerCase() === 'path') {
-        // Use querySelector to get the <desc> element and the <title> element.
-        const descEl = target.querySelector('desc');
-        if (descEl) {
-          // If the runId exists in the <desc> element, it means that a running route has been clicked.
-          const runId = Number(descEl.innerHTML);
-          if (!runId) {
-            return;
-          }
-          locateActivity([runId]);
-          return;
-        }
+  const selectMonth = useCallback((year: number, month: number) => {
+    setSelectedYear(String(year));
+    setSelectedMonth(month);
+    setSelectedDate(null);
+    setSelectedRunId(null);
+    setQuickFilter(null);
+  }, []);
 
-        const titleEl = target.querySelector('title');
-        if (titleEl) {
-          // If the runDate exists in the <title> element, it means that a date square has been clicked.
-          const [runDate] = titleEl.innerHTML.match(
-            /\d{4}-\d{1,2}-\d{1,2}/
-          ) || [`${+thisYear + 1}`];
-          const runIDsOnDate = runs
-            .filter((r) => r.start_date_local.slice(0, 10) === runDate)
-            .map((r) => r.run_id);
-          if (!runIDsOnDate.length) {
-            return;
-          }
-          locateActivity(runIDsOnDate);
-        }
+  const selectDate = useCallback(
+    (date: string) => {
+      if (selectedDate === date) {
+        setSelectedDate(null);
+        setSelectedRunId(null);
+        return;
       }
-    };
-    svgStat.addEventListener('click', handleClick);
-    return () => {
-      svgStat && svgStat.removeEventListener('click', handleClick);
-    };
-  }, [year]);
+      setSelectedYear(date.slice(0, 4));
+      setSelectedMonth(Number(date.slice(5, 7)));
+      setSelectedDate(date);
+      setSelectedRunId(null);
+      setQuickFilter(null);
+    },
+    [selectedDate]
+  );
 
-  const selectedRun = runIndex >= 0 ? runs[runIndex] : undefined;
+  const selectRun = useCallback((runId: number | null) => {
+    setSelectedRunId(runId);
+    if (runId !== null) {
+      scrollOnSelect.current = true;
+      scrollToMap();
+    }
+  }, []);
+
+  const selectQuickFilter = useCallback(
+    (kind: 'city' | 'title', value: string) => {
+      setQuickFilter({ kind, value });
+      setSelectedYear('all');
+      setSelectedMonth(null);
+      setSelectedDate(null);
+      setSelectedRunId(null);
+      scrollToMap();
+    },
+    []
+  );
+
   const terrainRef = useRef<HTMLDivElement>(null);
 
-  // A run with a baked scene opens the 3D card below the map; bring it into view once the map's
-  // own scroll (in locateActivity) has landed.
+  // A run with a baked scene opens the 3D card below the map; bring it into
+  // view once the map's own scroll has landed.
   useEffect(() => {
     if (!scrollOnSelect.current) return;
     scrollOnSelect.current = false;
@@ -196,59 +204,80 @@ const Index = () => {
         behavior: 'smooth',
         block: 'start',
       });
-    }, 150);
+    }, 260);
     return () => window.clearTimeout(timer);
   }, [selectedRun?.run_id]);
 
+  const mapTitle = useMemo(() => {
+    if (selectedRun) return titleForShow(selectedRun);
+    const label = filterNote ?? scopeLabel(scope);
+    if (!scopeRuns.length) return `${label} · 无记录`;
+    return `${label} · ${formatNumber(scopeRuns.length)} 次 · ${formatDistanceKm(
+      scopeTotals.distanceKm
+    )} km`;
+  }, [selectedRun, filterNote, scope, scopeRuns, scopeTotals.distanceKm]);
+
   return (
     <Layout>
-      <SiteHero />
-      <JourneyStats changeCity={changeCity} changeTitle={changeTitle} />
-      <div id="explore" className="mt-8 flex flex-col gap-8 lg:flex-row">
-        <aside className="w-full lg:w-1/3">
-          <div className="card p-6 lg:sticky lg:top-24">
-            {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
-              <LocationStat
-                changeYear={changeYear}
-                changeCity={changeCity}
-                changeTitle={changeTitle}
-              />
-            ) : (
-              <YearsStat year={year} onClick={changeYear} />
-            )}
-          </div>
-        </aside>
-        <div className="w-full space-y-6 lg:w-2/3">
+      <RunningDashboard
+        runs={runs}
+        baseRuns={baseRuns}
+        scopeRuns={scopeRuns}
+        scope={scope}
+        filterNote={filterNote}
+        selectedMetric={selectedMetric}
+        selectedRunId={selectedRunId}
+        onSelectYear={selectYear}
+        onSelectMonth={selectMonth}
+        onSelectDate={selectDate}
+        onSelectMetric={setSelectedMetric}
+        onSelectRun={selectRun}
+        onClearScope={clearScope}
+      />
+
+      <section id="explore" className={styles.section}>
+        <SectionHeader
+          index="05"
+          kicker="ACTIVITY EXPLORER"
+          title="地图与全部记录"
+        >
+          <span className={styles.scopePill}>
+            {filterNote ?? scopeLabel(scope)}
+          </span>
+        </SectionHeader>
+
+        <div className="space-y-4">
           <div className="card overflow-hidden">
             <RunMap
-              title={title}
+              title={mapTitle}
               viewState={viewState}
               geoData={geoData}
               setViewState={setViewState}
-              changeYear={changeYear}
-              thisYear={year}
             />
           </div>
-          <div ref={terrainRef} className="scroll-mt-4">
+
+          <div ref={terrainRef} className="scroll-mt-20">
             {selectedRun ? (
-              <TerrainCard run={selectedRun} onClose={() => setRunIndex(-1)} />
+              <TerrainCard run={selectedRun} onClose={() => selectRun(null)} />
             ) : null}
           </div>
+
           <div className="card p-4 lg:p-6">
-            {year === 'Total' ? (
-              <SVGStat />
-            ) : (
-              <RunTable
-                runs={runs}
-                locateActivity={locateActivity}
-                setActivity={setActivity}
-                runIndex={runIndex}
-                setRunIndex={setRunIndex}
-              />
-            )}
+            <RunTable
+              runs={scopeRuns}
+              selectedRunId={selectedRunId}
+              onSelectRun={selectRun}
+              onClearScope={clearScope}
+            />
           </div>
         </div>
-      </div>
+      </section>
+
+      <JourneyStats
+        changeCity={(city) => selectQuickFilter('city', city)}
+        changeTitle={(title) => selectQuickFilter('title', title)}
+      />
+
       {/* Enable Audiences in Vercel Analytics: https://vercel.com/docs/concepts/analytics/audiences/quickstart */}
       {import.meta.env.VERCEL && <Analytics />}
     </Layout>

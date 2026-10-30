@@ -1,13 +1,17 @@
 import { locationForRun, titleForRun } from '@/utils/utils';
-import activities from '@/static/activities.json';
+import activitiesJson from '@/static/activities.json';
+import type { Activity } from '@/utils/utils';
 
-const useActivities = () => {
+const activities = (activitiesJson as Activity[]).filter(
+  (run) => /^run$/i.test(run.type || '')
+);
+
+const build = () => {
   const cities: Record<string, number> = {};
   const runPeriod: Record<string, number> = {};
   const provinces: Set<string> = new Set();
   const countries: Set<string> = new Set();
-  let years: Set<string> = new Set();
-  let thisYear = '';
+  const years: Set<string> = new Set();
 
   activities.forEach((run) => {
     const location = locationForRun(run);
@@ -26,12 +30,11 @@ const useActivities = () => {
     }
     if (province) provinces.add(province);
     if (country) countries.add(country);
-    const year = run.start_date_local.slice(0, 4);
-    years.add(year);
+    years.add(run.start_date_local.slice(0, 4));
   });
 
-  let yearsArray = [...years].sort().reverse();
-  if (years) [thisYear] = yearsArray; // set current year as first one of years array
+  const yearsArray = [...years].sort().reverse();
+  const thisYear = yearsArray[0] ?? '';
 
   return {
     activities,
@@ -43,5 +46,11 @@ const useActivities = () => {
     thisYear,
   };
 };
+
+// The activity file is static for the lifetime of the bundle, so aggregate once
+// instead of rebuilding every map/journey render.
+const cache = build();
+
+const useActivities = () => cache;
 
 export default useActivities;

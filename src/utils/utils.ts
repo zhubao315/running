@@ -42,10 +42,11 @@ const titleForShow = (run: Activity): string => {
 };
 
 const formatPace = (d: number): string => {
-  if (Number.isNaN(d)) return '0';
+  if (!Number.isFinite(d) || d <= 0) return '—';
   const pace = (1000.0 / 60.0) * (1.0 / d);
-  const minutes = Math.floor(pace);
-  const seconds = Math.floor((pace - minutes) * 60.0);
+  const totalSeconds = Math.round(pace * 60);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
   return `${minutes}'${seconds.toFixed(0).toString().padStart(2, '0')}"`;
 };
 
@@ -74,11 +75,9 @@ const formatRunTime = (moving_time: string): string => {
 
 // for scroll to the map
 const scrollToMap = () => {
-  const el = document.querySelector('.fl.w-100.w-70-l');
-  const rect = el?.getBoundingClientRect();
-  if (rect) {
-    window.scroll(rect.left + window.scrollX, rect.top + window.scrollY);
-  }
+  const el = document.getElementById('explore');
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 };
 
 const extractCities = (str: string): string[] => {
@@ -212,26 +211,34 @@ const pathForRun = (run: Activity): Coordinate[] => {
 
 const geoJsonForRuns = (runs: Activity[]): FeatureCollection<LineString> => ({
   type: 'FeatureCollection',
-  features: runs.map((run) => {
+  features: runs.flatMap((run) => {
     const points = pathForRun(run);
+    // A LineString needs at least two points. Runs without a polyline stay in
+    // the table and the totals, but cannot contribute a line to the map.
+    if (points.length < 2) return [];
 
-    return {
-      type: 'Feature',
-      properties: {
-        color: MAP_LINE_COLOR,
+    return [
+      {
+        type: 'Feature' as const,
+        properties: {
+          color: MAP_LINE_COLOR,
+        },
+        geometry: {
+          type: 'LineString' as const,
+          coordinates: points,
+        },
       },
-      geometry: {
-        type: 'LineString',
-        coordinates: points,
-      },
-    };
+    ];
   }),
 });
 
-const geoJsonForMap = (): FeatureCollection<RPGeometry> => ({
-  type: 'FeatureCollection',
-  features: worldGeoJson.features.concat(chinaGeojson.features),
-})
+const geoJsonForMap = (): FeatureCollection<RPGeometry> => {
+  const world = worldGeoJson as unknown as FeatureCollection<RPGeometry>;
+  return {
+    type: 'FeatureCollection',
+    features: world.features.concat(chinaGeojson.features),
+  };
+};
 
 const getActivitySport = (act: Activity): string => {
   if (act.type === 'Run') {
@@ -271,7 +278,7 @@ const titleForRun = (run: Activity): string => {
       return run.name;
     }
     // 2. try to use location+type if the location is available, eg. 'Shanghai Run'
-    const { city, province } = locationForRun(run);
+    const { city } = locationForRun(run);
     const activity_sport = getActivitySport(run);
     if (city && city.length > 0 && activity_sport.length > 0) {
       return `${city} ${activity_sport}`;

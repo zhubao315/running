@@ -40,11 +40,11 @@
 }
 
 .runTitle {
-  max-width: min(710px, 60vw);
+  max-width: min(710px, calc(100% - 100px));
   position: absolute;
-  bottom: 8px;
-  left: 120px;
-  cursor: pointer;
+  bottom: 10px;
+  left: 12px;
+  cursor: default;
   color: #f8fafc;
   background: rgba(15, 23, 42, 0.78);
   border-radius: 6px;
