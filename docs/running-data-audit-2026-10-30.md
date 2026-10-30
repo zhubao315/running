@@ -315,8 +315,17 @@ The Pages workflow (`.github/workflows/gh-pages.yml`) and the deploy job in
 PATH_PREFIX=/${{ github.event.repository.name }} pnpm build
 ```
 
-so the `/running/` base path is preserved. Deployment result is recorded after
-the push to `master`; the live URL is <https://zhubao315.github.io/running/>.
+so the `/running/` base path is preserved.
+
+Deployment:
+
+- Pushed commit `e2b04b3` to `master` on 2026-10-30.
+- CI run `41009877522`: `success`.
+- COROS Sync run `41009877670`: `success`; jobs
+  `Sync COROS data` and `Build and deploy page` both `success`.
+- Live URL: <https://zhubao315.github.io/running/>.
+- Live HTML serves the same hashed assets as the local build:
+  `index-6203be4e.js` and `index-2296203e.css`.
 
 ## 9. Known limitations
 
