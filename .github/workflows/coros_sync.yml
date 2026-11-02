@@ -108,6 +108,17 @@ jobs:
             echo "rebuild=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # Remove running records that are the same physical activity as a hike.
+      # The watch files hikes as a running sport type, so without this step the
+      # same session is counted both here and on the hiking site. The manifest
+      # lists the confirmed pairs and the script re-verifies start time and
+      # distance before deleting, refusing anything that no longer matches.
+      # It must run BEFORE the SVG charts, README stats and parquet export so
+      # those artefacts are derived from the cleaned dataset.
+      - name: Exclude hiking duplicates
+        if: steps.change.outputs.rebuild == 'true'
+        run: python run_page/exclude_hiking_dupes_rh.py --execute
+
       - name: Regenerate SVG charts
         if: steps.change.outputs.rebuild == 'true'
         run: |

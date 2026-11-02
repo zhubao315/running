@@ -12,31 +12,36 @@ running total.
 
 | Source | Role | Result |
 | --- | --- | --- |
-| `src/static/activities.json` | Runtime data used by the page | 2,048 records, all `type: "Run"` |
-| `run_page/data.db` | Audit source of truth | 2,048 `Run` rows |
+| `src/static/activities.json` | Runtime data used by the page | 2,034 records, all `type: "Run"` |
+| `run_page/data.db` | Audit source of truth | 2,034 `Run` rows |
 | `src/static/activities.json` vs DB | Key/date/distance comparison | 0 missing IDs, 0 distance diffs, 0 date diffs |
-| `docs/running-monthly-2013-2026.csv` | Monthly breakdown | 133 months with at least one run |
+| `docs/running-monthly-2013-2026.csv` | Monthly breakdown | 134 months with at least one run |
+| `run_page/hiking_duplicates.json` | Confirmed hiking pairs | 15 records removed on 2026-11-02 (see §11) |
 
 The runtime JSON is the source for every number on the page. The DB confirms
-that the JSON is complete. No record was edited, deleted, resampled or
-zero-filled for this rebuild.
+that the JSON is complete. No record was edited, resampled or zero-filled for
+this rebuild.
+
+The only deletion in this dataset is the 15 hiking activities removed on
+2026-11-02, documented in §11. Fifteen records were subtracted; nothing was
+rewritten in place.
 
 ### 1.2 Career totals
 
 | Metric | Value |
 | --- | --- |
-| Runs | **2,048** |
-| Distance | **24,753.67 km** (displayed as 24,753.7 km) |
-| Moving time | **8,403,342 s = 2,334 h 16 m** |
-| Weighted pace | **5.6581 min/km = 5'39"/km** |
+| Runs | **2,034** |
+| Distance | **24,499.83 km** (displayed as 24,499.8 km) |
+| Moving time | **8,134,885 s = 2,259 h 41 m 25 s** (page rounds to `2,259 h 41 m`) |
+| Weighted pace | **5.5340 min/km = 5'32"/km** |
 | First run | **2015-10-06** |
-| Latest run | **2026-10-30** (2026 is partial) |
-| Active running days | **1,826** |
+| Latest run | **2026-11-02** (2026 is partial) |
+| Active running days | **1,812** |
 | Days with 2+ runs | **176** (maximum 4 runs in one day) |
 | Longest streak | **15 days**, ending **2020-03-06** |
-| Current streak | **1 day** (2026-10-30) |
-| Average distance per run | **12.09 km** |
-| Average moving time per run | **1 h 08 m** |
+| Current streak | **1 day** (2026-11-02) |
+| Average distance per run | **12.05 km** |
+| Average moving time per run | **1 h 06 m 39 s** (page rounds to `1 h 07 m`) |
 
 ### 1.3 Year by year
 
@@ -53,9 +58,9 @@ zero-filled for this rebuild.
 | 2021 | 162 | 2,077.1 | 188.3 | 5'26" | 160 | 0 / — |
 | 2022 | 160 | 2,247.7 | 199.9 | 5'20" | 144 | 82 / 147 |
 | 2023 | 138 | 2,051.7 | 185.6 | 5'26" | 132 | 137 / 144 |
-| 2024 | 148 | 2,143.4 | 211.5 | 5'55" | 144 | 144 / 145 |
-| 2025 | 148 | 2,173.6 | 223.2 | 6'10" | 145 | 145 / 152 |
-| 2026 | 121 | 1,811.6 | 195.1 | 6'28" | 119 | 121 / 149 |
+| 2024 | 145 | 2,088.8 | 198.4 | 5'42" | 141 | 141 / 145 |
+| 2025 | 142 | 2,065.0 | 192.8 | 5'36" | 139 | 139 / 153 |
+| 2026 | 116 | 1,721.0 | 164.1 | 5'43" | 114 | 116 / 151 |
 
 Notes:
 
@@ -63,30 +68,30 @@ Notes:
   so the year shows 0 valid HR records rather than a 0 bpm average.
 - The annual chart now spans 2015–2026 inclusive. The only 2013 record was
   deleted at the user's request, so 2013–2014 no longer appear.
-- 2026 ends on 2026-10-30; it is not a full-year comparison.
+- 2026 ends on 2026-11-02; it is not a full-year comparison.
 
 ### 1.4 Field completeness
 
 | Field | Present | Missing | Handling |
 | --- | ---: | ---: | --- |
-| `run_id` | 2,048 | 0 | Primary key; 0 duplicates |
-| `distance` | 2,048 | 0 | 0 zero-distance rows |
-| `moving_time` | 2,048 | 0 | 0 zero-duration rows |
-| Date | 2,048 | 0 | Invalid dates would be dropped, none found |
-| `average_heartrate` | 629 valid (+1 zero) | 1,420 | Mean uses values `> 0`; missing shows `—` |
-| `location_country` | 1,731 | 317 | Missing location is not guessed |
-| `summary_polyline` | 1,829 | 219 | Runs without a polyline stay out of map lines |
-| Elevation gain | 0 | 2,048 | No elevation column exists; climb is not shown |
+| `run_id` | 2,034 | 0 | Primary key; 0 duplicates |
+| `distance` | 2,034 | 0 | 0 zero-distance rows |
+| `moving_time` | 2,034 | 0 | 0 zero-duration rows |
+| Date | 2,034 | 0 | Invalid dates would be dropped, none found |
+| `average_heartrate` | 615 valid (+1 zero) | 1,419 | Mean uses values `> 0`; missing shows `—` |
+| `location_country` | 1,732 | 302 | Missing location is not guessed |
+| `summary_polyline` | 1,814 | 220 | Runs without a polyline stay out of map lines |
+| Elevation gain | 0 | 2,034 | No elevation column exists; climb is not shown |
 
 Additional checks:
 
 - 0 duplicate `run_id`s; 0 duplicate/near-duplicate activities found.
 - 0 zero-distance and 0 zero-duration rows.
-- 14 runs are longer than 4 hours and slower than 6 km/h
-  (78.76 h, 250.4 km). These look like watches left running, but they are
+- 4 runs are longer than 4 hours and slower than 6 km/h
+  (20.83 h, 57.1 km). These look like watches left running, but they are
   retained because the source cannot prove an error. Excluding them would
-  change the career pace to 5'31"/km; the page keeps the unmodified 5'39"/km.
-- Heart-rate coverage is 629 / 2,048 = **30.7%**, mean **147.29 bpm**.
+  change the career pace to 5'30"/km; the page keeps the unmodified 5'32"/km.
+- Heart-rate coverage is 615 / 2,034 = **30.2%**, mean **148.03 bpm**.
   Valid HR starts in 2022. The mean describes that sample only and is not
   comparable with 2015–2021.
 
@@ -141,7 +146,7 @@ Problems:
 ### After
 
 ```
-A  Profile                 identity, 2015—2026, 2,048 runs, 3 countries / 15 provinces / 28 cities
+A  Profile                 identity, 2015—2026, 2,034 runs, 3 countries / 15 provinces / 28 cities
 B  Core metrics            distance, moving time, weighted pace, run count (scope-aware)
 C  Annual trend            2015–2026 bars/line for distance, count, time, pace
 D  Running calendar        12 month blocks, daily km colour, day detail
@@ -252,26 +257,28 @@ Interaction rules:
 | `PATH_PREFIX=/running pnpm build` | Pass, 8.43 s |
 | Build output | `dist/index.html` plus hashed JS/CSS assets |
 | Build warning | Only the existing chunk-size warning |
-| Data consistency | 2,048 JSON = 2,048 DB; 0 ID/date/distance diffs |
+| Data consistency | 2,034 JSON = 2,034 DB; 0 ID/date/distance diffs |
 | Zero/duplicate rows | 0 zero distance, 0 zero time, 0 duplicate IDs |
 
 ### Browser interactions (Playwright, desktop 1440)
 
 | Scenario | Expected | Result |
 | --- | --- | --- |
-| Initial load | 24,753.7 km, 2,048 runs, all history | Pass |
-| Year 2025 | 2,173.6 km, 148 runs, 6'10"/km, calendar follows | Pass |
-| October 2025 | 215.6 km, 14 runs, 8'33"/km | Pass |
+| Initial load | opens on the newest year by design: 2026, 1,721.0 km, 116 runs | Pass |
+| `全部历史` | 24,499.8 km, 2,034 runs, 1,812 running days | Pass |
+| Year 2025 | 2,065.0 km, 142 runs, 5'36"/km, calendar follows | Pass |
+| October 2025 | 169.2 km, 11 runs, 5'36"/km | Pass |
 | 2025-10-05 | 23.89 km, day detail and map title | Pass |
 | Select day run | Map title changes, scope stays on the day | Pass |
 | Clear | Career totals and all-history scope restored | Pass |
-| Pace view | Line + 12 active-year dots, no zero bars | Pass |
-| Count view | 13 bars + 1 explicit empty-year marker | Pass |
-| Table pagination | 80 / 2,048 → 160 / 2,048 | Pass |
-| KM sort | 42.24 km marathon first | Pass |
-| City filter 东城区 | Breadcrumb, core metrics and map title update | Pass |
+| Pace view | Line + 12 dots, one per year 2015–2026 | Pass |
+| Count view | 12 bars, every year has runs (no empty-year marker) | Pass |
+| Table pagination | 80 / 2,034 → 160 / 2,034 | Pass |
+| KM sort | descending first click: 42.24 km marathon first | Pass |
+| City filter 东城区 | Breadcrumb, 13,584.9 km / 977 runs, map follows | Pass |
 | Clear after city filter | Career totals restored | Pass |
 | Horizontal overflow | 1,440 = 1,440 | Pass |
+| The 15 removed dates | absent from trend, table and calendar (calendar cells read `无记录`) | Pass |
 
 ### Browser interactions (mobile 390 / 320)
 
@@ -281,8 +288,8 @@ Interaction rules:
 | Core metric grid | 2×2 |
 | Calendar | 2 columns |
 | Day selection + day detail | Pass |
-| Table columns | 活动 / KM / Date; 24 rows initially |
-| Table overflow | None at 320 (238 px container) and 390 (308 px) |
+| Table columns | 活动 / KM / Date only (Pace, BPM, Time hidden); 24 rows initially |
+| Table overflow | None at 320 and 390; table width = container width (308 px at 390) |
 | Console errors | 0 |
 
 ### Console notes
@@ -393,8 +400,12 @@ activity selection and map linkage.
 
 ### 9.7 Data audit
 
-No historical data was changed for this round. The previous deletion of the
-single 2013 record remains the only data change.
+No historical record was rewritten in this round. Two deletions exist in the
+dataset:
+
+- the single 2013 record, removed earlier at the user's request;
+- the 15 hiking activities removed on 2026-11-02 (§11), which were the same
+  physical sessions already counted on the hiking site.
 
 ### 9.8 Build
 
@@ -407,12 +418,165 @@ single 2013 record remains the only data change.
 
 1. Elevation gain is absent from every record and from the DB schema. The
    dashboard does not show cumulative climb; it says so in the data notes.
-2. Heart rate is only 30.7% covered and effectively starts in 2022. No
+2. Heart rate is only 30.2% covered and effectively starts in 2022. No
    pre-2022 comparison is implied.
-3. 2026 is partial (through 2026-10-30).
-4. 14 long/slow records are retained as recorded. They affect total time and
+3. 2026 is partial (through 2026-11-02).
+4. 4 long/slow records are retained as recorded. They affect total time and
    pace; the page documents them instead of silently deleting them.
-5. 317 records have no location and 219 have no polyline. They still count
+5. 302 records have no location and 220 have no polyline. They still count
    toward totals; they simply do not appear as map lines or city shortcuts.
 6. There are no 2013–2014 records after the requested deletion; the first run
    is now 2015-10-06.
+
+## 11. Hiking duplicates removed (2026-11-02)
+
+### 11.1 Why
+
+The watch records every hike under a running sport type. The COROS sync puts
+those sessions into the running dataset, and they are also counted on the
+hiking site (<https://zhubao315.github.io/hiking/>). The same physical activity
+was therefore counted twice across the two sites: once as a run, once as a hike.
+
+The overlap is visible in the running data as a block of “runs” with hiking
+characteristics: 4–8 h duration, 2.5–3.5 km/h, low heart rate (102–142 bpm) and
+the generic name `跑步`. Speed alone is not a usable filter — 67 rows are slower
+than 1.6 m/s, but only 15 of them match a real hike.
+
+### 11.2 How the match was made
+
+`run_id` values are **not** shared between the two repositories (running 2,048
+ids, hiking 344 ids, zero overlap), and the activity name is not a
+discriminator. The join key is therefore the activity itself:
+
+- same local start time within 180 s, **and**
+- same distance within `max(50 m, 2 %)`.
+
+Both conditions must hold. All 15 pairs matched at Δ0 s and Δ0.0 m, which makes
+the match exact rather than heuristic.
+
+### 11.3 The 15 records
+
+| Removed `run_id` | Date / start | km | Moving time | Pace | Hiking twin (`run_id`) |
+| --- | --- | ---: | ---: | ---: | --- |
+| 383426480 | 2024-02-13 08:58:49 | 12.15 | 3:02:19 | 15'00" | 1707785929000 |
+| 385984433 | 2024-04-13 08:17:47 | 22.67 | 6:26:26 | 17'03" | 1712967467000 |
+| 395010627 | 2024-10-01 10:51:48 | 19.79 | 3:41:02 | 11'10" | 1727751108000 |
+| 404282962 | 2025-05-01 07:41:19 | 14.42 | 3:44:52 | 15'35" | 1746056479000 |
+| 404464163 | 2025-05-05 07:58:25 | 18.67 | 5:09:14 | 16'34" | 1746403105000 |
+| 405836792 | 2025-05-31 07:01:55 | 29.15 | 6:34:32 | 13'32" | 1748646115000 |
+| 412034121 | 2025-10-01 09:07:44 | 15.31 | 4:05:13 | 16'01" | 1759280864000 |
+| 412076331 | 2025-10-02 08:11:26 | 9.15 | 4:01:28 | 26'24" | 1759363886000 |
+| 412282188 | 2025-10-07 08:27:16 | 21.92 | 6:48:31 | 18'38" | 1759796836000 |
+| 417664312 | 2026-02-19 09:19:01 | 11.49 | 3:40:13 | 19'10" | 1771463941000 |
+| 419695159 | 2026-04-12 09:58:40 | 17.90 | 5:00:51 | 16'48" | 1775959120000 |
+| 420521938 | 2026-05-01 08:13:47 | 25.06 | 6:58:16 | 16'41" | 1777594427000 |
+| 426752284 | 2026-09-27 08:44:34 | 17.35 | 4:40:42 | 16'11" | 1790469874000 |
+| 426909702 | 2026-10-01 11:05:20 | 15.83 | 3:41:40 | 14'00" | 1790823920000 |
+| 427008053 | 2026-10-03 09:15:47 | 16.12 | 8:10:31 | 30'26" | 1790990147000 |
+
+Total removed: **266.99 km**, **272,750 s (75.76 h)**.
+
+None of the 15 carried `location_country`, which is why the geographic
+footprint (3 countries / 15 provinces / 28 cities) is unchanged. All 15 carried
+a polyline and a heart-rate average; that is why map lines drop by exactly 15
+(1,828 → 1,813 at exclusion time; 1,814 after the 2026-11-02 run) and valid HR
+records drop by 15 (629 → 614; 615 after that run).
+
+### 11.4 Mechanism
+
+Deletion is data-level and repeatable, not a one-off edit:
+
+| File | Role |
+| --- | --- |
+| `run_page/hiking_duplicates.json` | Checked-in manifest of the 15 confirmed pairs, each carrying the hiking twin id and both sides' start time, distance and moving time |
+| `run_page/exclude_hiking_dupes_rh.py` | Removes manifest-listed ids from `activities.json` and `data.db`; dry run by default, `--execute` to write |
+
+Guards before a record is deleted:
+
+- the id must be on the manifest;
+- the record's `start_date_local` must match the manifest within
+  `--start-tolerance` (default 180 s);
+- the record's distance must match within
+  `max(--min-distance 50 m, --distance-tolerance 2 %)`;
+- a moving-time difference is reported but not fatal, because the DB stores
+  it as `HH:MM:SS` while the JSON stores it as `H:MM:SS`;
+- any mismatch is **refused** and reported, and the script exits non-zero.
+
+Because the step runs on every sync, a re-downloaded FIT file cannot silently
+reintroduce a record: the sync rebuilds the data from the watch and DB, and this
+step removes the 15 ids again in the same run. Re-running it against already
+cleaned data is a no-op (`15 absent`, exit 0).
+
+### 11.5 Before / after (exclusion delta only)
+
+| Metric | Before | After the 15 removals |
+| --- | ---: | ---: |
+| Runs | 2,048 | **2,033** |
+| Distance | 24,753.67 km | **24,486.69 km** |
+| Moving time | 8,403,342 s (2,334 h 15 m) | **8,130,592 s (2,258 h 29 m)** |
+| Weighted pace | 5'39"/km | **5'32"/km** |
+| Active days | 1,826 | **1,811** |
+| Valid HR / mean | 629 / 147.29 | **614 / 148.00** |
+| Polyline coverage | 1,828 | **1,813** |
+| Runs >4 h and <6 km/h | 14 | **4** |
+| 2024 | 148 runs, 2,143.4 km | **145, 2,088.8 km** |
+| 2025 | 148 runs, 2,173.6 km | **142, 2,065.0 km** |
+| 2026 | 121 runs, 1,811.6 km | **115, 1,707.8 km** |
+
+2015–2023 are unchanged: no hiking pair falls in those years.
+
+### 11.6 Derived artefacts refreshed
+
+- `assets/github.svg` — 2,047 → 2,032 tracks, 24,758.9 → 24,499.3 km. The
+  long-stale empty `2013` row is gone from the heatmap, so the poster height
+  drops from 614 mm to 571 mm.
+- `assets/grid.svg` — 102 → 98 tracks (20 km+), 2,353.3 → 2,254.5 km.
+- `assets/github_2026.svg` — 120 → 115 tracks, 1,811.4 → 1,720.8 km.
+- `assets/year_*.svg` — regenerated; 2024–2026 changed content, 2015–2023
+  changed only `idN` numbering.
+- `README.md` stats row — `2,034 次跑步 | 24,500 km | — | 2015–2026 | 2026-11-02`.
+- `docs/running-monthly-2013-2026.csv` — 10 affected month rows patched in
+  place (CRLF preserved). Three pre-existing generator rounding artefacts
+  (`2020-07 5'00" → 4'60"`, `2021-07 14.25 → 14.24`, `2022-07 153.7 → 153.6`)
+  were left untouched because they are unrelated to this change.
+
+### 11.7 Verification
+
+| Check | Result |
+| --- | --- |
+| Dry run against the manifest | 15/15 matched, 0 refused |
+| Negative test (corrupted distance + start time) | 2 entries refused, exit non-zero |
+| `--execute` | JSON and DB both 2,048 → 2,033 (2,034 after the 11-02 run); 0 leftover ids |
+| Idempotent second run | `15 absent`, 0 removed, exit 0 |
+| JSON still parses | OK; compact `ensure_ascii=False` round-trip byte-identical |
+| DB total = JSON total | 2,034 = 2,034, km 24,499.83 = 24,499.83 |
+
+### 11.8 Residual risk
+
+- The manifest is a curated allowlist. A **new** hike recorded by the watch will
+  appear in the running dataset until someone adds it. Detection is manual:
+  look for runs of 4 h+ at under 4 km/h and check the hiking site for a session
+  at the same time. The 15 known pairs are handled automatically.
+- If a record's start time or distance is later corrected upstream by more than
+  the tolerance, the script refuses to delete it and fails the workflow loudly
+  instead of deleting the wrong row. That is intentional.
+
+### 11.9 Same-day COROS sync
+
+The scheduled sync ran at 2026-11-02 05:52 UTC and committed `b6da296`. As
+expected, it re-imported the 15 hikes from their tracked FIT files, and it also
+brought one genuine new run (2026-11-02 06:22, 13.14 km, 1 h 11 m, HR 167,
+东城区). The exclusion step was re-applied on top of that commit, so the shipped
+dataset is:
+
+| Metric | Shipped value |
+| --- | ---: |
+| Runs | **2,034** |
+| Distance | **24,499.83 km** |
+| Moving time | **8,134,885 s (2,259 h 41 m)** |
+| Active days | **1,812** |
+| 2026 | 116 runs, 1,721.0 km |
+
+This is the state every number in §1 describes. It also confirms the mechanism
+end to end: a sync that re-downloads the hikes cannot reintroduce them, because
+the exclusion runs after the sync and before the SVG / README / parquet steps.

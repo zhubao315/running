@@ -1,0 +1,160 @@
+{
+  "_comment": [
+    "Running-site records that are the same physical activity as a hiking record.",
+    "They were recorded by the watch under a running sport type, so the COROS",
+    "sync put them into the running dataset, while the hiking site counts the",
+    "same session once. Keeping both double-counts the distance, the time and",
+    "the elevation.",
+    "",
+    "Matching method (2026-11-02): cross-dataset match against the hiking repo",
+    "src/static/activities.json (344 records) on start_date_local within 180 s",
+    "AND distance within max(50 m, 2%). run_id values are NOT shared between",
+    "the two repos, so the id can never be used as the join key. All 15 entries",
+    "matched with a start-time delta of 0 s and a distance delta of 0.0 m.",
+    "",
+    "Every entry is removed from src/static/activities.json and run_page/data.db",
+    "by run_page/exclude_hiking_dupes_rh.py, which re-checks the recorded start",
+    "time and distance before deleting and refuses anything that does not match.",
+    "Delete an entry here to stop excluding that record."
+  ],
+  "matched_on": "2026-11-02",
+  "hiking_source": "zhubao315/hiking src/static/activities.json (344 records, snapshot 2026-11-02)",
+  "hiking_source_totals": "344 records, 2,693.8 km",
+  "entries": [
+    {
+      "run_id": 383426480,
+      "start_date_local": "2024-02-13 08:58:49",
+      "distance_m": 12152.35,
+      "moving_time": "3:02:19",
+      "hiking_run_id": 1707785929000,
+      "hiking_distance_m": 12152.35,
+      "hiking_moving_time": "3:02:19"
+    },
+    {
+      "run_id": 385984433,
+      "start_date_local": "2024-04-13 08:17:47",
+      "distance_m": 22673.57,
+      "moving_time": "6:26:26",
+      "hiking_run_id": 1712967467000,
+      "hiking_distance_m": 22673.57,
+      "hiking_moving_time": "6:26:26"
+    },
+    {
+      "run_id": 395010627,
+      "start_date_local": "2024-10-01 10:51:48",
+      "distance_m": 19790.57,
+      "moving_time": "3:41:02",
+      "hiking_run_id": 1727751108000,
+      "hiking_distance_m": 19790.57,
+      "hiking_moving_time": "3:41:01"
+    },
+    {
+      "run_id": 404282962,
+      "start_date_local": "2025-05-01 07:41:19",
+      "distance_m": 14424.23,
+      "moving_time": "3:44:52",
+      "hiking_run_id": 1746056479000,
+      "hiking_distance_m": 14424.23,
+      "hiking_moving_time": "3:44:51"
+    },
+    {
+      "run_id": 404464163,
+      "start_date_local": "2025-05-05 07:58:25",
+      "distance_m": 18674.06,
+      "moving_time": "5:09:14",
+      "hiking_run_id": 1746403105000,
+      "hiking_distance_m": 18674.06,
+      "hiking_moving_time": "5:09:14"
+    },
+    {
+      "run_id": 405836792,
+      "start_date_local": "2025-05-31 07:01:55",
+      "distance_m": 29147.4,
+      "moving_time": "6:34:32",
+      "hiking_run_id": 1748646115000,
+      "hiking_distance_m": 29147.4,
+      "hiking_moving_time": "6:34:31"
+    },
+    {
+      "run_id": 412034121,
+      "start_date_local": "2025-10-01 09:07:44",
+      "distance_m": 15307.09,
+      "moving_time": "4:05:13",
+      "hiking_run_id": 1759280864000,
+      "hiking_distance_m": 15307.09,
+      "hiking_moving_time": "4:05:12"
+    },
+    {
+      "run_id": 412076331,
+      "start_date_local": "2025-10-02 08:11:26",
+      "distance_m": 9147.94,
+      "moving_time": "4:01:28",
+      "hiking_run_id": 1759363886000,
+      "hiking_distance_m": 9147.94,
+      "hiking_moving_time": "4:01:28"
+    },
+    {
+      "run_id": 412282188,
+      "start_date_local": "2025-10-07 08:27:16",
+      "distance_m": 21921.56,
+      "moving_time": "6:48:31",
+      "hiking_run_id": 1759796836000,
+      "hiking_distance_m": 21921.56,
+      "hiking_moving_time": "6:48:31"
+    },
+    {
+      "run_id": 417664312,
+      "start_date_local": "2026-02-19 09:19:01",
+      "distance_m": 11493.83,
+      "moving_time": "3:40:13",
+      "hiking_run_id": 1771463941000,
+      "hiking_distance_m": 11493.83,
+      "hiking_moving_time": "3:40:12"
+    },
+    {
+      "run_id": 419695159,
+      "start_date_local": "2026-04-12 09:58:40",
+      "distance_m": 17901.25,
+      "moving_time": "5:00:51",
+      "hiking_run_id": 1775959120000,
+      "hiking_distance_m": 17901.25,
+      "hiking_moving_time": "5:00:51"
+    },
+    {
+      "run_id": 420521938,
+      "start_date_local": "2026-05-01 08:13:47",
+      "distance_m": 25059.83,
+      "moving_time": "6:58:16",
+      "hiking_run_id": 1777594427000,
+      "hiking_distance_m": 25059.83,
+      "hiking_moving_time": "6:58:16"
+    },
+    {
+      "run_id": 426752284,
+      "start_date_local": "2026-09-27 08:44:34",
+      "distance_m": 17347.72,
+      "moving_time": "4:40:42",
+      "hiking_run_id": 1790469874000,
+      "hiking_distance_m": 17347.72,
+      "hiking_moving_time": "4:40:41"
+    },
+    {
+      "run_id": 426909702,
+      "start_date_local": "2026-10-01 11:05:20",
+      "distance_m": 15828.51,
+      "moving_time": "3:41:40",
+      "hiking_run_id": 1790823920000,
+      "hiking_distance_m": 15828.51,
+      "hiking_moving_time": "3:41:40"
+    },
+    {
+      "run_id": 427008053,
+      "start_date_local": "2026-10-03 09:15:47",
+      "distance_m": 16116.09,
+      "moving_time": "8:10:31",
+      "hiking_run_id": 1790990147000,
+      "hiking_distance_m": 16116.09,
+      "hiking_moving_time": "8:10:30"
+    }
+  ]
+}
