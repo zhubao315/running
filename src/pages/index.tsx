@@ -25,6 +25,7 @@ import {
   buildCalendar,
   buildDataset,
   buildYearSeries,
+  availableYears,
   computeTotals,
   filterRunsByScope,
   formatDistanceKm,
@@ -44,7 +45,12 @@ const Index = () => {
   const { activities } = useActivities();
   const { runs } = useMemo(() => buildDataset(activities), [activities]);
 
-  const [selectedYear, setSelectedYear] = useState('all');
+  // Open on the newest year with real records instead of all history; the
+  // dataset is imported statically, so this resolves on the very first render.
+  const [selectedYear, setSelectedYear] = useState(() => {
+    const years = availableYears(runs);
+    return years.length ? String(years[years.length - 1]) : 'all';
+  });
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedMetric, setSelectedMetric] =
@@ -287,6 +293,10 @@ const Index = () => {
               viewState={viewState}
               geoData={geoData}
               setViewState={setViewState}
+              changeYear={(year) =>
+                selectYear(year === 'Total' ? 'all' : year)
+              }
+              thisYear={selectedYear === 'all' ? 'Total' : selectedYear}
             />
           </div>
 

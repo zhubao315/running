@@ -9,6 +9,7 @@ import {
 } from '@/utils/const';
 import { Coordinate, IViewState, geoJsonForMap } from '@/utils/utils';
 import RunMarker from './RunMarker';
+import RunMapButtons from './RunMapButtons';
 import styles from './style.module.css';
 import { FeatureCollection } from 'geojson';
 import { FilterSpecification } from 'maplibre-gl';
@@ -20,6 +21,8 @@ interface IRunMapProps {
   viewState: IViewState;
   setViewState: (_viewState: IViewState) => void;
   geoData: FeatureCollection<RPGeometry>;
+  changeYear: (_year: string) => void;
+  thisYear: string;
 }
 
 const RunMap = ({
@@ -27,6 +30,8 @@ const RunMap = ({
   viewState,
   setViewState,
   geoData,
+  changeYear,
+  thisYear,
 }: IRunMapProps) => {
   const { countries, provinces } = useActivities();
   const mapRef = useRef<MapRef | null>(null);
@@ -140,6 +145,7 @@ const RunMap = ({
           }}
         />
       </Source>
+      <RunMapButtons changeYear={changeYear} thisYear={thisYear} />
       {isSingleRun && (
         <RunMarker
           startLat={startLat}

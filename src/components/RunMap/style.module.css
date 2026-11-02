@@ -80,3 +80,26 @@
   background-position: center center;
   opacity: 1;
 }
+
+/* Narrow screens: keep the year strip on one swipeable line instead of a
+   five-row wall of pills covering the route map. */
+@media (max-width: 640px) {
+  .buttons {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: calc(100% - 88px);
+    padding: 0;
+    scrollbar-width: none;
+  }
+
+  .buttons::-webkit-scrollbar {
+    display: none;
+  }
+
+  .button {
+    flex: 0 0 auto;
+    padding: 0.12rem 0.44rem;
+    font-size: 0.78rem;
+  }
+}
