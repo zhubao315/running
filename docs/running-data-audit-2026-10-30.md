@@ -489,6 +489,7 @@ Deletion is data-level and repeatable, not a one-off edit:
 | File | Role |
 | --- | --- |
 | `run_page/hiking_duplicates.json` | Checked-in manifest of the 15 confirmed pairs, each carrying the hiking twin id and both sides' start time, distance and moving time |
+| `run_page/refresh_hiking_duplicates.py` | Re-runs the cross-dataset match against the hiking site's published `activities.json` and appends any new pair to the manifest; dry run by default, `--execute` to write, `--soft-fail` for CI |
 | `run_page/exclude_hiking_dupes_rh.py` | Removes manifest-listed ids from `activities.json` and `data.db`; dry run by default, `--execute` to write |
 
 Guards before a record is deleted:
@@ -506,6 +507,29 @@ Because the step runs on every sync, a re-downloaded FIT file cannot silently
 reintroduce a record: the sync rebuilds the data from the watch and DB, and this
 step removes the 15 ids again in the same run. Re-running it against already
 cleaned data is a no-op (`15 absent`, exit 0).
+
+Discovery is automated as well. Until 2026-11-05 the manifest was hand-maintained,
+so a hike taken after that date stayed double-counted until someone noticed it.
+`refresh_hiking_duplicates.py` now runs immediately before the exclusion step and
+applies the same tolerance criteria to the hiking site's live dataset, appending
+every new pair. It is append-only by design: an entry whose running record is
+absent from the dataset *is* the exclusion, so pruning old entries would
+resurrect those records on the next rebuild. Against the current published data
+the run reports `matched=0 new=0 already-excluded=15` — the 15 pairs are already
+gone from `activities.json`, which is exactly the proof that the matcher and the
+manifest agree. On the pre-exclusion snapshot of the same file it reproduces
+precisely those 15 pairs (all with a 0 s start delta and 0.0 m distance delta) and
+matches none of the 2,035 genuine runs, so the false-positive rate is zero.
+
+The lag is set by the hiking schedule, not by the logic: hiking syncs weekly
+(Mondays 08:30 Asia/Shanghai, plus Thursdays in May and October), so a hike only
+enters the hiking dataset at its next sync and is excluded from this site at the
+first running sync after that — at most about a week. Until the hiking repo gains
+a daily schedule, the window in which one session is counted twice is a property
+of the schedules, and `matched=0` on every run is what confirms nothing was
+missed. If the hiking fetch fails, `--soft-fail` keeps the committed manifest and
+the deploy proceeds, which degrades to the previous manual-maintenance behaviour
+instead of blocking the page.
 
 ### 11.5 Before / after (exclusion delta only)
 

@@ -108,13 +108,27 @@ jobs:
             echo "rebuild=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # Remove running records that are the same physical activity as a hike.
-      # The watch files hikes as a running sport type, so without this step the
-      # same session is counted both here and on the hiking site. The manifest
-      # lists the confirmed pairs and the script re-verifies start time and
-      # distance before deleting, refusing anything that no longer matches.
-      # It must run BEFORE the SVG charts, README stats and parquet export so
-      # those artefacts are derived from the cleaned dataset.
+      # Keep the duplicate manifest current, then remove the records it lists.
+      # The watch files hikes as a running sport type, so without this the same
+      # session is counted both here and on the hiking site.
+      #
+      # Refresh reads the hiking site's published dataset and appends any new
+      # pair, so a hike taken yesterday is excluded without anyone noticing it
+      # first; the manifest used to be hand-maintained. Matching is on start
+      # time and distance only — run_id values are not shared between the two
+      # repositories and the activity name is not a discriminator.
+      # --soft-fail: a transient fetch error leaves the manifest as committed
+      # (the pre-automation behaviour) rather than failing the whole sync run.
+      # Entries are only ever added, because an entry whose record is gone IS
+      # the exclusion and deleting it would resurrect it.
+      #
+      # Both steps must run BEFORE the SVG charts, README stats and parquet
+      # export so those artefacts derive from the cleaned dataset, and the
+      # exclude step must follow the refresh to act on the fresh entries.
+      - name: Refresh hiking duplicate manifest
+        if: steps.change.outputs.rebuild == 'true'
+        run: python run_page/refresh_hiking_duplicates.py --execute --soft-fail
+
       - name: Exclude hiking duplicates
         if: steps.change.outputs.rebuild == 'true'
         run: python run_page/exclude_hiking_dupes_rh.py --execute
