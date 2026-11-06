@@ -673,4 +673,7 @@ regenerated JSON is committed.
 
 Live check after that pass deployed (1440×900, 390×844, 320×568): the Profile line
 reads 设备原生 1,733 次 / 轨迹坐标解析 91 次, page errors 0, console errors 0 apart
-from library warnings, horizontal overflow 0.
+from library warnings, horizontal overflow 0. The geographic headline moved from
+the 3 countries / 15 provinces / 28 cities of §11.3 to 3 / 15 / 29; the province
+count is unchanged because the frontend only counts names ending in 省 or 自治区,
+and 北京市 was already named by device records.
