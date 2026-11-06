@@ -21,6 +21,11 @@ export interface Activity {
   start_date: string;
   start_date_local: string;
   location_country?: string | null;
+  /**
+   * Place derived from the GPS track by run_page/resolve_locations_rh.py for
+   * records the watch never geocoded. Never overwrites location_country.
+   */
+  location_resolved?: string | null;
   summary_polyline?: string | null;
   average_heartrate?: number | null;
   average_speed: number;
@@ -129,7 +134,9 @@ const locationForRun = (
   if (locationCache.has(run.run_id)) {
     return locationCache.get(run.run_id)!;
   }
-  let location = run.location_country;
+  // Records the watch never geocoded carry a track-derived place in
+  // location_resolved; the device value always wins where both exist.
+  let location = run.location_country || run.location_resolved;
   let [city, province, country] = ['', '', ''];
   let coordinate = null;
   if (location) {

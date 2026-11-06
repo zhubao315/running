@@ -184,6 +184,20 @@ jobs:
             --drop 20285755:1@191 \
             --delete 9223370440357779707
 
+      # Place records the watch never geocoded from their own GPS track, then
+      # compare the published JSON with the DB it was built from. Both are
+      # idempotent: the resolver only ever fills an empty location, and the
+      # check only reads. They run last so the artefacts above (SVG charts,
+      # README stats, parquet) are already derived, and the commit captures
+      # whatever the resolver added.
+      - name: Resolve locations from tracks
+        if: steps.change.outputs.rebuild == 'true'
+        run: python run_page/resolve_locations_rh.py --execute
+
+      - name: Check dataset integrity
+        if: steps.change.outputs.rebuild == 'true'
+        run: python run_page/check_data_integrity_rh.py --sport running
+
       - name: Commit new runs
         id: commit
         if: steps.change.outputs.rebuild == 'true'

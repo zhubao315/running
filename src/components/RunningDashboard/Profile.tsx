@@ -41,6 +41,11 @@ const Profile = ({ runs }: IProfileProps) => {
           <p className={styles.profileFoot}>
             {formatNumber(totals.count)} 次跑步 · {geo.countries.length} 个国家 ·{' '}
             {geo.provinces.length} 个省份 · {geo.cities.length} 座城市
+            {geo.trackPlaced
+              ? ` · 地点来源：设备原生 ${formatNumber(
+                  geo.devicePlaced
+                )} 次，轨迹坐标解析 ${formatNumber(geo.trackPlaced)} 次`
+              : ''}
           </p>
         </div>
       </div>
