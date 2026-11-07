@@ -404,6 +404,40 @@ button.geoCell:hover {
   color: var(--muted);
 }
 
+.recordRowDisabled {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  column-gap: 0.7rem;
+  margin-top: 0.3rem;
+  padding: 0.24rem 0.4rem;
+  border: 1px dashed color-mix(in srgb, var(--border) 75%, transparent);
+  border-radius: 6px;
+  cursor: default;
+}
+
+.recordRowDisabled .recordLabel,
+.recordRowDisabled .recordValue,
+.recordRowDisabled .recordDate {
+  color: var(--muted);
+}
+
+.recordDisabledCaption {
+  grid-column: 1 / -1;
+  margin-top: 0.12rem;
+  color: var(--muted);
+  font-size: 0.66rem;
+}
+
+.recordNote {
+  margin: 0.6rem 0 0;
+  padding-left: 0.5rem;
+  border-left: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  color: var(--muted);
+  font-size: 0.64rem;
+  line-height: 1.6;
+}
+
 @media (max-width: 960px) {
   .body {
     grid-template-columns: 1fr;

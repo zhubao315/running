@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import useActivities from '@/hooks/useActivities';
 import { RUN_TITLES } from '@/utils/const';
 import { Activity, convertMovingTime2Sec, formatPace } from '@/utils/utils';
+import { formatNumber } from '@/utils/runningStats';
 import SectionHeader from '@/components/RunningDashboard/SectionHeader';
 import styles from './style.module.css';
 
@@ -91,6 +92,7 @@ const JourneyStats = ({ changeCity, changeTitle, onViewRun }: IJourneyStatsProps
   });
   const avgPace = totalSeconds ? formatPace(totalMeters / totalSeconds) : null;
   const avgHR = hrCount ? Math.round(hrSum / hrCount) : null;
+  const totalRuns = activities.length;
 
   const periods = DAY_SEGMENTS.map(({ title, label, alpha }) => ({
     title,
@@ -422,7 +424,27 @@ const JourneyStats = ({ changeCity, changeTitle, onViewRun }: IJourneyStatsProps
                   <span className={styles.recordDate}>{r.date}</span>
                 </button>
               ))}
+              <div
+                className={styles.recordRowDisabled}
+                aria-disabled="true"
+                title="设备未提供爬升字段，不做估算"
+              >
+                <span className={styles.recordLabel}>
+                  最大单次爬升 / Max Elevation Gain
+                </span>
+                <span className={styles.recordValue}>—</span>
+                <span className={styles.recordDate}>未提供</span>
+                <span className={styles.recordDisabledCaption}>
+                  设备未提供爬升字段，不做估算
+                </span>
+              </div>
             </div>
+            <p className={styles.recordNote}>
+              数据说明：以上纪录除「最大单次爬升」外均可点击查看活动；爬升字段 0
+              / {formatNumber(totalRuns)} 条提供，不做估算；心率仅{' '}
+              {formatNumber(hrCount)} / {formatNumber(totalRuns)}{' '}
+              条包含，缺失值不计为 0。
+            </p>
           </div>
           {records.prRows.length ? (
             <div className={styles.recordCard}>

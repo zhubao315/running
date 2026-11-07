@@ -38,17 +38,17 @@
 }
 
 :root {
-  --accent: #e0ed5e;
-  --accent-2: #a3e635;
-  --bg: #0a0c0f;
-  --bg-soft: #0f1318;
-  --card: #0d1116;
-  --card-hover: #121821;
-  --text: #e6eaf0;
-  --muted: #8b95a5;
-  --border: #1f252d;
-  --border-strong: #2b333d;
-  --radius: 8px;
+  --accent: #38BDF8;
+  --accent-2: #0EA5E9;
+  --bg: #0b1d33;
+  --bg-soft: #0a1729;
+  --card: #102a43;
+  --card-hover: #14344f;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --border: #1e3a56;
+  --border-strong: #2a4e70;
+  --radius: 10px;
   --font-sans: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -122,7 +122,7 @@ a {
 }
 
 .pill-active {
-  color: #0b0d10;
+  color: #06121f;
   background: var(--accent);
   border-color: var(--accent);
   font-weight: 600;
