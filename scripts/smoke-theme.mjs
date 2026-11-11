@@ -49,9 +49,24 @@ if (!existsSync(path.join(dist, 'index.html'))) {
   process.exit(1);
 }
 
+// The deploy builds with a path prefix ("/running"), so the built page asks
+// for its assets under that prefix. The test server serves the build the
+// same way, or the page would load without a script.
+const builtHtml = readFileSync(path.join(dist, 'index.html'), 'utf-8');
+const assetHref = [
+  ...builtHtml.matchAll(/(?:src|href)="(\/[^"]+\/assets\/[^"]+)"/g),
+].map((match) => match[1])[0];
+const basePath = assetHref
+  ? assetHref.slice(0, assetHref.indexOf('/assets/'))
+  : '';
+
 const server = createServer((req, res) => {
   const url = new URL(req.url, `http://127.0.0.1:${port}`);
-  let file = path.join(dist, decodeURIComponent(url.pathname));
+  let pathname = decodeURIComponent(url.pathname);
+  if (basePath && pathname.startsWith(basePath)) {
+    pathname = pathname.slice(basePath.length) || '/';
+  }
+  let file = path.join(dist, pathname);
   if (existsSync(file) && statSync(file).isDirectory()) {
     file = path.join(file, 'index.html');
   }
@@ -88,7 +103,7 @@ page.on('console', (message) => {
     problems.push(`console.error: ${message.text()}`);
 });
 
-const base = `http://127.0.0.1:${actualPort}/`;
+const base = `http://127.0.0.1:${actualPort}${basePath}/`;
 await page.goto(base, { waitUntil: 'domcontentloaded' });
 await page.waitForTimeout(2500);
 
@@ -116,8 +131,9 @@ expect(
   nav.current === 1,
   `exactly one navigation item is current (${nav.current})`
 );
-
-console.log('smoke-theme: navigation checked');
+console.log(
+  `smoke-theme: navigation = ${nav.zh.join('/')} (${nav.en.join('/')})`
+);
 
 // --- the theme --------------------------------------------------------------
 const initial = await page.evaluate(() => ({
