@@ -38,20 +38,48 @@ if (!/<div id="root"|<div id="app"|<main/i.test(index)) {
   fail('dist/index.html has no mount point — the SPA shell did not render');
 }
 
-// every asset the shell asks for has to exist in the build
-const assets = [...index.matchAll(/(?:src|href)="([^"]+)"/g)]
-  .map((m) => m[1])
-  .filter((href) => href.startsWith('/') || !/^(https?:)?\/\//.test(href))
-  .filter((href) => !href.endsWith('/'));
+// Every asset the shell asks for has to exist in the build.
+//
+// The page is published under a path prefix ("/running/", "/cycling/", …),
+// so the URLs in index.html carry that prefix while the files in dist/ do
+// not. The prefix is taken from the assets themselves rather than guessed.
+const hrefs = [...index.matchAll(/(?:src|href)="([^"]+)"/g)].map((m) => m[1]);
+const localHrefs = hrefs.filter(
+  (href) =>
+    !/^(https?:)?\/\//.test(href) &&
+    !href.startsWith('data:') &&
+    !href.startsWith('#') &&
+    /\.[a-z0-9]+$/i.test(href.split('?')[0])
+);
+const prefix = localHrefs.length
+  ? localHrefs
+      .map((href) => href.split('?')[0].split('/'))
+      .reduce((acc, parts) => {
+        const out = [];
+        for (let i = 0; i < acc.length && i < parts.length; i += 1) {
+          if (acc[i] !== parts[i]) break;
+          out.push(acc[i]);
+        }
+        return out;
+      })
+      .join('/')
+  : '';
 let missingAssets = 0;
-for (const href of assets) {
-  const file = path.join(dist, href.replace(/^\//, ''));
+for (const href of localHrefs) {
+  const relative = href
+    .split('?')[0]
+    .slice(prefix.length)
+    .replace(/^\//, '');
+  const file = path.join(dist, relative);
   if (!existsSync(file)) {
     missingAssets += 1;
     fail(`dist is missing an asset the page asks for: ${href}`);
   }
 }
-note(`index.html references ${assets.length} local asset(s)`);
+note(
+  `index.html references ${localHrefs.length} local asset(s)` +
+    (prefix ? ` under ${prefix}` : '')
+);
 
 const assetDir = path.join(dist, 'assets');
 if (!existsSync(assetDir)) {
