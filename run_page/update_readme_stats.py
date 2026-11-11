@@ -29,6 +29,11 @@ def main():
     count = len(activities)
     distance = sum(a.get("distance") or 0 for a in activities) / 1000
     climb = sum(a.get("elevation_gain") or 0 for a in activities)
+    # The watch never reported a climb; the baked 3D terrain does. Count only
+    # the runs that carry one and say how many that is, so the number in the
+    # README is never read as "the whole career".
+    terrain = [a for a in activities if a.get("climb_terrain") is not None]
+    terrain_climb = sum(a.get("climb_terrain") or 0 for a in terrain)
     years = sorted({a["start_date_local"][:4] for a in activities})
     span = f"{years[0]}–{years[-1]}" if years else "—"
     latest = max((a["start_date_local"] for a in activities), default="—")
@@ -36,7 +41,12 @@ def main():
     if latest != "—":
         latest = latest[:10]
 
-    climb_text = f"{round(climb):,} m" if climb else "—"
+    if climb:
+        climb_text = f"{round(climb):,} m"
+    elif terrain:
+        climb_text = f"{round(terrain_climb):,} m（{len(terrain):,} 条地形恢复）"
+    else:
+        climb_text = "—"
     table = "\n".join(
         [
             START,
