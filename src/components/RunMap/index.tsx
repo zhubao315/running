@@ -1,6 +1,7 @@
 import React, {useRef, useCallback, useEffect} from 'react';
 import Map, {Layer, Source, FullscreenControl, NavigationControl, MapRef} from 'react-map-gl/maplibre';
 import useActivities from '@/hooks/useActivities';
+import useTheme from '@/hooks/useTheme';
 import {
   IS_CHINESE,
   PROVINCE_FILL_COLOR,
@@ -34,6 +35,7 @@ const RunMap = ({
   thisYear,
 }: IRunMapProps) => {
   const { countries, provinces } = useActivities();
+  const { theme } = useTheme();
   const mapRef = useRef<MapRef | null>(null);
   const mapRefCallback = useCallback((ref: MapRef) => {
     if (ref) mapRef.current = ref;
@@ -76,6 +78,10 @@ const RunMap = ({
   }
   const dash =
     USE_DASH_LINE && !isSingleRun && !isBigMap ? [2, 2] : undefined;
+  // The province and country fills have to read on both basemaps: the light
+  // style needs darker outlines, the dark style lighter ones.
+  const provinceFill = theme === 'light' ? PROVINCE_FILL_COLOR : '#1f6f92';
+  const countryFill = theme === 'light' ? COUNTRY_FILL_COLOR : 'rgb(148,163,184)';
   const onMove = React.useCallback(({ viewState }: { viewState: IViewState }) => {
     setViewState(viewState);
   }, []);
@@ -87,7 +93,6 @@ const RunMap = ({
     position: 'absolute',
     marginTop: '29.2px',
     right: '0px',
-    opacity: 0.3,
   };
 
   useEffect(() => {
@@ -107,7 +112,14 @@ const RunMap = ({
       {...viewState}
       onMove={onMove}
       style={style}
-      mapStyle="https://tiles.openfreemap.org/styles/positron"
+      /* The basemap follows the theme: the light page gets the light style,
+         the dark page the dark one. react-map-gl re-adds the GeoJSON source
+         and its layers after a style change, so the routes stay. */
+      mapStyle={
+        theme === 'light'
+          ? 'https://tiles.openfreemap.org/styles/positron'
+          : 'https://tiles.openfreemap.org/styles/dark'
+      }
       ref={mapRefCallback}
     >
       <Source id="data" type="geojson" data={geoData}>
@@ -115,7 +127,7 @@ const RunMap = ({
           id="province"
           type="fill"
           paint={{
-            'fill-color': PROVINCE_FILL_COLOR,
+            'fill-color': provinceFill,
           }}
           filter={filterProvinces}
         />
@@ -123,7 +135,7 @@ const RunMap = ({
           id="countries"
           type="fill"
           paint={{
-            'fill-color': COUNTRY_FILL_COLOR,
+            'fill-color': countryFill,
             // in China, fill a bit lighter while already filled provinces
             'fill-opacity': ["case", ["==", ["get", "name"], '中国'], 0.1, 0.5],
           }}
@@ -155,8 +167,8 @@ const RunMap = ({
         />
       )}
       <span className={styles.runTitle}>{title}</span>
-      <FullscreenControl style={fullscreenButton}/>
-      <NavigationControl showCompass={false} position={'bottom-right'} style={{opacity: 0.3}}/>
+      <FullscreenControl style={fullscreenButton} />
+      <NavigationControl showCompass={false} position={'bottom-right'} />
     </Map>
   );
 };

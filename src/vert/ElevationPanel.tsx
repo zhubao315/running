@@ -48,7 +48,7 @@ const downsample = (values: Float64Array | Float32Array): number[] => {
 export default function ElevationPanel({
   sceneId,
   hash,
-  accent = '#e0ed5e',
+  accent = 'var(--accent)',
   height = 120,
 }: ElevationPanelProps) {
   const [state, setState] = useState<State>({ status: 'loading' });
@@ -108,18 +108,20 @@ export default function ElevationPanel({
   if (state.status === 'loading') {
     return (
       <div
-        className="rounded-xl border border-[#242424] bg-[#101010] px-3 py-3"
+        className="rounded-xl border border-[var(--terrain-border-soft)] bg-[var(--terrain-panel)] px-3 py-3"
         style={{ minHeight: height }}
       >
-        <p className="text-[11px] text-[#7d7d7d]">海拔剖面加载中…</p>
+        <p className="text-[11px] text-[var(--terrain-muted)]">
+          海拔剖面加载中…
+        </p>
       </div>
     );
   }
 
   if (state.status === 'missing' || !profile) {
     return (
-      <div className="rounded-xl border border-[#242424] bg-[#101010] px-3 py-3">
-        <p className="text-[11px] text-[#7d7d7d]">
+      <div className="rounded-xl border border-[var(--terrain-border-soft)] bg-[var(--terrain-panel)] px-3 py-3">
+        <p className="text-[11px] text-[var(--terrain-muted)]">
           海拔剖面不可用：场景文件缺失或无法解码。
         </p>
       </div>
@@ -129,12 +131,12 @@ export default function ElevationPanel({
   const { climb, summit } = profile;
 
   return (
-    <div className="rounded-xl border border-[#242424] bg-[#101010] px-3 pb-2 pt-3">
+    <div className="rounded-xl border border-[var(--terrain-border-soft)] bg-[var(--terrain-panel)] px-3 pb-2 pt-3">
       <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2 px-1">
-        <span className="text-[11px] tracking-wide text-[#8a8a8a]">
+        <span className="text-[11px] tracking-wide text-[var(--terrain-muted)]">
           海拔剖面
         </span>
-        <span className="font-mono text-[11px] text-[#cfcfcf]">
+        <span className="font-mono text-[11px] text-[var(--terrain-text)]">
           爬升 +{Math.round(climb)} m · {Math.round(profile.minElevation)}–
           {Math.round(profile.maxElevation)} m
           {summit ? ` · 最高点 km ${(summit.distance / 1000).toFixed(1)}` : ''}
@@ -149,17 +151,15 @@ export default function ElevationPanel({
         )} 米，路线全长 ${(profile.maxDistance / 1000).toFixed(1)} 公里`}
         style={{ width: '100%', height }}
       >
-        <path d={profile.area} fill={accent} fillOpacity={0.14} />
+        <path d={profile.area} style={{ fill: accent, fillOpacity: 0.14 }} />
         <path
           d={profile.line}
-          fill="none"
-          stroke={accent}
-          strokeWidth={1.2}
+          style={{ fill: 'none', stroke: accent, strokeWidth: 1.2 }}
           vectorEffect="non-scaling-stroke"
           strokeLinejoin="round"
         />
       </svg>
-      <div className="font-mono flex justify-between px-1 text-[10px] text-[#5f5f5f]">
+      <div className="font-mono flex justify-between px-1 text-[10px] text-[var(--terrain-faint)]">
         <span>0.0 km</span>
         <span>{(profile.maxDistance / 1000).toFixed(1)} km</span>
       </div>

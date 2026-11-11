@@ -6,6 +6,22 @@
     <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>zhubao315 的跑步生涯</title>
+    <script>
+      // Theme before the first paint: the four sites share one key on the
+      // same origin, so the theme picked on one of them is the theme here.
+      // Without this the page would paint dark and then flip to light.
+      (() => {
+        try {
+          const saved = localStorage.getItem('zhubao315-theme');
+          const theme = saved === 'light' || saved === 'dark' ? saved : 'dark';
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.style.colorScheme = theme;
+        } catch (error) {
+          document.documentElement.dataset.theme = 'dark';
+          document.documentElement.style.colorScheme = 'dark';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

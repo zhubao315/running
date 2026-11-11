@@ -11,8 +11,11 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (accent) root.style.setProperty('--accent', accent);
-    if (accent2) root.style.setProperty('--accent-2', accent2);
+    // The brand colour is stored under its own name: the readable accent
+    // depends on the theme (a bright accent needs a light page), and
+    // theme.css derives it from these two.
+    if (accent) root.style.setProperty('--accent-brand', accent);
+    if (accent2) root.style.setProperty('--accent-2-brand', accent2);
   }, [accent, accent2]);
 
   return (

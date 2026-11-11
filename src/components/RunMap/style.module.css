@@ -27,14 +27,14 @@
   font-size: 0.85rem;
   line-height: 1.5;
   text-align: center;
-  color: #f8fafc;
-  background: rgba(15, 23, 42, 0.72);
+  color: var(--map-overlay-text);
+  background: var(--map-overlay);
   border-radius: 6px;
   backdrop-filter: blur(2px);
 }
 
 .selected {
-  color: #111827;
+  color: var(--on-accent);
   background: var(--accent);
   font-weight: 700;
 }
@@ -45,8 +45,8 @@
   bottom: 10px;
   left: 12px;
   cursor: default;
-  color: #f8fafc;
-  background: rgba(15, 23, 42, 0.78);
+  color: var(--map-overlay-text);
+  background: var(--map-overlay);
   border-radius: 6px;
   padding: 0.15rem 0.6rem;
   font-weight: 700;

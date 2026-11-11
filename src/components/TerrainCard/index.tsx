@@ -37,17 +37,17 @@ class TerrainBoundary extends Component<
 }
 
 const Skeleton = ({ message }: { message?: string }) => (
-  <div className="flex aspect-[4/3] w-full items-center justify-center rounded-xl border border-[#2a2a2a] bg-gradient-to-br from-[#1a1f24] via-[#14181c] to-[#0d0d0d] text-sm text-[#7d7d7d] sm:aspect-video">
+  <div className="flex aspect-[4/3] w-full items-center justify-center rounded-xl border border-[var(--terrain-border)] bg-gradient-to-br from-[var(--terrain-surface)] via-[var(--terrain-surface-2)] to-[var(--terrain-fallback)] text-sm text-[var(--terrain-muted)] sm:aspect-video">
     {message}
   </div>
 );
 
 const Stat = ({ label, value }: { label: string; value: string }) => (
   <span className="inline-flex items-baseline gap-1">
-    <span className="text-[10px] uppercase tracking-wider text-[#6f6f6f]">
+    <span className="text-[10px] uppercase tracking-wider text-[var(--terrain-muted)]">
       {label}
     </span>
-    <span className="font-mono text-[12px] text-[#d6d6d6]">{value}</span>
+    <span className="font-mono text-[12px] text-[var(--terrain-text)]">{value}</span>
   </span>
 );
 
@@ -94,13 +94,13 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
     <section
       aria-labelledby={id}
       data-terrain-card
-      className="terrain-in relative mt-6 overflow-hidden rounded-2xl border border-[#2b2b2b] bg-gradient-to-b from-[#191919] to-[#111] shadow-[0_18px_50px_-20px_rgba(0,0,0,0.8)]"
+      className="terrain-in relative mt-6 overflow-hidden rounded-2xl border border-[var(--terrain-border)] bg-gradient-to-b from-[var(--terrain-surface)] to-[var(--terrain-surface-2)] shadow-[0_18px_50px_-20px_rgba(0,0,0,0.55)]"
     >
       <button
         type="button"
         onClick={onClose}
         aria-label="关闭 3D 地形"
-        className="absolute right-2 top-2 z-10 rounded-full p-1.5 text-[#8a8a8a] transition-colors hover:bg-[#262626] hover:text-white"
+        className="absolute right-2 top-2 z-10 rounded-full p-1.5 text-[var(--terrain-muted)] transition-colors hover:bg-[var(--terrain-border)] hover:text-[var(--terrain-text)]"
       >
         <svg
           viewBox="0 0 20 20"
@@ -115,7 +115,7 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
           <path d="M5 5l10 10M15 5L5 15" />
         </svg>
       </button>
-      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-[#242424] px-4 py-3 pr-10 sm:px-5 sm:pr-12">
+      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--terrain-border-soft)] px-4 py-3 pr-10 sm:px-5 sm:pr-12">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <span className="rounded bg-[#e0ed5e] px-1.5 py-0.5 text-[10px] font-bold leading-tight text-black">
@@ -123,7 +123,7 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
             </span>
             <h2
               id={id}
-              className="truncate text-lg font-bold text-[#f2f2f2] sm:text-xl"
+              className="truncate text-lg font-bold text-[var(--terrain-text)] sm:text-xl"
             >
               {run.name || 'Untitled'}
             </h2>
@@ -175,7 +175,7 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
             </div>
           </Suspense>
         ) : null}
-        <p className="mt-2 text-right text-[10px] text-[#5f5f5f]">
+        <p className="mt-2 text-right text-[10px] text-[var(--terrain-faint)]">
           场景在构建期烘焙，不含坐标；地形在浏览器本地渲染
         </p>
       </div>
