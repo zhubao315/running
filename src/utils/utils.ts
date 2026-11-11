@@ -34,6 +34,10 @@ export interface Activity {
    * so summary_polyline is usually absent in the browser.
    */
   has_track?: boolean;
+  /** total ascent from the baked 3D terrain, metres (scenes-only backfill) */
+  climb_terrain?: number | null;
+  /** highest elevation reached on the route, metres (scenes-only backfill) */
+  altitude_max?: number | null;
   average_heartrate?: number | null;
   average_speed: number;
   streak: number;

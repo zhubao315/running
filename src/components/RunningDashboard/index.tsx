@@ -63,6 +63,27 @@ const RunningDashboard = ({
     [runs]
   );
 
+  // The watch never reported a climb. The baked 3D terrain does: every scene
+  // carries the route's elevation, so the climb can be recovered for the runs
+  // that have one. Say how many, and do not pretend the rest are flat.
+  const terrainRuns = useMemo(
+    () => runs.filter((run) => run.climb_terrain != null).length,
+    [runs]
+  );
+  const terrainNote = useMemo(() => {
+    if (!terrainRuns) {
+      return `设备未提供爬升字段（0 / ${formatNumber(
+        runs.length
+      )} 条），因此不展示累计爬升，核心指标用平均配速替代。`;
+    }
+    const share = runs.length
+      ? Math.round((terrainRuns / runs.length) * 100)
+      : 0;
+    return `设备未原生上报爬升，但已通过 ${formatNumber(
+      terrainRuns
+    )} / ${formatNumber(runs.length)} 条（${share}%）预烘焙 3D 地形恢复了可信爬升数据；未烘焙的记录仍显示为「—」，不按 0 计入。`;
+  }, [runs.length, terrainRuns]);
+
   return (
     <div className={styles.dashboard}>
       <Profile runs={runs} />
@@ -163,8 +184,7 @@ const RunningDashboard = ({
           本页只统计跑步记录：{formatNumber(runs.length)} 条，来自{' '}
           {careerTotals.firstDate} 至 {careerTotals.lastDate}
           。原始数据按 run_id 去重，缺失值显示为「—」，不以 0
-          代替；骑行、徒步与健康数据不混入。设备未提供爬升字段（0 /{' '}
-          {formatNumber(runs.length)} 条），因此不展示累计爬升，核心指标用平均配速替代。
+          代替；骑行、徒步与健康数据不混入。{terrainNote}
         </p>
         <p>
           心率仅 {formatNumber(careerTotals.hrCount)} /{' '}

@@ -93,6 +93,11 @@ const DayDetail = ({
                     ? `${Math.round(run.average_heartrate)} bpm`
                     : '— bpm'}
                 </span>
+                {run.climb_terrain != null ? (
+                  <span className={styles.runStat}>
+                    爬升 +{Math.round(run.climb_terrain)} m
+                  </span>
+                ) : null}
                 <span className={styles.runStat}>
                   {formatRunClock(run.seconds)}
                 </span>
