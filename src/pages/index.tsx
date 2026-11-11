@@ -35,6 +35,12 @@ import {
   type MetricKey,
   type RunScope,
 } from '@/utils/runningStats';
+import {
+  ensureTracks,
+  subscribeTracks,
+  trackProgress,
+} from '@/utils/tracks';
+import { readUrlState, writeUrlState } from '@/utils/urlState';
 import styles from '@/components/RunningDashboard/style.module.css';
 
 type QuickFilter = {
@@ -46,19 +52,44 @@ const Index = () => {
   const { activities } = useActivities();
   const { runs } = useMemo(() => buildDataset(activities), [activities]);
 
+  // A link may address a day, a year or one activity: read it before the
+  // first paint so the page opens on what the link talks about.
+  const urlState = useMemo(() => readUrlState(), []);
+  const deepLinkDate = useMemo(() => {
+    if (!urlState.date) return null;
+    // ignore a date the data does not cover — an empty view helps nobody
+    const dates = runs.map((run) => run.date);
+    if (!dates.length) return null;
+    const first = dates[0];
+    const last = dates[dates.length - 1];
+    return urlState.date >= first && urlState.date <= last ? urlState.date : null;
+  }, [runs, urlState.date]);
+
   // Open on the newest year with real records instead of all history; the
   // dataset is imported statically, so this resolves on the very first render.
   const [selectedYear, setSelectedYear] = useState(() => {
+    if (deepLinkDate) return deepLinkDate.slice(0, 4);
+    if (urlState.year) return urlState.year;
     const years = availableYears(runs);
     return years.length ? String(years[years.length - 1]) : 'all';
   });
-  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(() =>
+    deepLinkDate ? Number(deepLinkDate.slice(5, 7)) : null
+  );
+  const [selectedDate, setSelectedDate] = useState<string | null>(
+    () => deepLinkDate
+  );
   const [selectedMetric, setSelectedMetric] =
     useState<MetricKey>('distance');
-  const [selectedRunId, setSelectedRunId] = useState<number | null>(null);
+  const [selectedRunId, setSelectedRunId] = useState<number | null>(() => {
+    if (urlState.runId === null) return null;
+    return runs.some((run) => run.run_id === urlState.runId)
+      ? urlState.runId
+      : null;
+  });
   const [quickFilter, setQuickFilter] = useState<QuickFilter>(null);
   const scrollOnSelect = useRef(false);
+  const deepLinkRunId = urlState.runId;
 
   const scope: RunScope = useMemo(
     () => ({
@@ -99,7 +130,26 @@ const Index = () => {
     [selectedRun, scopeRuns]
   );
 
-  const fullGeoData = useMemo(() => geoJsonForRuns(mapRuns), [mapRuns]);
+  // The bundle carries no geometry: ask for the years this view draws, then
+  // rebuild the lines when a batch lands.
+  const [tracksToken, setTracksToken] = useState(0);
+  useEffect(
+    () => subscribeTracks(() => setTracksToken((token) => token + 1)),
+    []
+  );
+  useEffect(() => {
+    ensureTracks(mapRuns);
+  }, [mapRuns]);
+
+  const tracks = useMemo(
+    () => trackProgress(mapRuns),
+    [mapRuns, tracksToken]
+  );
+
+  const fullGeoData = useMemo(
+    () => geoJsonForRuns(mapRuns),
+    [mapRuns, tracksToken]
+  );
   const [geoData, setGeoData] = useState<FeatureCollection<LineString>>(
     () => fullGeoData
   );
@@ -204,6 +254,36 @@ const Index = () => {
 
   const terrainRef = useRef<HTMLDivElement>(null);
 
+  // Keep the address bar in step with the view, so a copied link shows the
+  // same day / year / activity.
+  useEffect(() => {
+    writeUrlState({
+      date: selectedDate,
+      year: selectedDate ? null : selectedYear === 'all' ? null : selectedYear,
+      runId: selectedRunId,
+    });
+  }, [selectedDate, selectedYear, selectedRunId]);
+
+  // A deep link opens the day it talks about: bring the calendar into view.
+  useEffect(() => {
+    if (!deepLinkDate) return;
+    const timer = window.setTimeout(() => {
+      document
+        .getElementById('calendar')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 400);
+    return () => window.clearTimeout(timer);
+  }, [deepLinkDate]);
+
+  // A deep link to one activity opens its terrain, if it has a scene.
+  useEffect(() => {
+    if (!deepLinkRunId || !selectedRun) return;
+    const timer = window.setTimeout(() => {
+      terrainRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 600);
+    return () => window.clearTimeout(timer);
+  }, [deepLinkRunId, selectedRun]);
+
   // A run with a baked scene opens the 3D card below the map; bring it into
   // view once the map's own scroll has landed.
   useEffect(() => {
@@ -220,13 +300,21 @@ const Index = () => {
   }, [selectedRun?.run_id]);
 
   const mapTitle = useMemo(() => {
-    if (selectedRun) return titleForShow(selectedRun);
+    // While a year's geometry is still on its way the map would otherwise show
+    // fewer lines than the scope contains, so say so in the caption.
+    const trackNote =
+      tracks.wanted === 0 || tracks.present === tracks.wanted
+        ? ''
+        : tracks.failedBuckets.length > 0
+          ? ` · ${formatNumber(tracks.failedBuckets.length)} 个年份的轨迹加载失败`
+          : ` · 轨迹加载中 ${formatNumber(tracks.present)}/${formatNumber(tracks.wanted)}`;
+    if (selectedRun) return `${titleForShow(selectedRun)}${trackNote}`;
     const label = filterNote ?? scopeLabel(scope);
     if (!scopeRuns.length) return `${label} · 无记录`;
     return `${label} · ${formatNumber(scopeRuns.length)} 次 · ${formatDistanceKm(
       scopeTotals.distanceKm
-    )} km`;
-  }, [selectedRun, filterNote, scope, scopeRuns, scopeTotals.distanceKm]);
+    )} km${trackNote}`;
+  }, [selectedRun, filterNote, scope, scopeRuns, scopeTotals.distanceKm, tracks]);
 
   const yearSeries = useMemo(() => buildYearSeries(baseRuns), [baseRuns]);
   const latestYear = yearSeries.length

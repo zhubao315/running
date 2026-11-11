@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgr from 'vite-plugin-svgr';
+import splitActivities from './plugins/splitActivities';
 
 // The following are known larger packages or packages that can be loaded asynchronously.
 const individuallyPackages = ['activities', 'github.svg', 'grid.svg'];
@@ -11,6 +12,9 @@ const individuallyPackages = ['activities', 'github.svg', 'grid.svg'];
 export default defineConfig({
   plugins: [
     react(),
+    // Must come first: it claims src/static/activities.json before Vite's JSON
+    // plugin turns the whole file into one eager chunk.
+    splitActivities(),
     viteTsconfigPaths(),
     svgr({
       include: ['**/*.svg'],

@@ -971,6 +971,17 @@ button.day:hover {
   font-size: 0.62rem;
 }
 
+/* cross-site jump: the health dashboard holds that day's sleep and recovery */
+.dayLink {
+  color: var(--accent);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.dayLink:hover {
+  color: #7dd3fc;
+  border-bottom-style: solid;
+}
+
 /* ---------- data notes ---------- */
 
 .dataNotes {

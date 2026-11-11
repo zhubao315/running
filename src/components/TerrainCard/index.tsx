@@ -15,15 +15,21 @@ import type { SceneMeta } from '@/vert/VertTerrain';
 
 // Only this import pulls in Vert, and with it three.js: a chunk of its own, loaded on demand.
 const VertTerrain = lazy(() => import('@/vert/VertTerrain'));
+// The 2D profile reads the same baked scene, so it survives a browser that
+// cannot give the 3D view a WebGL context.
+const ElevationPanel = lazy(() => import('@/vert/ElevationPanel'));
 
 /** Shows `fallback` instead of a child that threw (no WebGL, a lost context, a bug). */
 class TerrainBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
+  { children: ReactNode; fallback: ReactNode; onError?: () => void },
   { failed: boolean }
 > {
   override state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
+  }
+  override componentDidCatch() {
+    this.props.onError?.();
   }
   override render() {
     return this.state.failed ? this.props.fallback : this.props.children;
@@ -58,10 +64,12 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
   const id = useId();
   const hash = sceneHashOf(run.run_id);
   const [meta, setMeta] = useState<SceneMeta | null>(null);
+  const [terrainFailed, setTerrainFailed] = useState(false);
   const onMeta = useCallback((next: SceneMeta) => setMeta(next), []);
 
   useEffect(() => {
     setMeta(null);
+    setTerrainFailed(false);
   }, [run.run_id]);
 
   // Escape closes the panel, unless the profile already handled it (it clears its scrub).
@@ -146,6 +154,7 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
       <div className="p-3 sm:p-4">
         <TerrainBoundary
           fallback={<Skeleton message="该设备无法显示 3D 地形。" />}
+          onError={() => setTerrainFailed(true)}
         >
           <Suspense fallback={<Skeleton message="地形加载中…" />}>
             <VertTerrain
@@ -157,6 +166,15 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
             />
           </Suspense>
         </TerrainBoundary>
+        {/* No WebGL? The elevation profile still is the record: draw it from
+            the same baked scene, as plain SVG. */}
+        {terrainFailed ? (
+          <Suspense fallback={null}>
+            <div className="mt-3">
+              <ElevationPanel sceneId={String(run.run_id)} hash={hash} />
+            </div>
+          </Suspense>
+        ) : null}
         <p className="mt-2 text-right text-[10px] text-[#5f5f5f]">
           场景在构建期烘焙，不含坐标；地形在浏览器本地渲染
         </p>

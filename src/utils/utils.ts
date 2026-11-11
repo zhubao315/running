@@ -6,6 +6,7 @@ import worldGeoJson from '@surbowl/world-geo-json-zh/world.zh.json';
 import { chinaCities } from '@/static/city';
 import { MAP_LINE_COLOR, MUNICIPALITY_CITIES_ARR, NEED_FIX_MAP, RUN_TITLES, ACTIVITY_TYPES, RICH_TITLE } from './const';
 import { FeatureCollection, LineString } from 'geojson';
+import { trackFor } from './tracks';
 
 export type Coordinate = [number, number];
 
@@ -27,6 +28,12 @@ export interface Activity {
    */
   location_resolved?: string | null;
   summary_polyline?: string | null;
+  /**
+   * Set by plugins/splitActivities.ts for every record that has a polyline.
+   * The polyline itself is fetched per year at runtime (see utils/tracks.ts),
+   * so summary_polyline is usually absent in the browser.
+   */
+  has_track?: boolean;
   average_heartrate?: number | null;
   average_speed: number;
   streak: number;
@@ -42,7 +49,7 @@ const titleForShow = (run: Activity): string => {
   if (run.name) {
     name = run.name;
   }
-  return `${name} ${date} ${distance} KM ${!run.summary_polyline ? '(No map data for this run)' : ''
+  return `${name} ${date} ${distance} KM ${!run.summary_polyline && !run.has_track ? '(No map data for this run)' : ''
     }`;
 };
 
@@ -193,10 +200,13 @@ const intComma = (x = '') => {
 
 const pathForRun = (run: Activity): Coordinate[] => {
   try {
-    if (!run.summary_polyline) {
+    // The geometry is not in the bundle: it is fetched per year at runtime
+    // (see utils/tracks.ts), so the polyline may still be missing here.
+    const encoded = run.summary_polyline || trackFor(run.run_id);
+    if (!encoded) {
       return [];
     }
-    const c = mapboxPolyline.decode(run.summary_polyline);
+    const c = mapboxPolyline.decode(encoded);
     // reverse lat long for mapbox
     c.forEach((arr) => {
       [arr[0], arr[1]] = !NEED_FIX_MAP
