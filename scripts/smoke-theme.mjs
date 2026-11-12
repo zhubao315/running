@@ -145,6 +145,34 @@ expect(initial.theme === 'dark', `the page starts dark (${initial.theme})`);
 
 const toggle = page.locator('[aria-label*="主题"]').first();
 expect((await toggle.count()) === 1, 'the theme button is on the page');
+
+// The button is an icon button: no words in the interface, but the words
+// for a screen reader and a tooltip.
+const button = await toggle.evaluate((element) => ({
+  text: element.innerText.trim(),
+  label: element.getAttribute('aria-label'),
+  title: element.getAttribute('title'),
+  type: element.getAttribute('type'),
+  width: Math.round(element.getBoundingClientRect().width),
+  height: Math.round(element.getBoundingClientRect().height),
+  icons: element.querySelectorAll('svg').length,
+}));
+console.log('smoke-theme: button =', JSON.stringify(button));
+expect(button.text === '', `the theme button shows no words (${button.text})`);
+expect(
+  button.icons === 2,
+  `the theme button draws a sun and a moon (${button.icons})`
+);
+expect(button.type === 'button', 'the theme button is type="button"');
+expect(
+  !!button.label && !!button.title,
+  'the theme button has a label and a title'
+);
+expect(
+  button.width >= 40 && button.height >= 40,
+  `the theme button is at least 40px (${button.width}x${button.height})`
+);
+
 await toggle.click();
 await page.waitForTimeout(700);
 
@@ -155,10 +183,18 @@ const light = await page.evaluate(() => ({
   colorScheme: document.documentElement.style.colorScheme,
   hasMap: !!document.querySelector('.maplibregl-canvas'),
   sections: document.querySelectorAll('section[id]').length,
+  label:
+    document
+      .querySelector('[aria-label*="主题"]')
+      ?.getAttribute('aria-label') || '',
 }));
 expect(
   light.theme === 'light',
   `the button switches the theme (${light.theme})`
+);
+expect(
+  light.label.includes('暗色'),
+  `the button names the theme it switches to (${light.label})`
 );
 expect(light.stored === 'light', `the choice is stored (${light.stored})`);
 expect(light.colorScheme === 'light', 'color-scheme follows the theme');

@@ -57,7 +57,7 @@ const YearStat = ({ year, onClick }: { year: string, onClick: (_year: string) =>
     >
       <section className={styles.grid}>
         <Stat value={year} description=" Journey" />
-        <Stat value={runs.length} description=" Runs" />
+        <Stat value={runs.length} description=" 次" />
         <Stat value={sumDistance} description=" KM" />
         <Stat value={avgPace} description=" Avg Pace" />
         <Stat value={`${streak} day`} description=" Streak" />

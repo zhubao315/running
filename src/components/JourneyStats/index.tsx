@@ -302,7 +302,7 @@ const JourneyStats = ({ changeCity, changeTitle, onViewRun }: IJourneyStatsProps
             <span className={styles.panelTitle}>
               Running Rhythm / 跑步节律
             </span>
-            <span className={styles.panelHint}>{periodTotal} Runs</span>
+            <span className={styles.panelHint}>{periodTotal} 次</span>
           </div>
           {periodTotal ? (
             <div className={styles.periodBar} role="group" aria-label="时段分布">
@@ -318,7 +318,7 @@ const JourneyStats = ({ changeCity, changeTitle, onViewRun }: IJourneyStatsProps
                     background: `color-mix(in srgb, var(--accent) ${p.alpha}%, transparent)`,
                   }}
                   onClick={() => changeTitle(p.title)}
-                  title={`${p.label}跑步 · ${p.count} Runs`}
+                  title={`${p.label}跑步 · ${p.count} 次`}
                   aria-label={`${p.label} ${p.count} 次`}
                 />
               ))}
@@ -354,7 +354,7 @@ const JourneyStats = ({ changeCity, changeTitle, onViewRun }: IJourneyStatsProps
                   onClick={() => changeTitle(r.title)}
                 >
                   <span className={styles.raceLabel}>{r.label}</span>
-                  <span className={styles.raceCount}>{r.count} Runs</span>
+                  <span className={styles.raceCount}>{r.count} 次</span>
                 </button>
               ))}
             </div>

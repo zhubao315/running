@@ -23,7 +23,9 @@ const note = (message) => notes.push(message);
 // ---------------------------------------------------------------- structure
 
 if (!existsSync(dist)) {
-  console.error(`verify-dist: ${dist} does not exist — the build produced nothing`);
+  console.error(
+    `verify-dist: ${dist} does not exist — the build produced nothing`
+  );
   process.exit(1);
 }
 
@@ -66,10 +68,7 @@ const prefix = localHrefs.length
   : '';
 let missingAssets = 0;
 for (const href of localHrefs) {
-  const relative = href
-    .split('?')[0]
-    .slice(prefix.length)
-    .replace(/^\//, '');
+  const relative = href.split('?')[0].slice(prefix.length).replace(/^\//, '');
   const file = path.join(dist, relative);
   if (!existsSync(file)) {
     missingAssets += 1;
@@ -102,24 +101,66 @@ if (existsSync(assetDir)) {
   }
 }
 
-// Each site's own wording is right for it and wrong for the others: the
-// riding site once shipped the running site's sentences.
+// Each site says things in its own words. The riding site once shipped the
+// running site's sentences and the hiking site the old running template, so
+// the wording itself is a regression test: the right sentences have to be
+// there, and the other sports' have not.
 const SITE = process.env.SITE_SPORT || 'running';
-const OTHERS = ['running', 'cycling', 'hiking'].filter((s) => s !== SITE);
 const SPORT_CN = { running: '跑步', cycling: '骑行', hiking: '徒步' };
-const FORBIDDEN = OTHERS.flatMap((sport) => [
-  {
-    text: `本页只统计${SPORT_CN[sport]}记录`,
-    why: `${sport} copy left in the ${SITE} site`,
-  },
-  {
-    text: `标记的${SPORT_CN[sport]}`,
-    why: `${sport} copy left in the ${SITE} site`,
-  },
-]);
+const OTHERS = ['running', 'cycling', 'hiking'].filter((s) => s !== SITE);
+
+const FORBIDDEN = [
+  ...OTHERS.flatMap((sport) => [
+    {
+      text: `本页只统计${SPORT_CN[sport]}记录`,
+      why: `${sport} copy left in the ${SITE} site`,
+    },
+    {
+      text: `标记的${SPORT_CN[sport]}可查看地形`,
+      why: `${sport} copy left in the ${SITE} site`,
+    },
+  ]),
+  // the old running template: the hiking site showed "时段节律 0 Runs"
+  { text: '时段节律', why: 'the old running template left in the site' },
+  { text: '0 Runs', why: 'the old running template left in the site' },
+];
 for (const rule of FORBIDDEN) {
   if (bundleText.includes(rule.text)) {
     fail(`bundle still contains "${rule.text}" (${rule.why})`);
+  }
+}
+
+// The site's own sentences have to be there: a site that lost its own wording
+// would render a panel nobody can read.
+const EXPECTED = {
+  running: [
+    {
+      text: '本页只统计跑步记录',
+      why: 'the running site names its own records',
+    },
+    { text: '跑步节律', why: 'the running site has its rhythm panel' },
+  ],
+  cycling: [
+    {
+      text: '本页只统计骑行记录',
+      why: 'the riding site names its own records',
+    },
+    { text: '平均速度', why: 'the riding site shows a speed, not a pace' },
+  ],
+  hiking: [
+    {
+      text: '本页只统计徒步记录',
+      why: 'the hiking site names its own records',
+    },
+    {
+      text: '标记的徒步可查看地形剖面',
+      why: 'the hiking site names its terrain',
+    },
+  ],
+};
+for (const rule of EXPECTED[SITE] || []) {
+  if (!bundleText.includes(rule.text)) {
+    fail(`the bundle is missing "${rule.text}" (${rule.why})`);
   }
 }
 
@@ -137,16 +178,10 @@ if (activities) {
 
   // The running site must not publish the hikes it counted twice: the hiking
   // site owns those records.
-  const duplicatesPath = path.join(
-    root,
-    'run_page',
-    'hiking_duplicates.json'
-  );
+  const duplicatesPath = path.join(root, 'run_page', 'hiking_duplicates.json');
   if (existsSync(duplicatesPath)) {
     const duplicates = JSON.parse(readFileSync(duplicatesPath, 'utf-8'));
-    const entries = Array.isArray(duplicates.entries)
-      ? duplicates.entries
-      : [];
+    const entries = Array.isArray(duplicates.entries) ? duplicates.entries : [];
     const published = new Set(activities.map((a) => String(a.run_id)));
     const leaked = entries.filter((entry) =>
       published.has(String(entry.run_id))
@@ -163,9 +198,9 @@ if (activities) {
 
   // The geometry must not be in the eager bundle any more.
   const polylineBytes = activities.reduce(
-    (sum, a) => sum + (typeof a.summary_polyline === 'string'
-      ? a.summary_polyline.length
-      : 0),
+    (sum, a) =>
+      sum +
+      (typeof a.summary_polyline === 'string' ? a.summary_polyline.length : 0),
     0
   );
   if (polylineBytes > 0 && bundleText.includes('summary_polyline')) {
