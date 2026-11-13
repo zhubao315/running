@@ -61,6 +61,9 @@ for (const a of activities) {
   updated++;
 }
 
+// JSON.parse has no integer above 2^53, so writing the parsed file back
+// rounds the 19-digit COROS run_ids ("...807" -> "...000"); coros_sync.yml
+// restores the exact ids from the DB with run_page/repair_run_ids_rh.py.
 writeFileSync(actPath, JSON.stringify(activities));
 console.log(
   `done: updated ${updated} of ${activities.length} activities, ` +

@@ -13,7 +13,10 @@ name: COROS Sync
 on:
   workflow_dispatch:
   schedule:
-    - cron: '10 0 * * *' # 08:10 Asia/Shanghai
+    # 02:10 Asia/Shanghai — six hours ahead of the old 08:10 slot: GitHub
+    # fired that trigger 5-7 h late every day in November, so the site
+    # updated after lunch; this slot lands near 08:10 Beijing anyway.
+    - cron: '10 18 * * *'
   push:
     branches:
       - master
@@ -180,6 +183,16 @@ jobs:
         run: |
           node scripts/backfill-scene-records.mjs
           python scripts/sync_scene_records_db.py .
+
+      # Node read the JSON above through JSON.parse, which has no integer
+      # above 2^53: the 19-digit COROS ids came back as the nearest double
+      # ("...807" -> "...000"). The browser rounds the same way, so the page
+      # is fine with it — but the integrity gate and the GPS-drift allowlist
+      # below join the JSON with the DB, and SQLite holds the exact INTEGER.
+      # Restore the ids from the DB so both sides speak the same ones again.
+      - name: Repair JS-rounded run_ids
+        if: steps.change.outputs.rebuild == 'true'
+        run: python run_page/repair_run_ids_rh.py --execute
 
       - name: Export parquet snapshot
         if: steps.change.outputs.rebuild == 'true'
