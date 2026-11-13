@@ -114,9 +114,18 @@ const nav = await page.evaluate(() => {
   const items = [...document.querySelectorAll('nav a[data-site]')];
   return {
     sites: items.map((a) => a.dataset.site),
-    zh: items.map((a) => a.firstElementChild?.textContent?.trim() || ''),
-    en: items.map((a) => a.lastElementChild?.textContent?.trim() || ''),
-    current: document.querySelectorAll('nav a[aria-current="page"]').length,
+    // The label spans are read by name: a navigation item carries the
+    // sub-brand icon before them. (CSS modules hash the class names, so the
+    // match is on the name inside the class.)
+    zh: items.map(
+      (a) => a.querySelector('[class*="navZh"]')?.textContent?.trim() || ''
+    ),
+    en: items.map(
+      (a) => a.querySelector('[class*="navEn"]')?.textContent?.trim() || ''
+    ),
+    // Scoped to the header: the phone bottom bar carries the same four
+    // links and marks the current site there as well.
+    current: document.querySelectorAll('header a[aria-current="page"]').length,
   };
 });
 expect(
