@@ -317,6 +317,27 @@ jobs:
         with:
           path: ./dist
 
+      - name: Wait for the artifact to be visible
+        # upload-pages-artifact finalises the upload, but the run's artifact
+        # list can lag a moment behind it — deploy-pages reads that list and
+        # fails when it is still empty. Poll it instead of racing the API.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for _ in $(seq 1 30); do
+            found=$(curl -fsS \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?per_page=100" \
+              | python3 -c "import json,sys; print(sum(1 for a in json.load(sys.stdin).get('artifacts', []) if a['name'] == 'github-pages'))")
+            if [ "$found" = "1" ]; then
+              echo "artifact github-pages is visible"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "artifact github-pages never became visible" >&2
+          exit 1
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
