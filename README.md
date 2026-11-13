@@ -35,7 +35,9 @@
 | 2,038 次跑步 | 24,563 km | 124,578 m（1,759 条地形恢复） | 2015–2026 | 2026-11-13 |
 <!-- STATS:END -->
 
-> 每天早上自动同步（约 **08:10 北京时间**）；完成后自动重建页面并部署到 GitHub Pages。
+> 每日自动同步一次（计划 `18:10 UTC` / 北京时间 02:10 触发；GitHub 定时调度常有 5–7 小时漂移，实际多在上午完成——以页面数据徽章为准）；完成后自动重建页面并部署到 GitHub Pages。
+>
+> 📄 系统级文档：[架构审计](docs/ACTIVE_SYSTEM_AUDIT.md) · [路线图](docs/ACTIVE_ROADMAP.md) · [隐私审计](docs/ACTIVE_PRIVACY_AUDIT.md) · [数据公开声明](docs/DATA_PUBLICATION.md)
 
 ## 站点亮点
 
@@ -58,7 +60,8 @@ flowchart LR
 ```
 
 - **数据源**：COROS 官方 MCP（OAuth 2.0 + PKCE），不再依赖 Strava token
-- **调度**：每天 `00:10 UTC` / `08:10 Asia/Shanghai`
+- **调度**：每天 `18:10 UTC`（北京时间 02:10 计划触发；GitHub 调度漂移后实际约 07:00–10:00 落地，增量窗口自动回补）
+- **配额**：三个运动站共享 COROS 每日 50 个 FIT 下载额度，按[租约式账本](https://github.com/zhubao315/active-watch/blob/main/state/fit-quota.json)分配（默认每次 10，手动回填可加大）
 - **工作流**：[`coros_sync.yml`](https://github.com/zhubao315/running/blob/master/.github/workflows/coros_sync.yml)
 - **落盘**：同步结果直接提交回仓库，不依赖会过期的 Actions 缓存
 - **构建**：同步 → SVG 海报 → README 数据表 → `pnpm build` → Pages
@@ -93,7 +96,7 @@ python run_page/coros_mcp_sync.py \
 可选参数：
 
 - `--start-date 20260101`：指定补齐起点
-- `--max-downloads 45`：遵守 COROS 每日 50 个 FIT 的上限
+- `--max-downloads N`：遵守 COROS 每日 50 个 FIT 上限；CI 中该数值由[共享配额账本](https://github.com/zhubao315/active-watch)自动分配，不再默认拉满 45
 - `--min-distance-km 3`：过滤短距离活动（骑行站使用）
 
 ## 仓库结构
