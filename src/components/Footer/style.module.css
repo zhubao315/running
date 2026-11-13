@@ -9,41 +9,66 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.25rem;
   max-width: 90rem;
   margin: 0 auto;
-  padding: 1.6rem 2rem;
+  padding: 1.8rem 2rem;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  font-weight: 800;
-  letter-spacing: -0.01em;
+  gap: 0.6rem;
 }
 
 .mark {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 50%;
-  background: var(--accent);
+  flex: none;
+  color: var(--text);
+}
+
+.brandText {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1.15;
+}
+
+.wordmark {
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
+
+.brandLine {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
 }
 
 .links {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.9rem;
 }
 
 .link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   color: var(--muted);
   font-size: 0.85rem;
   transition: color 0.2s ease;
 }
 
-.link:hover {
+.link:hover,
+.link:focus-visible {
   color: var(--accent);
+}
+
+.linkIcon {
+  opacity: 0.75;
 }
 
 .note {

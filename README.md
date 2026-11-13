@@ -12,7 +12,16 @@
 [![Last commit](https://img.shields.io/github/last-commit/zhubao315/running?style=flat-square)](https://github.com/zhubao315/running/commits)
 [![License](https://img.shields.io/github/license/zhubao315/running?style=flat-square)](https://github.com/zhubao315/running/blob/master/LICENSE)
 
-[🌐 在线站点](https://zhubao315.github.io/running/) · [📊 数据概览](#数据概览) · [🔄 自动同步](#自动同步) · [🛠 本地运行](#本地运行) · [🔗 三个站点](#三个站点)
+[🌐 在线站点](https://zhubao315.github.io/running/) · [📊 数据概览](#数据概览) · [🔄 自动同步](#自动同步) · [🛠 本地运行](#本地运行) · [🔗 相关站点](#相关站点)
+
+</div>
+
+<div align="center">
+
+**ZB ACTIVE** — 朱宝 · 运动与健康数字档案
+**用数据记录每一次前进。**
+
+[❤️ 健康 HEALTH](https://zhubao315.github.io/health/) · [🏃 跑步 RUNNING](https://zhubao315.github.io/running/) · [🚴 骑行 CYCLING](https://zhubao315.github.io/cycling/) · [🥾 徒步 HIKING](https://zhubao315.github.io/hiking/)
 
 </div>
 
@@ -34,7 +43,7 @@
 - 年度 / 总里程海报与圆环图
 - 单次轨迹地图、配速与心率
 - 3D 地形（已烘焙 700+ 条轨迹）
-- 三个运动站点互相跳转
+- 四个站点互相跳转（健康 / 跑步 / 骑行 / 徒步），共用同一套品牌与主题偏好
 
 ## 自动同步
 
@@ -98,6 +107,15 @@ python run_page/coros_mcp_sync.py \
 | `src/static/scenes.json` | 3D 场景索引 |
 | `public/scenes/` | 预烘焙 3D 地形 |
 | `.github/workflows/coros_sync.yml` | 每日同步 + 部署 |
+
+## 品牌 ZB ACTIVE
+
+四个站点属于同一套品牌视觉系统：同一个 ZB ACTIVE 标志、四套子品牌图标、同一套配色令牌、同一套字体与布局骨架、同一套响应式规则与主题偏好键。运动站各自保留专业表达（跑步的速度与节奏、骑行的机械与流线、徒步的地形与海拔），健康站保持独立的数据驾驶舱实现，不迁框架。
+
+- 品牌规范：[BRAND_SYSTEM.md](BRAND_SYSTEM.md)
+- 设计令牌：[src/styles/brand-tokens.css](src/styles/brand-tokens.css)
+- 标志与图标：[public/brand/](public/brand/)
+- 社交预览图：[public/brand/og-*.png](public/brand/)
 
 ## 相关站点
 

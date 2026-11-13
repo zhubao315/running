@@ -1,5 +1,7 @@
 import useSiteMetadata from '@/hooks/useSiteMetadata';
 import ThemeToggle from '@/components/ThemeToggle';
+import BrandMark from '@/components/BrandMark';
+import SportIcon from '@/components/SportIcon';
 import styles from './style.module.css';
 
 const ORDER = ['health', 'running', 'cycling', 'hiking'] as const;
@@ -21,7 +23,7 @@ const isSiteKey = (name: string): name is SiteKey =>
   (ORDER as readonly string[]).includes(name);
 
 const Header = () => {
-  const { logo, siteUrl, navLinks, siteTitle } = useSiteMetadata();
+  const { logo, siteUrl, navLinks, siteTitle, sportLabel } = useSiteMetadata();
   const current = siteUrl.replace(/\/$/, '').split('/').pop() ?? '';
   const sites = navLinks.filter((link) => isSiteKey(link.name.toLowerCase()));
   const extras = navLinks.filter((link) => !isSiteKey(link.name.toLowerCase()));
@@ -29,9 +31,17 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <a href={siteUrl} className={styles.brand}>
-          <img className={styles.logo} alt="" src={logo} />
-          <span className={styles.name}>{siteTitle}</span>
+        <a href={siteUrl} className={styles.brand} aria-label="ZB ACTIVE">
+          <BrandMark size={26} className={styles.mark} />
+          <span className={styles.wordmark}>ZB ACTIVE</span>
+          <span className={styles.rule} aria-hidden="true" />
+          <span className={styles.site}>
+            <span className={styles.siteZh}>{sportLabel || siteTitle}</span>
+            <span className={styles.siteEn}>{current.toUpperCase()}</span>
+          </span>
+          {/* The personal avatar stays a personal thing: it is not the brand
+              mark of a sport site any more. */}
+          <img className={styles.avatar} alt="" src={logo} hidden />
         </a>
         <div className={styles.right}>
           <nav className={styles.nav} aria-label="运动与健康站点导航">
@@ -45,9 +55,13 @@ const Header = () => {
                   data-site={key}
                   className={`${styles.navItem} ${active ? styles.navActive : ''}`}
                   aria-current={active ? 'page' : undefined}
+                  title={`${LABELS[key].zh} · ${LABELS[key].en}`}
                 >
-                  <span className={styles.navZh}>{LABELS[key].zh}</span>
-                  <span className={styles.navEn}>{LABELS[key].en}</span>
+                  <SportIcon name={key} size={16} className={styles.navIcon} />
+                  <span className={styles.navText}>
+                    <span className={styles.navZh}>{LABELS[key].zh}</span>
+                    <span className={styles.navEn}>{LABELS[key].en}</span>
+                  </span>
                 </a>
               );
             })}

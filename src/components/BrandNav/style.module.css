@@ -1,0 +1,62 @@
+/* The mobile bar: four sites, one thumb reach, the safe area respected. */
+.bar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 45;
+  display: none;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(16px) saturate(1.1);
+  padding-bottom: var(--zb-safe-bottom);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 56px;
+  padding: 0.45rem 0.25rem;
+  color: var(--muted);
+  transition: color var(--zb-fast) ease;
+}
+
+.item:hover,
+.item:focus-visible {
+  color: var(--text);
+}
+
+.icon {
+  opacity: 0.85;
+}
+
+.label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+.active {
+  color: var(--accent);
+}
+
+.active .icon {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .bar {
+    display: block;
+  }
+}

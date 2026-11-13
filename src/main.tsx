@@ -11,6 +11,7 @@ import {
 } from './utils/const';
 import '@/styles/index.css';
 import '@/styles/theme.css';
+import '@/styles/brand-tokens.css';
 import { withOptionalGAPageTracking } from './utils/trackRoute';
 
 if (USE_GOOGLE_ANALYTICS) {

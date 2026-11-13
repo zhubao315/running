@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import SectionHeader from './SectionHeader';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
+import BrandMark from '@/components/BrandMark';
+import SportIcon from '@/components/SportIcon';
 import {
   computeGeo,
   computeTotals,
@@ -24,12 +26,22 @@ const Profile = ({ runs }: IProfileProps) => {
   const firstYear = totals.firstDate?.slice(0, 4) ?? '';
   const lastYear = totals.lastDate?.slice(0, 4) ?? '';
   const span = firstYear && lastYear ? `${firstYear}—${lastYear}` : '';
+  const sportKey = meta.siteUrl.replace(/\/$/, '').split('/').pop() ?? '';
 
   return (
     <section className={styles.profile} aria-labelledby="profile-title">
       <SectionHeader index="01" kicker="RUNNING PERFORMANCE & CAREER" title="个人跑步档案" />
       <div className={styles.profileIdentity}>
-        <img className={styles.avatar} src={meta.logo} alt="" />
+        <div className={styles.brandBlock}>
+          <BrandMark size={40} className={styles.brandMark} />
+          <span className={styles.brandLabel}>
+            <SportIcon name={sportKey} size={14} className={styles.brandIcon} />
+            <span>ZB ACTIVE / {sportKey.toUpperCase()}</span>
+          </span>
+          {totals.lastDate ? (
+            <span className={styles.brandStamp}>数据截至 {dotDate(totals.lastDate)}</span>
+          ) : null}
+        </div>
         <div className={styles.profileText}>
           <h1 id="profile-title" className={styles.profileTitle}>
             {meta.siteTitle}

@@ -20,8 +20,8 @@ const data: ISiteMetadataResult = {
   logo: 'https://avatars.githubusercontent.com/u/1206487?v=4',
   description: 'zhubao315 的跑步生涯',
   tagline: '用脚步丈量城市，也用数据记住每一次出发。',
-  accent: '#38BDF8',
-  accent2: '#0EA5E9',
+  accent: '#D9F36A',
+  accent2: '#A3B82F',
   sportLabel: '跑步',
   repoUrl: 'https://github.com/zhubao315/running',
   navLinks: [

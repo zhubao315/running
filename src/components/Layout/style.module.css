@@ -13,3 +13,11 @@
     padding: 0 2rem 2rem;
   }
 }
+
+/* The mobile bottom bar sits over the page: the content keeps the space it
+   needs so nothing is ever hidden behind it. */
+@media (max-width: 768px) {
+  .main {
+    padding-bottom: calc(var(--zb-mobile-nav-height) + 1.5rem);
+  }
+}

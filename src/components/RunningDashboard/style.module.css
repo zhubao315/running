@@ -65,12 +65,40 @@
 
 .profile {
   position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: clamp(1.4rem, 4vw, 3rem);
   padding: 0.4rem 0 clamp(1.4rem, 3vw, 2rem);
   border-bottom: 1px solid var(--border);
+}
+
+/* The brand backdrop: the sport's own generated art, held far enough back
+   that the numbers stay the loudest thing on the page. */
+.profile::before {
+  content: '';
+  position: absolute;
+  top: -12%;
+  right: 8%;
+  bottom: -12%;
+  left: 8%;
+  background-image: url('/brand/hero-running.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.34;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 26%, #000 74%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 26%, #000 74%, transparent);
+  pointer-events: none;
+}
+
+.profile > * {
+  position: relative;
+  z-index: 1;
+}
+
+:root[data-theme='light'] .profile::before {
+  display: none;
 }
 
 .profileIdentity {
@@ -89,13 +117,39 @@
   font-variant-numeric: tabular-nums;
 }
 
-.avatar {
-  width: clamp(3.2rem, 5vw, 4.4rem);
-  height: clamp(3.2rem, 5vw, 4.4rem);
-  border-radius: 50%;
-  border: 1px solid var(--border-strong);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 8%, transparent);
+.brandBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
   flex: 0 0 auto;
+}
+
+.brandMark {
+  color: var(--text);
+}
+
+.brandLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.brandIcon {
+  opacity: 0.9;
+}
+
+.brandStamp {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
 }
 
 .profileText {
@@ -1138,5 +1192,12 @@ button.day:hover {
 @media (prefers-reduced-motion: reduce) {
   .dayDetail {
     animation: none;
+  }
+}
+
+/* On a phone the backdrop steps back: the numbers and the text come first. */
+@media (max-width: 768px) {
+  .profile::before {
+    opacity: 0.16;
   }
 }
