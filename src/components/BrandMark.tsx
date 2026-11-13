@@ -1,38 +1,25 @@
-import styles from './style.module.css';
-
 interface Props {
   size?: number;
   className?: string;
-  title?: string;
 }
 
 /**
- * The ACTIVE mark.
- *
- * One continuous Z-shaped trail with a gold node where the line crosses:
- * a route, and the point on it where you are now. The stroke inherits the
- * current text colour so the mark works on both themes; the node stays gold.
+ * The ACTIVE mark is the main site's trail symbol (owner decision 2026-11-13):
+ * one raster, byte-identical in all four repositories under /brand/.
+ * It is decorative — the surrounding brand link carries the accessible name,
+ * exactly like the main site does.
  */
-const BrandMark = ({ size = 26, className, title = 'ACTIVE' }: Props) => (
-  <svg
+const BrandMark = ({ size = 28, className }: Props) => (
+  <img
     className={className}
-    width={size}
-    height={size}
-    viewBox="0 0 32 32"
-    fill="none"
-    role="img"
-    aria-label={title}
-  >
-    <title>{title}</title>
-    <path
-      d="M7 9h18L7 23h18"
-      stroke="currentColor"
-      strokeWidth="2.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <circle cx="16" cy="16" r="2.4" fill="#FBBF24" />
-  </svg>
+    src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/zhubao-symbol.png`}
+    width={592}
+    height={530}
+    style={{ height: size, width: 'auto' }}
+    alt=""
+    aria-hidden="true"
+    decoding="async"
+  />
 );
 
 export default BrandMark;

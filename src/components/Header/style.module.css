@@ -38,6 +38,13 @@
 .mark {
   flex: none;
   color: var(--text);
+  /* the main site's hover: the mark tilts and grows a hair, on its easing */
+  transition: transform 0.35s var(--active-ease-out);
+}
+
+.brand:hover .mark,
+.brand:focus-visible .mark {
+  transform: rotate(-3deg) scale(1.04);
 }
 
 .wordmark {

@@ -40,9 +40,6 @@ const data: ISiteMetadataResult = {
     {
       name: 'health',
       url: 'https://zhubao315.github.io/health/',
-    },    {
-      name: 'X',
-      url: 'https://x.com/zhubao315',
     },
   ],
 };
