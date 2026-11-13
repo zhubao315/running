@@ -16,6 +16,7 @@ the quota service is down.
 
 This file is byte-identical in running/cycling/hiking under scripts/.
 """
+
 import argparse
 import base64
 import datetime
@@ -47,7 +48,9 @@ def token():
 
 
 def utc_today(offset_days: int = 0) -> str:
-    d = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=offset_days)
+    d = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+        days=offset_days
+    )
     return d.strftime("%Y-%m-%d")
 
 
@@ -90,7 +93,9 @@ def update_ledger(repo: str, mutator, attempts: int = 3) -> bool:
     the last committed state — still fairer than each assuming the full cap.
     """
     if not token():
-        log("no ACTIVE_STATE_TOKEN: computed from last known state; this repo's share is not recorded")
+        log(
+            "no ACTIVE_STATE_TOKEN: computed from last known state; this repo's share is not recorded"
+        )
     for attempt in range(attempts):
         ledger, sha = read_ledger()
         ledger["days"] = prune(ledger.get("days", {}))
@@ -101,12 +106,18 @@ def update_ledger(repo: str, mutator, attempts: int = 3) -> bool:
         payload = {
             "message": f"quota: {utc_today()} ({repo})",
             "branch": LEDGER_REF,
-            "content": base64.b64encode(json.dumps(ledger, ensure_ascii=False, indent=2).encode()).decode(),
+            "content": base64.b64encode(
+                json.dumps(ledger, ensure_ascii=False, indent=2).encode()
+            ).decode(),
         }
         if sha:
             payload["sha"] = sha
         try:
-            gh_json(f"{API}/repos/{LEDGER_REPO}/contents/{LEDGER_FILE}", payload, method="PUT")
+            gh_json(
+                f"{API}/repos/{LEDGER_REPO}/contents/{LEDGER_FILE}",
+                payload,
+                method="PUT",
+            )
             return True
         except urllib.error.HTTPError as e:
             if e.code in (409, 422, 412):  # lost the race: re-read and retry
@@ -129,13 +140,20 @@ def cmd_reserve(args) -> None:
         computed = max(0, min(args.cap, DAILY_TOTAL - used_by_others))
         allow = min(args.want, computed)
         day[args.repo] = max(int(day.get(args.repo, 0)), allow)
-        others = ", ".join(f"{r}={v}" for r, v in sorted(day.items()) if r != args.repo) or "none yet"
-        log(f"today {utc_today()}: others hold {used_by_others}/{DAILY_TOTAL} ({others}); asking {args.want} -> {allow}")
+        others = (
+            ", ".join(f"{r}={v}" for r, v in sorted(day.items()) if r != args.repo)
+            or "none yet"
+        )
+        log(
+            f"today {utc_today()}: others hold {used_by_others}/{DAILY_TOTAL} ({others}); asking {args.want} -> {allow}"
+        )
 
     try:
         update_ledger(args.repo, mutate)
     except Exception as exc:  # noqa: BLE001 — the sync must not die on the ledger
-        log(f"ledger unavailable ({exc}); falling back to a conservative {FALLBACK_ALLOW}")
+        log(
+            f"ledger unavailable ({exc}); falling back to a conservative {FALLBACK_ALLOW}"
+        )
     print(allow)
 
 
@@ -155,7 +173,9 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("mode", choices=["reserve", "reconcile"])
     ap.add_argument("--repo", required=True)
-    ap.add_argument("--want", type=int, default=10, help="downloads this run hopes to use")
+    ap.add_argument(
+        "--want", type=int, default=10, help="downloads this run hopes to use"
+    )
     ap.add_argument("--cap", type=int, default=45, help="per-repo hard cap")
     ap.add_argument("--used", type=int, help="actual downloads (reconcile)")
     args = ap.parse_args()
