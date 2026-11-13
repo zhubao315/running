@@ -10,9 +10,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  max-width: 90rem;
+  width: min(var(--active-shell), 100% - 2 * var(--active-gutter));
   margin: 0 auto;
-  padding: 1.8rem 2rem;
+  padding: 1.8rem 0;
 }
 
 .brand {

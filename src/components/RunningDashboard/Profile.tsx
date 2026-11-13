@@ -36,7 +36,7 @@ const Profile = ({ runs }: IProfileProps) => {
           <BrandMark size={40} className={styles.brandMark} />
           <span className={styles.brandLabel}>
             <SportIcon name={sportKey} size={14} className={styles.brandIcon} />
-            <span>ZB ACTIVE / {sportKey.toUpperCase()}</span>
+            <span>ACTIVE / {sportKey.toUpperCase()}</span>
           </span>
           {totals.lastDate ? (
             <span className={styles.brandStamp}>数据截至 {dotDate(totals.lastDate)}</span>

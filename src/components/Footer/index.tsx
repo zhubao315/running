@@ -27,7 +27,7 @@ const Footer = () => {
         <div className={styles.brand}>
           <BrandMark size={30} className={styles.mark} />
           <span className={styles.brandText}>
-            <span className={styles.wordmark}>ZB ACTIVE</span>
+            <span className={styles.wordmark}>ACTIVE</span>
             <span className={styles.brandLine}>朱宝 · 运动与健康数字档案</span>
           </span>
         </div>

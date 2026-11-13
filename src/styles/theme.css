@@ -1,28 +1,43 @@
-/* Self-hosted type: Fira Sans (UI/latin) + Fira Code (numerals/tables).
-   CJK falls back to the system stack — Fira has no CJK coverage. */
+/* Text faces come from the main site (zhubao315.github.io): Inter for
+   reading, Manrope for display, both self-hosted variable files. Fira Code
+   stays the numeral/table face — CJK falls back to the system stack. */
 @font-face {
-  font-family: 'Fira Sans';
-  src: url('/fonts/fira-sans-400.woff2') format('woff2');
-  font-weight: 400;
+  font-family: 'Inter Variable';
+  src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Fira Sans';
-  src: url('/fonts/fira-sans-500.woff2') format('woff2');
-  font-weight: 500;
+  font-family: 'Inter Variable';
+  src: url('/fonts/inter-latin-ext-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: 'Fira Sans';
-  src: url('/fonts/fira-sans-600.woff2') format('woff2');
-  font-weight: 600;
+  font-family: 'Manrope Variable';
+  src: url('/fonts/manrope-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: normal;
   font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: 'Fira Sans';
-  src: url('/fonts/fira-sans-700.woff2') format('woff2');
-  font-weight: 700;
+  font-family: 'Manrope Variable';
+  src: url('/fonts/manrope-latin-ext-wght-normal.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: normal;
   font-display: swap;
+  unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
   font-family: 'Fira Code';
@@ -56,20 +71,22 @@
   --accent-2: var(--accent-2-brand);
   /* text that sits on a filled accent chip */
   --on-accent: #06121f;
-  --bg: #0b1d33;
-  --bg-soft: #0a1729;
+  --bg: #07111f;
+  --bg-soft: #0a1424;
   --card: #102a43;
-  --card-hover: #14344f;
-  --text: #f8fafc;
+  --card-hover: #16324e;
+  --text: #f7faff;
   --text-secondary: #cbd5e1;
   --muted: #94a3b8;
   --subtle: #64748b;
-  --border: #1e3a56;
-  --border-strong: #2a4e70;
+  --border: rgba(247, 250, 255, 0.16);
+  --border-strong: rgba(247, 250, 255, 0.32);
   --shadow: 0 18px 40px -24px rgba(2, 8, 20, 0.9);
   --radius: 12px;
-  --font-sans: 'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  --font-sans: 'Inter Variable', 'Manrope Variable', 'Noto Sans CJK SC',
     'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-display: 'Manrope Variable', 'Inter Variable', 'Noto Sans CJK SC',
+    'PingFang SC', sans-serif;
   --font-mono: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* the 3D terrain panel keeps its own vocabulary: the viewport stays dark
@@ -96,16 +113,16 @@
   --accent: color-mix(in srgb, var(--accent-brand) 72%, #062033);
   --accent-2: color-mix(in srgb, var(--accent-2-brand) 72%, #062033);
   --on-accent: #ffffff;
-  --bg: #eef3f9;
-  --bg-soft: #e4ecf5;
+  --bg: #f7faff;
+  --bg-soft: #eef2f7;
   --card: #ffffff;
-  --card-hover: #f2f7fc;
-  --text: #0e1b29;
+  --card-hover: #eef2f7;
+  --text: #101828;
   --text-secondary: #38495b;
   --muted: #5b6d80;
   --subtle: #7b8b9c;
-  --border: #d3dfec;
-  --border-strong: #b0c2d5;
+  --border: rgba(16, 24, 40, 0.14);
+  --border-strong: rgba(16, 24, 40, 0.3);
   --shadow: 0 16px 34px -26px rgba(12, 34, 60, 0.55);
 
   --terrain-surface: #f7fafc;

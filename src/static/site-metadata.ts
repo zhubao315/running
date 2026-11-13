@@ -26,10 +26,6 @@ const data: ISiteMetadataResult = {
   repoUrl: 'https://github.com/zhubao315/running',
   navLinks: [
     {
-      name: 'health',
-      url: 'https://zhubao315.github.io/health/',
-    },
-    {
       name: 'running',
       url: 'https://zhubao315.github.io/running/',
     },
@@ -42,6 +38,9 @@ const data: ISiteMetadataResult = {
       url: 'https://zhubao315.github.io/hiking/',
     },
     {
+      name: 'health',
+      url: 'https://zhubao315.github.io/health/',
+    },    {
       name: 'X',
       url: 'https://x.com/zhubao315',
     },

@@ -38,7 +38,7 @@ const SiteHero = () => {
       <div className={styles.inner}>
         <p className={styles.eyebrow}>
           <SportIcon name={sportKey} size={15} className={styles.eyebrowIcon} />
-          <span>ZB ACTIVE</span>
+          <span>ACTIVE</span>
           <span className={styles.eyebrowSlash} aria-hidden="true">
             /
           </span>

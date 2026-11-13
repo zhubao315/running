@@ -1,6 +1,7 @@
 /* Unified four-site header: the mother brand on the left, the four sites and
    the theme switch on the right. The navigation carries the sub-brand icon,
-   a Chinese label and the English site name. */
+   a Chinese label and the English site name. The bar is --active-header-h
+   tall on every site — health reads the same token. */
 .header {
   position: sticky;
   top: 0;
@@ -18,9 +19,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  max-width: 90rem;
+  width: min(var(--active-shell), 100% - 2 * var(--active-gutter));
+  min-height: calc(var(--active-header-h) - 1px);
   margin: 0 auto;
-  padding: 0.55rem 1.5rem;
+  padding: 0.4rem 0;
 }
 
 .brand {
@@ -28,6 +30,7 @@
   align-items: center;
   gap: 0.55rem;
   min-width: 0;
+  flex: none;
   color: var(--text);
   text-decoration: none;
 }
@@ -38,9 +41,9 @@
 }
 
 .wordmark {
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
   white-space: nowrap;
 }
 
@@ -74,10 +77,6 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   color: var(--muted);
-}
-
-.avatar {
-  display: none;
 }
 
 .right {
@@ -177,7 +176,6 @@
 
 @media (max-width: 1023px) {
   .inner {
-    padding: 0.5rem 1rem;
     gap: 0.5rem;
   }
 
@@ -193,13 +191,17 @@
 /* On a phone the four sites move to the bottom bar; the header keeps only
    the brand, the current site and the theme switch. */
 @media (max-width: 768px) {
+  .inner {
+    min-height: calc(var(--active-header-h-sm) - 1px);
+  }
+
   .nav {
     display: none;
   }
 
   .wordmark {
-    font-size: 0.85rem;
-    letter-spacing: 0.06em;
+    font-size: 0.88rem;
+    letter-spacing: 0.12em;
   }
 
   .siteZh {

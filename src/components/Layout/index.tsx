@@ -8,7 +8,7 @@ import useSiteMetadata from '@/hooks/useSiteMetadata';
 import styles from './style.module.css';
 
 const Layout = ({ children }: React.PropsWithChildren) => {
-  const { siteTitle, description, accent, accent2 } = useSiteMetadata();
+  const { accent, accent2 } = useSiteMetadata();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -23,8 +23,8 @@ const Layout = ({ children }: React.PropsWithChildren) => {
     <>
       <Helmet bodyAttributes={{ class: styles.body }}>
         <html lang="zh-CN" />
-        <title>{siteTitle} · ZB ACTIVE</title>
-        <meta name="description" content={description} />
+        {/* title and description live in index.html (ACTIVE / … format);
+            Helmet only carries what the runtime knows better */}
         <meta name="keywords" content="running cycling hiking COROS" />
         <meta
           name="viewport"

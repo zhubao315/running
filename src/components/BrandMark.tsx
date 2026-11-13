@@ -7,13 +7,13 @@ interface Props {
 }
 
 /**
- * The ZB ACTIVE mark.
+ * The ACTIVE mark.
  *
  * One continuous Z-shaped trail with a gold node where the line crosses:
  * a route, and the point on it where you are now. The stroke inherits the
  * current text colour so the mark works on both themes; the node stays gold.
  */
-const BrandMark = ({ size = 26, className, title = 'ZB ACTIVE' }: Props) => (
+const BrandMark = ({ size = 26, className, title = 'ACTIVE' }: Props) => (
   <svg
     className={className}
     width={size}

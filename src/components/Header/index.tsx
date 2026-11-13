@@ -11,6 +11,7 @@ type SiteKey = (typeof ORDER)[number];
  * The four sites share one navigation. Each entry carries a Chinese label —
  * the word a person reads first — and the English name of the site, so the
  * navigation stays the brand it always was while being readable at a glance.
+ * The order is the brand's: run, ride, hike, then health, then the source.
  */
 const LABELS: Record<SiteKey, { zh: string; en: string }> = {
   health: { zh: '健康', en: 'HEALTH' },
@@ -23,7 +24,7 @@ const isSiteKey = (name: string): name is SiteKey =>
   (ORDER as readonly string[]).includes(name);
 
 const Header = () => {
-  const { logo, siteUrl, navLinks, siteTitle, sportLabel } = useSiteMetadata();
+  const { siteUrl, navLinks, siteTitle, sportLabel, repoUrl } = useSiteMetadata();
   const current = siteUrl.replace(/\/$/, '').split('/').pop() ?? '';
   const sites = navLinks.filter((link) => isSiteKey(link.name.toLowerCase()));
   const extras = navLinks.filter((link) => !isSiteKey(link.name.toLowerCase()));
@@ -31,17 +32,14 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <a href={siteUrl} className={styles.brand} aria-label="ZB ACTIVE">
-          <BrandMark size={26} className={styles.mark} />
-          <span className={styles.wordmark}>ZB ACTIVE</span>
+        <a href={siteUrl} className={styles.brand} aria-label="ACTIVE">
+          <BrandMark size={28} className={styles.mark} />
+          <span className={styles.wordmark}>ACTIVE</span>
           <span className={styles.rule} aria-hidden="true" />
           <span className={styles.site}>
             <span className={styles.siteZh}>{sportLabel || siteTitle}</span>
             <span className={styles.siteEn}>{current.toUpperCase()}</span>
           </span>
-          {/* The personal avatar stays a personal thing: it is not the brand
-              mark of a sport site any more. */}
-          <img className={styles.avatar} alt="" src={logo} hidden />
         </a>
         <div className={styles.right}>
           <nav className={styles.nav} aria-label="运动与健康站点导航">
@@ -76,6 +74,18 @@ const Header = () => {
                 {link.name}
               </a>
             ))}
+            {repoUrl ? (
+              <a
+                href={repoUrl}
+                data-site="github"
+                className={styles.navX}
+                target="_blank"
+                rel="noreferrer"
+                title="本站源码"
+              >
+                GitHub
+              </a>
+            ) : null}
           </nav>
           <ThemeToggle />
         </div>
