@@ -12,6 +12,11 @@ name: COROS Sync
 
 on:
   workflow_dispatch:
+    inputs:
+      reserve_budget:
+        description: FIT downloads to reserve from the shared 50/day COROS quota
+        required: false
+        default: '10'
   schedule:
     # 02:10 Asia/Shanghai — six hours ahead of the old 08:10 slot: GitHub
     # fired that trigger 5-7 h late every day in November, so the site
@@ -96,6 +101,21 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: pip install -r requirements.txt
 
+      # COROS gives this account 50 FIT downloads a day, shared by all three
+      # sport sites. Claim today's share in the shared ledger before syncing
+      # (default 10; raise reserve_budget on a manual backfill run) and hand
+      # the allowance to the sync. Ledger trouble degrades to a small static
+      # budget — the sync never fails because of the quota bookkeeping.
+      - name: Claim today's share of the shared COROS quota
+        id: quota
+        if: steps.gate.outputs.run == 'true'
+        env:
+          ACTIVE_STATE_TOKEN: ${{ secrets.ACTIVE_STATE_TOKEN }}
+          QUOTA_RESERVE: ${{ github.event.inputs.reserve_budget || '10' }}
+        run: |
+          ALLOW=$(python3 scripts/quota_lease.py reserve --repo running --want "$QUOTA_RESERVE" --cap 45)
+          echo "allow=${ALLOW:-10}" >> "$GITHUB_OUTPUT"
+
       - name: Sync from COROS MCP
         id: sync
         if: steps.gate.outputs.run == 'true'
@@ -104,12 +124,26 @@ jobs:
           python run_page/coros_mcp_sync.py \
             --account "${{ secrets.COROS_ACCOUNT }}" \
             --password "${{ secrets.COROS_PASSWORD }}" \
-            --max-downloads 45 2>&1 | tee "$RUNNER_TEMP/coros_sync.log"
+            --max-downloads "${{ steps.quota.outputs.allow }}" 2>&1 | tee "$RUNNER_TEMP/coros_sync.log"
           fetched=$(grep -oE 'fetched [0-9]+ new FIT' "$RUNNER_TEMP/coros_sync.log" \
             | tail -n1 | grep -oE '[0-9]+' || true)
           echo "fetched=${fetched:-unknown}" >> "$GITHUB_OUTPUT"
-        # COROS allows 50 FIT downloads per day; stop at 45 and let the next
-        # run pick up anything left over.
+        # The daily 50-FIT allowance is shared across the sport sites; the
+        # quota step above divides it, and anything left over is picked up by
+        # the next run (the sync window always starts at newest - 2 days).
+
+      # Give back what the run did not need so the other sites can use it
+      # today. `fetched` counts downloaded FIT files; "unknown" (log format
+      # drift) simply leaves the reservation standing.
+      - name: Reconcile the quota ledger with what was fetched
+        if: steps.gate.outputs.run == 'true' && steps.quota.outputs.allow != ''
+        continue-on-error: true
+        env:
+          ACTIVE_STATE_TOKEN: ${{ secrets.ACTIVE_STATE_TOKEN }}
+        run: |
+          fetched="${{ steps.sync.outputs.fetched }}"
+          case "$fetched" in ''|unknown|*[!0-9]*) exit 0;; esac
+          python3 scripts/quota_lease.py reconcile --repo running --used "$fetched"
 
       - name: Check whether anything new arrived
         id: change
