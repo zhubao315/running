@@ -2,7 +2,7 @@ import useSiteMetadata from '@/hooks/useSiteMetadata';
 import SportIcon from '@/components/SportIcon';
 import styles from './style.module.css';
 
-const ORDER = ['health', 'running', 'cycling', 'hiking'] as const;
+const ORDER = ['running', 'cycling', 'hiking', 'health'] as const;
 type SiteKey = (typeof ORDER)[number];
 
 const LABELS: Record<SiteKey, { zh: string; en: string }> = {
@@ -26,7 +26,13 @@ const isSiteKey = (name: string): name is SiteKey =>
 const BrandNav = () => {
   const { navLinks, siteUrl } = useSiteMetadata();
   const current = siteUrl.replace(/\/$/, '').split('/').pop() ?? '';
-  const sites = navLinks.filter((link) => isSiteKey(link.name.toLowerCase()));
+  const sites = navLinks
+    .filter((link) => isSiteKey(link.name.toLowerCase()))
+    .sort(
+      (a, b) =>
+        ORDER.indexOf(a.name.toLowerCase() as SiteKey) -
+        ORDER.indexOf(b.name.toLowerCase() as SiteKey),
+    );
 
   return (
     <nav className={styles.bar} aria-label="四站导航">

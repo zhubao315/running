@@ -4,14 +4,15 @@ import BrandMark from '@/components/BrandMark';
 import SportIcon from '@/components/SportIcon';
 import styles from './style.module.css';
 
-const ORDER = ['health', 'running', 'cycling', 'hiking'] as const;
+const ORDER = ['running', 'cycling', 'hiking', 'health'] as const;
 type SiteKey = (typeof ORDER)[number];
 
 /**
  * The four sites share one navigation. Each entry carries a Chinese label —
  * the word a person reads first — and the English name of the site, so the
  * navigation stays the brand it always was while being readable at a glance.
- * The order is the brand's: run, ride, hike, then health, then the source.
+ * The order is the brand's: run, ride, hike, then health. Repository links
+ * belong in the footer only — the top bar carries sites and the theme switch.
  */
 const LABELS: Record<SiteKey, { zh: string; en: string }> = {
   health: { zh: '健康', en: 'HEALTH' },
@@ -24,10 +25,15 @@ const isSiteKey = (name: string): name is SiteKey =>
   (ORDER as readonly string[]).includes(name);
 
 const Header = () => {
-  const { siteUrl, navLinks, siteTitle, sportLabel, repoUrl } = useSiteMetadata();
+  const { siteUrl, navLinks, siteTitle, sportLabel } = useSiteMetadata();
   const current = siteUrl.replace(/\/$/, '').split('/').pop() ?? '';
-  const sites = navLinks.filter((link) => isSiteKey(link.name.toLowerCase()));
-  const extras = navLinks.filter((link) => !isSiteKey(link.name.toLowerCase()));
+  const sites = navLinks
+    .filter((link) => isSiteKey(link.name.toLowerCase()))
+    .sort(
+      (a, b) =>
+        ORDER.indexOf(a.name.toLowerCase() as SiteKey) -
+        ORDER.indexOf(b.name.toLowerCase() as SiteKey),
+    );
 
   return (
     <header className={styles.header}>
@@ -63,29 +69,6 @@ const Header = () => {
                 </a>
               );
             })}
-            {extras.map((link) => (
-              <a
-                key={link.name}
-                href={link.url}
-                className={styles.navX}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {link.name}
-              </a>
-            ))}
-            {repoUrl ? (
-              <a
-                href={repoUrl}
-                data-site="github"
-                className={styles.navX}
-                target="_blank"
-                rel="noreferrer"
-                title="本站源码"
-              >
-                GitHub
-              </a>
-            ) : null}
           </nav>
           <ThemeToggle />
         </div>
