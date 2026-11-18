@@ -4,17 +4,18 @@ interface Props {
 }
 
 /**
- * The ACTIVE master mark (v3.0): the PRECISION MOTION "A" — one ascending
- * leg, one descending leg and a motion arc, in the official blue gradient.
+ * The ACTIVE master mark — a real PNG slice from the supplied identity board
+ * (brand/assets/ACTIVE_Brand_Identity_Board.png), not a redrawn vector.
+ * The white card backdrop was keyed to alpha by brand/slice-board.py, leaving
+ * the original gradient "A" pixels byte-for-byte from the source image.
  *
- * It is one byte-identical SVG in all four repositories under /brand/.
  * Decorative only: the surrounding brand link carries `aria-label="ACTIVE"`.
  */
 const BrandMark = ({ size = 28, className }: Props) => (
   <img
     className={className}
-    src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/active-mark.svg`}
-    width={64}
+    src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/active-mark.png`}
+    width={96}
     height={64}
     style={{ height: size, width: 'auto' }}
     alt=""
