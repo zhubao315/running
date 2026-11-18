@@ -9,13 +9,9 @@ interface Props {
 /**
  * The four sub-brand icons.
  *
- * These are PNG slices from the supplied ACTIVE identity board (the four
- * icons in the "四大子品牌图标" card). The white card backdrop was keyed to
- * alpha by brand/slice-board.py; the icon strokes are the original pixels,
- * not redrawn vectors. All four share one grid and visual weight.
- *
- * They inherit visual weight via CSS `filter` where needed; the source PNGs
- * carry their own official sub-brand colour.
+ * True SVG vectors rebuilt from the four icons in the ACTIVE identity board
+ * (ACTIVE-BRAND-VECTOR/sub-brands/). 24x24 grid, crisp at any size, with the
+ * official sub-brand colours baked into the vector fills.
  */
 const SportIcon = ({ name, size = 20, className }: Props) => {
   const key = (name || '').toLowerCase() as SportKey;
@@ -24,7 +20,7 @@ const SportIcon = ({ name, size = 20, className }: Props) => {
   return (
     <img
       className={className}
-      src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/icons/icon-${srcKey}.png`}
+      src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/icons/${srcKey}.svg`}
       width={size}
       height={size}
       style={{ width: size, height: 'auto', display: 'block' }}
