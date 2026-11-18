@@ -159,7 +159,7 @@ export default function ElevationPanel({
           strokeLinejoin="round"
         />
       </svg>
-      <div className="font-mono flex justify-between px-1 text-[10px] text-[var(--terrain-faint)]">
+      <div className="font-mono flex justify-between px-1 text-[11px] text-[var(--terrain-faint)]">
         <span>0.0 km</span>
         <span>{(profile.maxDistance / 1000).toFixed(1)} km</span>
       </div>

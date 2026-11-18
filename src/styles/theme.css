@@ -78,7 +78,7 @@
   --text: #f7faff;
   --text-secondary: #cbd5e1;
   --muted: #94a3b8;
-  --subtle: #64748b;
+  --subtle: #8fa6bd;
   --border: rgba(247, 250, 255, 0.16);
   --border-strong: rgba(247, 250, 255, 0.32);
   --shadow: 0 18px 40px -24px rgba(2, 8, 20, 0.9);
@@ -120,7 +120,7 @@
   --text: #101828;
   --text-secondary: #38495b;
   --muted: #5b6d80;
-  --subtle: #7b8b9c;
+  --subtle: #5c6b7c;
   --border: rgba(16, 24, 40, 0.14);
   --border-strong: rgba(16, 24, 40, 0.3);
   --shadow: 0 16px 34px -26px rgba(12, 34, 60, 0.55);
@@ -160,6 +160,10 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* Impeccable: balanced headings, readable paragraph rag (progressive). */
+h1, h2, h3, h4 { text-wrap: balance; }
+p { text-wrap: pretty; }
 
 ::selection {
   background: color-mix(in srgb, var(--accent) 35%, transparent);
@@ -257,8 +261,13 @@ a {
   color: var(--map-overlay-text);
 }
 
+.maplibregl-ctrl-attrib,
+.maplibregl-ctrl-attrib-inner {
+  color: var(--map-overlay-text) !important;
+}
+
 .maplibregl-ctrl-attrib a {
-  color: var(--map-overlay-text);
+  color: var(--map-overlay-text) !important;
 }
 
 .maplibregl-ctrl-attrib-button {

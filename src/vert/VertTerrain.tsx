@@ -209,7 +209,7 @@ export default function VertTerrain({
         </div>
       </div>
 
-      <p className="mt-1 text-right text-[10px] text-[#5f5f5f]">
+      <p className="mt-1 text-right text-[11px] text-[var(--terrain-muted)]">
         <a
           className="transition-colors hover:text-[#9a9a9a]"
           href={TERRAIN_ATTRIBUTION_LINK.href}

@@ -44,7 +44,7 @@ const Skeleton = ({ message }: { message?: string }) => (
 
 const Stat = ({ label, value }: { label: string; value: string }) => (
   <span className="inline-flex items-baseline gap-1">
-    <span className="text-[10px] uppercase tracking-wider text-[var(--terrain-muted)]">
+    <span className="text-[11px] uppercase tracking-wider text-[var(--terrain-muted)]">
       {label}
     </span>
     <span className="font-mono text-[12px] text-[var(--terrain-text)]">{value}</span>
@@ -118,7 +118,7 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
       <header className="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--terrain-border-soft)] px-4 py-3 pr-10 sm:px-5 sm:pr-12">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <span className="rounded bg-[#e0ed5e] px-1.5 py-0.5 text-[10px] font-bold leading-tight text-black">
+            <span className="rounded bg-[#e0ed5e] px-1.5 py-0.5 text-[11px] font-bold leading-tight text-black">
               3D 地形
             </span>
             <h2
@@ -175,7 +175,7 @@ const TerrainCard = ({ run, onClose }: TerrainCardProps) => {
             </div>
           </Suspense>
         ) : null}
-        <p className="mt-2 text-right text-[10px] text-[var(--terrain-faint)]">
+        <p className="mt-2 text-right text-[11px] text-[var(--terrain-faint)]">
           场景在构建期烘焙，不含坐标；地形在浏览器本地渲染
         </p>
       </div>

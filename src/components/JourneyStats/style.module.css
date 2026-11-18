@@ -342,7 +342,7 @@ button.geoCell:hover {
 
 .kpiLabel {
   color: var(--muted);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -398,7 +398,7 @@ button.geoCell:hover {
 
 .recordDate {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   color: var(--muted);
@@ -426,7 +426,7 @@ button.geoCell:hover {
   grid-column: 1 / -1;
   margin-top: 0.12rem;
   color: var(--muted);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
 }
 
 .recordNote {
@@ -434,7 +434,7 @@ button.geoCell:hover {
   padding-left: 0.5rem;
   border-left: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
   color: var(--muted);
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   line-height: 1.6;
 }
 
@@ -528,7 +528,7 @@ button.geoCell:hover {
 }
 
 .fastButtonZh {
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 
@@ -640,7 +640,7 @@ button.geoCell:hover {
 }
 
 .detailGrid dt {
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 

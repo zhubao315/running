@@ -30,7 +30,7 @@
   margin: 0;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
@@ -135,7 +135,7 @@
   gap: 0.35rem;
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -148,7 +148,7 @@
 .brandStamp {
   color: var(--text-dim);
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
 }
 
@@ -160,7 +160,7 @@
   margin: 0;
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -186,7 +186,7 @@
   margin: 0.6rem 0 0;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   letter-spacing: 0.02em;
 }
 
@@ -204,7 +204,7 @@
 
 .fact dt {
   color: var(--muted);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -237,7 +237,7 @@
   margin-right: 0.15rem;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
@@ -274,7 +274,7 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 8%, transparent);
   color: var(--accent);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 
 .scopeClear {
@@ -284,7 +284,7 @@
   background: none;
   color: var(--muted);
   font: inherit;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: color 140ms ease;
 }
@@ -305,7 +305,7 @@
   border-radius: 999px;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   white-space: nowrap;
 }
 
@@ -344,14 +344,14 @@
   margin-left: 0.28rem;
   color: var(--muted);
   font-family: var(--font-sans);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   font-weight: 400;
 }
 
 .metricSub {
   margin: 0.42rem 0 0;
   color: var(--muted);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   line-height: 1.45;
 }
 
@@ -360,7 +360,7 @@
   padding-left: 0.6rem;
   border-left: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
   color: var(--muted);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   line-height: 1.65;
 }
 
@@ -418,7 +418,7 @@
 .readoutYear {
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
 }
 
@@ -432,7 +432,7 @@
 
 .readoutMeta {
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 
 .chart {
@@ -456,7 +456,7 @@
   transform: translateY(50%);
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
@@ -571,7 +571,7 @@
   padding-top: 0.5rem;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.7rem;
   text-align: center;
   white-space: nowrap;
 }
@@ -644,7 +644,7 @@
   margin-left: 0.15rem;
   color: var(--muted);
   font-family: var(--font-sans);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
 }
 
 .yearAllButton {
@@ -655,7 +655,7 @@
   background: transparent;
   color: var(--muted);
   font: inherit;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: color 140ms ease, border-color 140ms ease,
     background-color 140ms ease;
@@ -681,12 +681,12 @@
   margin-bottom: 0.7rem;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
 }
 
 .calendarHint {
   font-family: var(--font-sans);
-  font-size: 0.64rem;
+  font-size: 0.75rem;
   color: var(--muted);
 }
 
@@ -734,7 +734,7 @@
   overflow: hidden;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.58rem;
+  font-size: 0.7rem;
   font-variant-numeric: tabular-nums;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -777,7 +777,7 @@
   background: transparent;
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.56rem;
+  font-size: 0.7rem;
   font-variant-numeric: tabular-nums;
   line-height: 1;
 }
@@ -852,7 +852,7 @@ button.day:hover {
   gap: 0.3rem;
   margin-top: 0.8rem;
   color: var(--muted);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
 }
 
 .legendLabel {
@@ -904,7 +904,7 @@ button.day:hover {
   margin: 0;
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -938,7 +938,7 @@ button.day:hover {
   background: transparent;
   color: var(--muted);
   font: inherit;
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   cursor: pointer;
   transition: color 140ms ease, border-color 140ms ease;
 }
@@ -1003,7 +1003,7 @@ button.day:hover {
 .runStat {
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -1015,14 +1015,14 @@ button.day:hover {
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 0.52rem;
+  font-size: 0.7rem;
   line-height: 1.3;
 }
 
 .dayHint {
   margin: 0.55rem 0 0;
   color: var(--muted);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
 }
 
 /* cross-site jump: the health dashboard holds that day's sleep and recovery */
@@ -1043,13 +1043,13 @@ button.day:hover {
   padding-top: 0.75rem;
   border-top: 1px solid var(--border);
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 
 .dataNotes summary {
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
@@ -1111,7 +1111,7 @@ button.day:hover {
   }
 
   .yTick {
-    font-size: 0.56rem;
+    font-size: 0.7rem;
   }
 
   .yearFull {
@@ -1123,7 +1123,7 @@ button.day:hover {
   }
 
   .yearLabel {
-    font-size: 0.56rem;
+    font-size: 0.7rem;
   }
 
   .dayRun {
@@ -1185,7 +1185,7 @@ button.day:hover {
   }
 
   .legend {
-    font-size: 0.58rem;
+    font-size: 0.7rem;
   }
 }
 
