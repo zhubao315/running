@@ -4,17 +4,18 @@ interface Props {
 }
 
 /**
- * The ACTIVE mark is the main site's trail symbol (owner decision 2026-11-13):
- * one raster, byte-identical in all four repositories under /brand/.
- * It is decorative — the surrounding brand link carries the accessible name,
- * exactly like the main site does.
+ * The ACTIVE master mark (v3.0): the PRECISION MOTION "A" — one ascending
+ * leg, one descending leg and a motion arc, in the official blue gradient.
+ *
+ * It is one byte-identical SVG in all four repositories under /brand/.
+ * Decorative only: the surrounding brand link carries `aria-label="ACTIVE"`.
  */
 const BrandMark = ({ size = 28, className }: Props) => (
   <img
     className={className}
-    src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/zhubao-symbol.png`}
-    width={592}
-    height={530}
+    src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/active-mark.svg`}
+    width={64}
+    height={64}
     style={{ height: size, width: 'auto' }}
     alt=""
     aria-hidden="true"
