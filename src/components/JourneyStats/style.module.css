@@ -237,6 +237,7 @@ button.geoCell:hover {
 }
 
 .legendItem {
+  min-height: 26px;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;

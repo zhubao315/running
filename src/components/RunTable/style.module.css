@@ -54,6 +54,7 @@
 }
 
 .sortButton {
+  min-height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
