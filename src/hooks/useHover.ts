@@ -8,10 +8,10 @@ const useHover = (): HoverHook => {
 
   const eventHandlers = {
     onMouseOver() {
-      setTimer(setTimeout(() => setHovered(true), 500)); // 500ms delay
+      setTimer(window.setTimeout(() => setHovered(true), 500)); // 500ms delay
     },
     onMouseOut() {
-      clearTimeout(timer);
+      window.clearTimeout(timer);
       setHovered(false);
     },
   };

@@ -31,3 +31,6 @@ TCX_OUT/*
 !TCX_OUT/.gitkeep
 activities/*
 !activities/.gitkeep
+
+# Build-time data shards (generated)
+/public/data/

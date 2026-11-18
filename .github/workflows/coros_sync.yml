@@ -267,6 +267,17 @@ jobs:
         if: steps.change.outputs.rebuild == 'true'
         run: python run_page/check_data_integrity_rh.py --sport running
 
+      # Machine-readable data watermark consumed by active-watch patrol.
+      # It describes the real data just written (date/count/checksum) instead
+      # of relying on the timestamp of the last code commit.
+      - name: Write data watermark
+        if: steps.change.outputs.rebuild == 'true'
+        env:
+          WATERMARK_SITE: running
+        run: |
+          export SOURCE_UPDATED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          node scripts/write-data-watermark.mjs
+
       - name: Commit new runs
         id: commit
         if: steps.change.outputs.rebuild == 'true'
@@ -338,6 +349,9 @@ jobs:
         # asks for must be in the build, the geometry must sit in its
         # per-year files and no caption of another sport may have survived.
         run: SITE_SPORT=running node scripts/verify-dist.mjs
+
+      - name: Verify the data shards
+        run: SITE_SPORT=running node scripts/verify-shards.mjs
 
       - name: Smoke-test the page in a real browser
         # The shared navigation and the shared theme are the same on all four

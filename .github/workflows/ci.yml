@@ -2,8 +2,15 @@ name: CI
 
 on: [push, pull_request]
 
+# PR gate: keep it READ-ONLY. `pnpm run check` / `lint` / `typecheck` never
+# rewrite files; the `--fix` / `--write` variants are local-only scripts.
+# The heavier COROS Sync deploy path repeats these gates on main.
+permissions:
+  contents: read
+
 jobs:
-  lint_and_test:
+  python:
+    name: Python formatting
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -21,8 +28,55 @@ jobs:
           cache-dependency-path: 'requirements-dev.txt'
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements-dev.txt
+        run: pip install -r requirements-dev.txt
 
       - name: Check formatting (black)
         run: black . --check
+
+  web:
+    name: TypeScript, build & browser
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Enable corepack (pnpm from packageManager)
+        run: npm install -g corepack@latest && corepack enable pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Read-only gates. `pnpm run check` = lint + tsc --noEmit.
+      - name: Lint & typecheck
+        run: pnpm run check
+
+      - name: Build
+        run: PATH_PREFIX=/${{ github.event.repository.name }} pnpm build
+
+      - name: Verify build artefacts
+        run: SITE_SPORT=running node scripts/verify-dist.mjs
+
+      # The shards must reproduce the original statistics exactly; the build
+      # generator already failed if reconciliation broke, this checks the
+      # published dist/data payload and every shard checksum.
+      - name: Verify data shards
+        run: SITE_SPORT=running node scripts/verify-shards.mjs
+
+      - name: Browser smoke test
+        run: |
+          set -o pipefail
+          mkdir -p "$RUNNER_TEMP/pw"
+          cd "$RUNNER_TEMP/pw"
+          npm init -y > /dev/null
+          npm install --no-fund --no-audit playwright-core
+          npx playwright-core install --with-deps chromium-headless-shell
+          SHELL_BIN="$(find "$HOME/.cache/ms-playwright" -type f \
+            \( -name chrome-headless-shell -o -name headless_shell \) | head -n1)"
+          test -n "$SHELL_BIN"
+          cd "$GITHUB_WORKSPACE"
+          BROWSER_PATH="$SHELL_BIN" NODE_PATH="$RUNNER_TEMP/pw/node_modules" \
+            node scripts/smoke-theme.mjs

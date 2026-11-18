@@ -74,6 +74,18 @@ const JourneyStats = ({ changeCity, changeTitle, onViewRun }: IJourneyStatsProps
     [activities]
   );
 
+  // The old note hardcoded "0" even though the device provides climb data for
+  // most runs. Count the real coverage and never treat a missing value as 0.
+  const climbCount = useMemo(
+    () =>
+      (activities as Activity[]).filter(
+        (a) =>
+          typeof a.climb_terrain === 'number' &&
+          Number.isFinite(a.climb_terrain)
+      ).length,
+    [activities]
+  );
+
   let totalMeters = 0;
   let totalSeconds = 0;
   let hrSum = 0;
@@ -198,10 +210,6 @@ const JourneyStats = ({ changeCity, changeTitle, onViewRun }: IJourneyStatsProps
   const selectedFastMeta = FAST_DISTANCES.find(
     (d) => d.meters === selectedFastDistance
   );
-
-  const detailHeartRate = selectedPb?.run.average_heartrate
-    ? Math.round(selectedPb.run.average_heartrate)
-    : null;
 
   return (
     <section className={styles.journey} aria-label="Total Journey">
@@ -440,8 +448,9 @@ const JourneyStats = ({ changeCity, changeTitle, onViewRun }: IJourneyStatsProps
               </div>
             </div>
             <p className={styles.recordNote}>
-              数据说明：以上纪录除「最大单次爬升」外均可点击查看活动；爬升字段 0
-              / {formatNumber(totalRuns)} 条提供，不做估算；心率仅{' '}
+              数据说明：以上纪录除「最大单次爬升」外均可点击查看活动；爬升字段{' '}
+              {formatNumber(climbCount)} / {formatNumber(totalRuns)}{' '}
+              条提供，不做估算；心率仅{' '}
               {formatNumber(hrCount)} / {formatNumber(totalRuns)}{' '}
               条包含，缺失值不计为 0。
             </p>
