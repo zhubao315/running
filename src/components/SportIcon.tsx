@@ -24,7 +24,7 @@ const SportIcon = ({ name, size = 20, className }: Props) => {
   return (
     <img
       className={className}
-      src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/icon-${srcKey}.png`}
+      src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/brand/icons/icon-${srcKey}.png`}
       width={size}
       height={size}
       style={{ width: size, height: 'auto', display: 'block' }}
