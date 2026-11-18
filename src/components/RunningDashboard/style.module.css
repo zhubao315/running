@@ -1,5 +1,5 @@
 .dashboard {
-  padding-top: clamp(1.2rem, 3vw, 2.4rem);
+  padding-top: clamp(0.75rem, 1.6vw, 1.25rem);
 }
 
 /* ---------- shared section chrome ---------- */
@@ -66,29 +66,28 @@
 .profile {
   position: relative;
   overflow: hidden;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  gap: clamp(1.4rem, 4vw, 3rem);
-  padding: 0.4rem 0 clamp(1.4rem, 3vw, 2rem);
+  gap: clamp(1rem, 3vw, 2.4rem);
+  padding: 0.75rem 0 0.9rem;
   border-bottom: 1px solid var(--border);
 }
 
-/* The brand backdrop: the sport's own generated art, held far enough back
-   that the numbers stay the loudest thing on the page. */
+/* Low-opacity sport art: decoration only, never drives container height. */
 .profile::before {
   content: '';
   position: absolute;
-  top: -12%;
-  right: 8%;
-  bottom: -12%;
-  left: 8%;
+  top: -25%;
+  right: 6%;
+  bottom: -25%;
+  left: 30%;
   background-image: url('/brand/hero-running.webp');
   background-size: cover;
   background-position: center;
-  opacity: 0.34;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 26%, #000 74%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 26%, #000 74%, transparent);
+  opacity: 0.16;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%, #000 75%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 45%, #000 75%, transparent);
   pointer-events: none;
 }
 
@@ -101,58 +100,19 @@
   display: none;
 }
 
-.profileIdentity {
+.identity {
   display: flex;
   align-items: center;
-  gap: clamp(0.9rem, 2vw, 1.35rem);
+  gap: 0.9rem;
   min-width: 0;
 }
 
-.profileYear {
-  margin: 0.35rem 0 0;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: clamp(0.72rem, 1.3vw, 0.82rem);
-  letter-spacing: 0.08em;
-  font-variant-numeric: tabular-nums;
-}
-
-.brandBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.35rem;
-  flex: 0 0 auto;
-}
-
-.brandMark {
-  color: var(--text);
-}
-
-.brandLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+.sportIcon {
+  flex: none;
   color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
-.brandIcon {
-  opacity: 0.9;
-}
-
-.brandStamp {
-  color: var(--text-dim);
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-}
-
-.profileText {
+.identityText {
   min-width: 0;
 }
 
@@ -160,57 +120,52 @@
   margin: 0;
   color: var(--accent);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
 .profileTitle {
-  margin: 0.32rem 0 0;
-  font-size: clamp(1.45rem, 3.6vw, 2.35rem);
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.3rem, 2.6vw, 1.85rem);
   font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.2;
-  overflow-wrap: anywhere;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 
 .tagline {
-  margin: 0.55rem 0 0;
-  max-width: 38rem;
+  margin: 0.3rem 0 0;
+  max-width: 34rem;
   color: var(--muted);
-  font-size: clamp(0.78rem, 1.4vw, 0.9rem);
-  line-height: 1.65;
+  font-size: 0.82rem;
+  line-height: 1.5;
 }
 
-.profileFoot {
-  margin: 0.6rem 0 0;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
-}
-
-.facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(5.4rem, 1fr));
-  gap: 0.75rem 1.6rem;
+.metaTags {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2.4vw, 2rem);
   margin: 0;
   flex: 0 0 auto;
 }
 
-.fact {
+.metaTag {
+  display: flex;
+  flex-direction: column;
+  gap: 0.16rem;
   min-width: 0;
 }
 
-.fact dt {
+.metaTag dt {
   color: var(--muted);
   font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
-.fact dd {
-  margin: 0.18rem 0 0;
+.metaTag dd {
+  margin: 0;
   color: var(--text);
   font-family: var(--font-mono);
   font-size: 0.82rem;
@@ -225,8 +180,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.42rem;
-  margin-top: 0.85rem;
-  padding: 0.5rem 0.75rem;
+  margin-top: 0.6rem;
+  padding: 0.38rem 0.65rem;
   border: 1px solid var(--border);
   border-radius: 6px;
   background: var(--bg-soft);
@@ -296,7 +251,7 @@
 /* ---------- core metrics ---------- */
 
 .core {
-  margin-top: clamp(2.2rem, 4.5vw, 3.4rem);
+  margin-top: clamp(1rem, 1.8vw, 1.5rem);
 }
 
 .scopePill {
@@ -1076,13 +1031,13 @@ button.day:hover {
 
 @media (max-width: 900px) {
   .profile {
-    align-items: flex-start;
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
   }
 
-  .facts {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    width: 100%;
+  .metaTags {
+    flex-wrap: wrap;
+    gap: 0.55rem 1.25rem;
   }
 }
 
@@ -1150,10 +1105,6 @@ button.day:hover {
     font-size: clamp(0.88rem, 4.2vw, 1.08rem);
   }
 
-  .facts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem 1rem;
-  }
 
   .scopeClear {
     margin-left: 0;
@@ -1186,6 +1137,41 @@ button.day:hover {
 
   .legend {
     font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .profile {
+    padding: 0.55rem 0 0.65rem;
+    gap: 0.5rem;
+  }
+
+  .sportIcon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .tagline {
+    font-size: 0.72rem;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 17rem;
+  }
+
+  .metaTags {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  .metaTag dt {
+    font-size: 0.62rem;
+  }
+
+  .metaTag dd {
+    font-size: 0.72rem;
   }
 }
 
