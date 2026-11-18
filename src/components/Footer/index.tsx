@@ -68,6 +68,12 @@ const Footer = () => {
         <p className={styles.note}>
           {siteTitle} · 数据来自 COROS · 每天早上自动同步 · 轨迹由 FIT 原始文件生成
         </p>
+        <p className={styles.release}>
+          <span className={styles.releaseTag}>ACTIVE 2.0</span>
+          <span>MOVE · MEASURE · EXPLORE</span>
+          <span className={styles.releaseSep} aria-hidden="true">·</span>
+          <span>个人运动与健康数字档案</span>
+        </p>
       </div>
     </footer>
   );

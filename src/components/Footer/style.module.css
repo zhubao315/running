@@ -60,7 +60,6 @@
 }
 
 .link {
-  min-height: 26px;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -84,8 +83,36 @@
   font-size: 0.75rem;
 }
 
+.release {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.35rem 0 0;
+  color: var(--subtle, var(--muted));
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.releaseTag {
+  color: var(--accent);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.releaseSep {
+  opacity: 0.5;
+}
+
 @media (min-width: 900px) {
   .note {
     width: auto;
+  }
+
+  .release {
+    width: auto;
+    margin-top: 0;
   }
 }
