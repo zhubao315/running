@@ -1,0 +1,410 @@
+{
+  "site": "running",
+  "url": "https://zhubao315.github.io/running/",
+  "captured_at": "2026-11-23T06:50:35.966500+00:00",
+  "tool": "playwright-chromium (Python)",
+  "results": [
+    {
+      "viewport": "desktop",
+      "theme": "dark",
+      "title": "ACTIVE / 跑步｜zhubao315 的跑步生涯",
+      "lcp_ms": 1996,
+      "cls": 0.0003,
+      "inp_ms": 21.9,
+      "dom_content_loaded_ms": 1338.6,
+      "load_ms": 1339.5,
+      "resource_count": 22,
+      "script_bytes": 629649,
+      "json_bytes": 193461,
+      "scene_bytes": 0,
+      "scene_requests": 0,
+      "json_requests": 2,
+      "bytes_by_type": {
+        "script": 71721,
+        "other": 557928,
+        "link": 25608,
+        "img": 4447,
+        "css": 198866,
+        "fetch": 193461
+      },
+      "top_resources": [
+        {
+          "name": "vendors-61d94739.js",
+          "type": "other",
+          "size": 446921
+        },
+        {
+          "name": "tracks-2026.json",
+          "type": "fetch",
+          "size": 193461
+        },
+        {
+          "name": "activities-50a31dbb.js",
+          "type": "other",
+          "size": 111007
+        },
+        {
+          "name": "hero-running.webp",
+          "type": "css",
+          "size": 77158
+        },
+        {
+          "name": "index-dfff76d0.js",
+          "type": "script",
+          "size": 71721
+        },
+        {
+          "name": "inter-latin-wght-normal.woff2",
+          "type": "css",
+          "size": 48556
+        },
+        {
+          "name": "fira-code-500.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "fira-code-400.woff2",
+          "type": "css",
+          "size": 36576
+        }
+      ],
+      "page_errors": []
+    },
+    {
+      "viewport": "desktop",
+      "theme": "light",
+      "title": "ACTIVE / 跑步｜zhubao315 的跑步生涯",
+      "lcp_ms": 1200,
+      "cls": 0.0002,
+      "inp_ms": 7.6,
+      "dom_content_loaded_ms": 962.3,
+      "load_ms": 963.4,
+      "resource_count": 24,
+      "script_bytes": 629649,
+      "json_bytes": 193461,
+      "scene_bytes": 0,
+      "scene_requests": 0,
+      "json_requests": 2,
+      "bytes_by_type": {
+        "script": 71721,
+        "other": 557928,
+        "link": 25608,
+        "img": 4447,
+        "css": 121708,
+        "fetch": 193461
+      },
+      "top_resources": [
+        {
+          "name": "vendors-61d94739.js",
+          "type": "other",
+          "size": 446921
+        },
+        {
+          "name": "tracks-2026.json",
+          "type": "fetch",
+          "size": 193461
+        },
+        {
+          "name": "activities-50a31dbb.js",
+          "type": "other",
+          "size": 111007
+        },
+        {
+          "name": "index-dfff76d0.js",
+          "type": "script",
+          "size": 71721
+        },
+        {
+          "name": "inter-latin-wght-normal.woff2",
+          "type": "css",
+          "size": 48556
+        },
+        {
+          "name": "fira-code-500.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "fira-code-400.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "index-9d3089f7.css",
+          "type": "link",
+          "size": 15931
+        }
+      ],
+      "page_errors": []
+    },
+    {
+      "viewport": "mobile-390",
+      "theme": "dark",
+      "title": "ACTIVE / 跑步｜zhubao315 的跑步生涯",
+      "lcp_ms": 1588,
+      "cls": 0.0058,
+      "inp_ms": 13.1,
+      "dom_content_loaded_ms": 1209.3,
+      "load_ms": 1210.2,
+      "resource_count": 21,
+      "script_bytes": 629649,
+      "json_bytes": 193461,
+      "scene_bytes": 0,
+      "scene_requests": 0,
+      "json_requests": 2,
+      "bytes_by_type": {
+        "script": 71721,
+        "other": 557928,
+        "link": 25608,
+        "img": 4447,
+        "css": 198866,
+        "fetch": 193461
+      },
+      "top_resources": [
+        {
+          "name": "vendors-61d94739.js",
+          "type": "other",
+          "size": 446921
+        },
+        {
+          "name": "tracks-2026.json",
+          "type": "fetch",
+          "size": 193461
+        },
+        {
+          "name": "activities-50a31dbb.js",
+          "type": "other",
+          "size": 111007
+        },
+        {
+          "name": "hero-running.webp",
+          "type": "css",
+          "size": 77158
+        },
+        {
+          "name": "index-dfff76d0.js",
+          "type": "script",
+          "size": 71721
+        },
+        {
+          "name": "inter-latin-wght-normal.woff2",
+          "type": "css",
+          "size": 48556
+        },
+        {
+          "name": "fira-code-400.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "fira-code-500.woff2",
+          "type": "css",
+          "size": 36576
+        }
+      ],
+      "page_errors": []
+    },
+    {
+      "viewport": "mobile-390",
+      "theme": "light",
+      "title": "ACTIVE / 跑步｜zhubao315 的跑步生涯",
+      "lcp_ms": 1108,
+      "cls": 0.0055,
+      "inp_ms": 9.2,
+      "dom_content_loaded_ms": 890.8,
+      "load_ms": 891.7,
+      "resource_count": 23,
+      "script_bytes": 629649,
+      "json_bytes": 193461,
+      "scene_bytes": 0,
+      "scene_requests": 0,
+      "json_requests": 2,
+      "bytes_by_type": {
+        "script": 71721,
+        "other": 557928,
+        "link": 25608,
+        "img": 4447,
+        "css": 121708,
+        "fetch": 193461
+      },
+      "top_resources": [
+        {
+          "name": "vendors-61d94739.js",
+          "type": "other",
+          "size": 446921
+        },
+        {
+          "name": "tracks-2026.json",
+          "type": "fetch",
+          "size": 193461
+        },
+        {
+          "name": "activities-50a31dbb.js",
+          "type": "other",
+          "size": 111007
+        },
+        {
+          "name": "index-dfff76d0.js",
+          "type": "script",
+          "size": 71721
+        },
+        {
+          "name": "inter-latin-wght-normal.woff2",
+          "type": "css",
+          "size": 48556
+        },
+        {
+          "name": "fira-code-500.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "fira-code-400.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "index-9d3089f7.css",
+          "type": "link",
+          "size": 15931
+        }
+      ],
+      "page_errors": []
+    },
+    {
+      "viewport": "mobile-360",
+      "theme": "dark",
+      "title": "ACTIVE / 跑步｜zhubao315 的跑步生涯",
+      "lcp_ms": 1404,
+      "cls": 0.0002,
+      "inp_ms": 14,
+      "dom_content_loaded_ms": 973.5,
+      "load_ms": 974.4,
+      "resource_count": 21,
+      "script_bytes": 629649,
+      "json_bytes": 193461,
+      "scene_bytes": 0,
+      "scene_requests": 0,
+      "json_requests": 2,
+      "bytes_by_type": {
+        "script": 71721,
+        "other": 557928,
+        "link": 25608,
+        "img": 4447,
+        "css": 198866,
+        "fetch": 193461
+      },
+      "top_resources": [
+        {
+          "name": "vendors-61d94739.js",
+          "type": "other",
+          "size": 446921
+        },
+        {
+          "name": "tracks-2026.json",
+          "type": "fetch",
+          "size": 193461
+        },
+        {
+          "name": "activities-50a31dbb.js",
+          "type": "other",
+          "size": 111007
+        },
+        {
+          "name": "hero-running.webp",
+          "type": "css",
+          "size": 77158
+        },
+        {
+          "name": "index-dfff76d0.js",
+          "type": "script",
+          "size": 71721
+        },
+        {
+          "name": "inter-latin-wght-normal.woff2",
+          "type": "css",
+          "size": 48556
+        },
+        {
+          "name": "fira-code-500.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "fira-code-400.woff2",
+          "type": "css",
+          "size": 36576
+        }
+      ],
+      "page_errors": []
+    },
+    {
+      "viewport": "mobile-360",
+      "theme": "light",
+      "title": "ACTIVE / 跑步｜zhubao315 的跑步生涯",
+      "lcp_ms": 1216,
+      "cls": 0.0002,
+      "inp_ms": 13.9,
+      "dom_content_loaded_ms": 927.1,
+      "load_ms": 928.1,
+      "resource_count": 23,
+      "script_bytes": 629649,
+      "json_bytes": 193461,
+      "scene_bytes": 0,
+      "scene_requests": 0,
+      "json_requests": 2,
+      "bytes_by_type": {
+        "script": 71721,
+        "other": 557928,
+        "link": 25608,
+        "img": 4447,
+        "css": 121708,
+        "fetch": 193461
+      },
+      "top_resources": [
+        {
+          "name": "vendors-61d94739.js",
+          "type": "other",
+          "size": 446921
+        },
+        {
+          "name": "tracks-2026.json",
+          "type": "fetch",
+          "size": 193461
+        },
+        {
+          "name": "activities-50a31dbb.js",
+          "type": "other",
+          "size": 111007
+        },
+        {
+          "name": "index-dfff76d0.js",
+          "type": "script",
+          "size": 71721
+        },
+        {
+          "name": "inter-latin-wght-normal.woff2",
+          "type": "css",
+          "size": 48556
+        },
+        {
+          "name": "fira-code-500.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "fira-code-400.woff2",
+          "type": "css",
+          "size": 36576
+        },
+        {
+          "name": "index-9d3089f7.css",
+          "type": "link",
+          "size": 15931
+        }
+      ],
+      "page_errors": []
+    }
+  ]
+}

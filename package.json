@@ -46,8 +46,9 @@
     "format:check": "prettier --check \"src/**/*.{css,ts,tsx}\"",
     "format:write": "prettier --write \"src/**/*.{css,ts,tsx}\" *.{md,yaml,json,ts,js}",
     "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
     "check": "pnpm run lint && pnpm run typecheck",
-    "ci": "pnpm run check && pnpm run build && node scripts/verify-dist.mjs",
+    "ci": "pnpm run check && pnpm run test && pnpm run build && node scripts/verify-dist.mjs",
     "bake:scenes": "node scripts/bake-scenes.mjs"
   },
   "engineStrict": true,
