@@ -10,7 +10,7 @@
 [![Site](https://img.shields.io/badge/site-live-e0ed5e?style=flat-square&logo=githubpages&logoColor=white)](https://zhubao315.github.io/running/)
 [![Data](https://img.shields.io/badge/data-COROS%20MCP-e0ed5e?style=flat-square)](https://zhubao315.github.io/running/)
 [![Last commit](https://img.shields.io/github/last-commit/zhubao315/running?style=flat-square)](https://github.com/zhubao315/running/commits)
-[![License](https://img.shields.io/github/license/zhubao315/running?style=flat-square)](https://github.com/zhubao315/running/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/zhubao315/running?style=flat-square)](https://github.com/zhubao315/running/blob/main/LICENSE)
 [![Release](https://img.shields.io/badge/release-v2.0.0-07111F?style=flat-square)](https://github.com/zhubao315/running/releases/tag/v2.0.0)
 
 [🌐 在线站点](https://zhubao315.github.io/running/) · [📊 数据概览](#数据概览) · [🔄 自动同步](#自动同步) · [🛠 本地运行](#本地运行) · [🔗 相关站点](#相关站点)
@@ -65,7 +65,7 @@ flowchart LR
 - **数据源**：COROS 官方 MCP（OAuth 2.0 + PKCE），不再依赖 Strava token
 - **调度**：每天 `18:10 UTC`（北京时间 02:10 计划触发；GitHub 调度漂移后实际约 07:00–10:00 落地，增量窗口自动回补）
 - **配额**：三个运动站共享 COROS 每日 50 个 FIT 下载额度，按[租约式账本](https://github.com/zhubao315/active-watch/blob/main/state/fit-quota.json)分配（默认每次 10，手动回填可加大）
-- **工作流**：[`coros_sync.yml`](https://github.com/zhubao315/running/blob/master/.github/workflows/coros_sync.yml)
+- **工作流**：[`coros_sync.yml`](https://github.com/zhubao315/running/blob/main/.github/workflows/coros_sync.yml)
 - **落盘**：同步结果直接提交回仓库，不依赖会过期的 Actions 缓存
 - **构建**：同步 → SVG 海报 → README 数据表 → `pnpm build` → Pages
 

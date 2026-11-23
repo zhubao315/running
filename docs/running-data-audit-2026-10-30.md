@@ -2,7 +2,7 @@
 
 Date: 2026-10-30  
 Site: <https://zhubao315.github.io/running/>  
-Repo: `zhubao315/running` (`master`)  
+Repo: `zhubao315/running` (`main`)  
 Scope: running records only; cycling, hiking and health data stay out of every
 running total.
 

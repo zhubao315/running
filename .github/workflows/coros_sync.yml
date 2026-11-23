@@ -1,7 +1,7 @@
 name: COROS Sync
 
 # Sync from the official COROS MCP gateway, then rebuild and deploy the page.
-# Data is committed back to master so history never depends on the Actions
+# Data is committed back to main so history never depends on the Actions
 # cache (the old cache-based workflow lost months of data when the Strava
 # token expired).
 #
@@ -24,7 +24,7 @@ on:
     - cron: '10 18 * * *'
   push:
     branches:
-      - master
+      - main
     paths:
       # Everything that can change the built page has to be listed here: a
       # path that is missing means a change to it never reaches the page.
@@ -291,7 +291,7 @@ jobs:
             exit 0
           fi
           git commit -m "chore: sync runs $(date -u +%Y-%m-%dT%H:%MZ)"
-          git pull --rebase origin master
+          git pull --rebase origin main
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
@@ -316,7 +316,7 @@ jobs:
         with:
           # always build the tip of the publishing branch, whatever triggered
           # the run
-          ref: master
+          ref: main
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

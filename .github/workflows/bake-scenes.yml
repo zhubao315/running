@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: master
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -50,5 +50,5 @@ jobs:
             exit 0
           fi
           git commit -m "chore: bake 3D scenes"
-          git pull --rebase origin master
+          git pull --rebase origin main
           git push

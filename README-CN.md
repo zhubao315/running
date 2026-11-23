@@ -41,7 +41,7 @@ python run_page/coros_mcp_sync.py --account "$COROS_ACCOUNT" --password "$COROS_
 `.github/workflows/coros_sync.yml` 中：
 
 - 每天 UTC 00:00（北京时间 08:00）自动同步并生成 `activities.json`、`data.db`、`assets/*.svg`
-- 同步结果直接提交回 `master`，不再依赖 Actions 缓存（旧缓存模式会在缓存过期后丢历史）
+- 同步结果直接提交回 `main`，不再依赖 Actions 缓存（旧缓存模式会在缓存过期后丢历史）
 - 提交完成后自动构建并部署 GitHub Pages
 - 支持 `workflow_dispatch` 手动触发
 
