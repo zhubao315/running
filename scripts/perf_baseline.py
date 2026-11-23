@@ -14,6 +14,7 @@
 - 所有指标来自真实浏览器，不推算、不补零；
 - 输出结构化 JSON，供 PERF_BASELINE.md 汇总与前后对比。
 """
+
 from __future__ import annotations
 
 import argparse
