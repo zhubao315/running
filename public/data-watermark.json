@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "site": "running",
-  "generated_at": "2026-11-22T23:34:45.759Z",
-  "latest_activity_date": "2026-11-22",
-  "activity_count": 2042,
-  "source_updated_at": "2026-11-22T23:34:45Z",
-  "data_checksum": "sha256:c761faf193215e7804df8a9d9408d91fb1eacc3a9456cf8c6b68b8da7705ee24",
-  "build_version": "35b3b8f",
+  "generated_at": "2026-11-24T03:57:15.801Z",
+  "latest_activity_date": "2026-11-24",
+  "activity_count": 2043,
+  "source_updated_at": "2026-11-24T03:57:15Z",
+  "data_checksum": "sha256:c6c09e3f6f9732125baf4f3f44cfec084cc33d0bb14e5e9417b7a6b8d529e9bb",
+  "build_version": "ac4c411",
   "status": "ok"
 }
