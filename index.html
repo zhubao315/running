@@ -2,6 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/brand/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="64x64" href="/brand/favicon-64.png" />
@@ -49,6 +50,9 @@
         }
       })();
     </script>
+    <script src="%BASE_URL%/js/zhubao-analytics.js" async fetchpriority="low"
+            data-site-id="running" data-site-group="MEASURE" data-repo="zhubao315/running"
+            data-page-type="dashboard" data-spa="true"></script>
   </head>
   <body>
     <div id="root"></div>

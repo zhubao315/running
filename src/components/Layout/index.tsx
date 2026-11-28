@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -9,6 +10,12 @@ import styles from './style.module.css';
 
 const Layout = ({ children }: React.PropsWithChildren) => {
   const { accent, accent2 } = useSiteMetadata();
+  const location = useLocation();
+
+  useEffect(() => {
+    // SPA 路由变化补一次 page_view；SDK 按 URL 去重，首屏不会重复计数。
+    (window as Window & { ZHUBAO?: { pageview?: () => void } }).ZHUBAO?.pageview?.();
+  }, [location.pathname]);
 
   useEffect(() => {
     const root = document.documentElement;
