@@ -1,0 +1,74 @@
+{
+  "_activities-5a3d52d7.js": {
+    "file": "assets/activities-5a3d52d7.js"
+  },
+  "_loadScene-1461f3a5.js": {
+    "file": "assets/loadScene-1461f3a5.js",
+    "imports": [
+      "_vendors-9afa3936.js"
+    ]
+  },
+  "_vendors-9afa3936.js": {
+    "css": [
+      "assets/vendors-b9e2e652.css"
+    ],
+    "file": "assets/vendors-9afa3936.js"
+  },
+  "assets/end.svg": {
+    "file": "assets/end-a91503f9.svg",
+    "src": "assets/end.svg"
+  },
+  "assets/start.svg": {
+    "file": "assets/start-2a9d06f3.svg",
+    "src": "assets/start.svg"
+  },
+  "index.css": {
+    "file": "assets/index-9d3089f7.css",
+    "src": "index.css"
+  },
+  "index.html": {
+    "css": [
+      "assets/index-9d3089f7.css"
+    ],
+    "dynamicImports": [
+      "src/vert/VertTerrain.tsx",
+      "src/vert/ElevationPanel.tsx"
+    ],
+    "file": "assets/index-40a0af25.js",
+    "imports": [
+      "_vendors-9afa3936.js",
+      "_activities-5a3d52d7.js"
+    ],
+    "isEntry": true,
+    "src": "index.html"
+  },
+  "src/vert/ElevationPanel.tsx": {
+    "file": "assets/ElevationPanel-dc5d0fbb.js",
+    "imports": [
+      "_vendors-9afa3936.js",
+      "_loadScene-1461f3a5.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/vert/ElevationPanel.tsx"
+  },
+  "src/vert/VertTerrain.css": {
+    "file": "assets/VertTerrain-1cc01152.css",
+    "src": "src/vert/VertTerrain.css"
+  },
+  "src/vert/VertTerrain.tsx": {
+    "css": [
+      "assets/VertTerrain-1cc01152.css"
+    ],
+    "file": "assets/VertTerrain-3add3508.js",
+    "imports": [
+      "_vendors-9afa3936.js",
+      "_loadScene-1461f3a5.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "src/vert/VertTerrain.tsx"
+  },
+  "vendors.css": {
+    "file": "assets/vendors-b9e2e652.css",
+    "src": "vendors.css"
+  }
+}

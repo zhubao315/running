@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "site": "running",
+  "source_checksum": "sha256:da314f9d42b237b19ea8aaf0f711e635dc09ab01209ffc8b892e8a75f1281394",
+  "scopes": {
+    "all": {
+      "totals": {
+        "count": 2044,
+        "distanceKm": 24660.425935277566,
+        "seconds": 8192330,
+        "paceSecondsPerKm": 332.2055353586005,
+        "hrCount": 625,
+        "hrAverage": 148.20680940583057,
+        "activeDays": 1822,
+        "firstDate": "2015-10-06",
+        "lastDate": "2026-11-26",
+        "longestStreak": 15,
+        "currentStreak": 1,
+        "averageDistanceKm": 12.06478763956828,
+        "averageSeconds": 4007.989236790607
+      },
+      "dropped": 0,
+      "years": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021",
+        "2020",
+        "2019",
+        "2018",
+        "2017",
+        "2016",
+        "2015"
+      ],
+      "activity_count": 2044,
+      "shard_count": 2044,
+      "last_activity_date": "2026-11-26",
+      "min_distance_m": 0
+    }
+  }
+}

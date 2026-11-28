@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "site": "running",
+  "generated_at": "2026-11-28T09:18:38.535Z",
+  "source_checksum": "sha256:da314f9d42b237b19ea8aaf0f711e635dc09ab01209ffc8b892e8a75f1281394",
+  "source_count": 2044,
+  "stats_engine": "src/utils/runningStats.ts",
+  "scopes": {
+    "all": {
+      "activity_count": 2044,
+      "shard_count": 2044,
+      "years": [
+        "2026",
+        "2025",
+        "2024",
+        "2023",
+        "2022",
+        "2021",
+        "2020",
+        "2019",
+        "2018",
+        "2017",
+        "2016",
+        "2015"
+      ],
+      "shards": [
+        {
+          "year": "2026",
+          "count": 126,
+          "checksum": "sha256:f99f14518300809018bb0746dd9028e5aab2a21d4a47a990dc4b48dfc7386b11"
+        },
+        {
+          "year": "2025",
+          "count": 142,
+          "checksum": "sha256:949002f60b9272cf2c9e1f1db77a2a019e5bde1ad701caa50dc42a32daa8b0d7"
+        },
+        {
+          "year": "2024",
+          "count": 145,
+          "checksum": "sha256:528eaa7987c665579948c68a76df4840b5c69aac1415de7b4842c3c2de0daabc"
+        },
+        {
+          "year": "2023",
+          "count": 138,
+          "checksum": "sha256:2182044e2ab9470519de3bfbb8a8e9333c0417bc6f66d08d2ee0415bb99a8eb0"
+        },
+        {
+          "year": "2022",
+          "count": 160,
+          "checksum": "sha256:9166e5abcb392248bbb6dd8e60b897e956bbf93bbcda8726b56e225d9ac595d8"
+        },
+        {
+          "year": "2021",
+          "count": 162,
+          "checksum": "sha256:2afda1b16520bf283827f4e32ea45de46bfaca3023e07dd67c51b5f11b5fe259"
+        },
+        {
+          "year": "2020",
+          "count": 197,
+          "checksum": "sha256:6d8c04725a6938bb91795cb1a4ea4533fe0aea95b9e721b1bc0ac1e5b24b878d"
+        },
+        {
+          "year": "2019",
+          "count": 205,
+          "checksum": "sha256:a97d11569b3f9e3a2b6cbf31ea35125f3e958a80000e434b6cd68997105fbfd8"
+        },
+        {
+          "year": "2018",
+          "count": 251,
+          "checksum": "sha256:d68d708736ebb7a7a52bdb4decedaa89c8acd180a23165bb22142db0222d3f2f"
+        },
+        {
+          "year": "2017",
+          "count": 243,
+          "checksum": "sha256:00fa4229210c3f3a0d2156845b22b7e736907b6d681456837ddf38adfb6ba2f4"
+        },
+        {
+          "year": "2016",
+          "count": 216,
+          "checksum": "sha256:13562b4288dd658e715c51d34c427a0593423c68bd3ddf09c4e8d3e96d5429ff"
+        },
+        {
+          "year": "2015",
+          "count": 59,
+          "checksum": "sha256:bce76a698fbaf800b86ce9f19085e9f57cc0c8b85cc3b7e779feab7b482b1794"
+        }
+      ],
+      "totals": {
+        "count": 2044,
+        "distanceKm": 24660.425935277566,
+        "seconds": 8192330,
+        "paceSecondsPerKm": 332.2055353586005,
+        "hrCount": 625,
+        "hrAverage": 148.20680940583057,
+        "activeDays": 1822,
+        "firstDate": "2015-10-06",
+        "lastDate": "2026-11-26",
+        "longestStreak": 15,
+        "currentStreak": 1,
+        "averageDistanceKm": 12.06478763956828,
+        "averageSeconds": 4007.989236790607
+      },
+      "reconciliation": {
+        "identical": true,
+        "engine": "src/utils/runningStats.ts"
+      }
+    }
+  },
+  "reconciled": true
+}

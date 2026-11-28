@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "site": "running",
+  "generated_at": "2026-11-26T01:46:05.218Z",
+  "latest_activity_date": "2026-11-26",
+  "activity_count": 2044,
+  "source_updated_at": "2026-11-26T01:46:05Z",
+  "data_checksum": "sha256:da314f9d42b237b19ea8aaf0f711e635dc09ab01209ffc8b892e8a75f1281394",
+  "build_version": "7e0dea1",
+  "status": "ok"
+}

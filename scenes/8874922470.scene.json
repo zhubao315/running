@@ -1,0 +1,19 @@
+{
+  "format": "vert-scene",
+  "version": 1,
+  "bytes": 27038,
+  "hash": "fedae902",
+  "summary": {
+    "distance": 14254,
+    "climb": 60,
+    "drawnLength": 13854,
+    "extent": {
+      "x": 4039,
+      "y": 5238
+    },
+    "trim": {
+      "start": 200,
+      "end": 200
+    }
+  }
+}

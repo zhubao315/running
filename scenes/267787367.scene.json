@@ -1,0 +1,19 @@
+{
+  "format": "vert-scene",
+  "version": 1,
+  "bytes": 9105,
+  "hash": "eced200d",
+  "summary": {
+    "distance": 10339,
+    "climb": 33,
+    "drawnLength": 9939,
+    "extent": {
+      "x": 3177,
+      "y": 709
+    },
+    "trim": {
+      "start": 200,
+      "end": 200
+    }
+  }
+}
