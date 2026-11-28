@@ -14,6 +14,7 @@ const Layout = ({ children }: React.PropsWithChildren) => {
 
   useEffect(() => {
     // SPA 路由变化补一次 page_view；SDK 按 URL 去重，首屏不会重复计数。
+    // 只发空事件：不读取活动记录、心率、轨迹或任何健康数据。
     (window as Window & { ZHUBAO?: { pageview?: () => void } }).ZHUBAO?.pageview?.();
   }, [location.pathname]);
 
